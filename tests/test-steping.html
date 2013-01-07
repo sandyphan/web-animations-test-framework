@@ -1,0 +1,113 @@
+<!-- 
+Copyright 2013 Google Inc. All Rights Reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+Written by Steph McArthur
+-->
+
+<!DOCTYPE html>
+<style>
+.anim {
+  left: 0px;
+  width: 200px;
+  height: 24px;
+  background-color: lightsteelblue;
+  position: relative;
+  border-bottom: solid white 1px;
+}
+
+#expectation {
+  position: absolute;
+  left: 200px;
+  width: 200px;
+  height: 200px;
+  background: red;
+}
+body { margin: 0px; }
+</style>
+
+<div id=expectation> </div>
+
+<div>
+  <div class="anim test">steps(3, start)</div>
+  <div class="anim test">steps(20, middle)</div>
+  <div class="anim test">steps(7, end)</div>
+  <div class="anim test">steps(70, end)</div>
+  <div class="anim test">steps(47, start)</div>
+  <div class="anim test">steps(4, start)</div>
+  <div class="anim test">steps(63, middle)</div>
+  <div class="anim test">steps(1, start)</div>
+</div>
+
+<script src="../../web-animations-js/web-animation.js"></script>
+<script src="../testharness/testharness.js"></script>
+<script src='../testharness/testharnessreport.js'></script>
+<script src='../extra-asserts.js'></script>
+<link rel='stylesheet' href='../testharness/testharness.css'>
+
+
+<script>
+var elems = document.querySelectorAll(".test");
+for (var i = 0; i < elems.length; i++) {
+  var element = elems[i];
+  new Animation(element, {left: "200px"}, {startDelay: 1, duration: 2, timingFunction: element.textContent});
+}
+
+var endTest = async_test("Testing final locations");
+setTimeout(function (){
+  endTest.step(function(){
+    var eels = document.querySelectorAll(".test");
+    for(var i = 0; i < eels.length; i++){
+      var params = document.defaultView.getComputedStyle(eels[i], null);
+      assert_equals(params.left, "200px", "Cube " + eels[i].textContent +" didn't finish at the right location");
+    }
+  });
+  endTest.done();
+}, 3500);
+
+var stepCount = async_test("Checking the animation has the right number of steps");
+var numAnim = (document.querySelectorAll(".test")).length;
+var steps = [];
+var prevLeft = [];
+for(var i = 0; i < numAnim; i++){
+  steps[i] = 0;
+  prevLeft[i] = 0;
+}
+var counter = setInterval(checkForStep, 10);
+
+function checkForStep (){
+  var eels = document.querySelectorAll(".test");
+  for(var i = 0; i < eels.length; i++){
+    var params = document.defaultView.getComputedStyle(eels[i], null);
+    if(params.left != prevLeft[i]) steps[i]++;
+    prevLeft[i] = params.left;
+  }
+}
+
+setTimeout(function(){
+  stepCount.step(function(){
+    var eels = document.querySelectorAll(".test");
+    for(var i = 0; i < eels.length; i++){
+      var params = document.defaultView.getComputedStyle(eels[i], null);
+      var numSteps = eels[i].textContent;
+      numSteps = numSteps.replace(/[^0-9]/g, " ");
+      assert_equals(steps[i] -1, parseInt(numSteps),  eels[i].textContent +" didn't have the right steps");
+    }
+  });
+  stepCount.done();
+}, 3500);
+</script>
+
+<div id="log"></div>
+
