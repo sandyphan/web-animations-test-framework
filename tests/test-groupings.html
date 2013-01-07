@@ -1,0 +1,120 @@
+<!-- 
+Copyright 2012 Google Inc. All Rights Reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+
+<!DOCTYPE html>
+<style>
+#main {
+  position: relative;
+}
+
+.anim {
+  position: absolute;
+  height: 100px;
+  width: 100px;
+  left: 100px;
+  top: 100px;
+}
+
+#bottom {
+  background-color: red;
+		
+}
+
+#top {
+  background-color: green;
+
+}
+
+
+
+</style>
+
+<div id="main">
+  <div id="bottom" class="anim"></div>
+  <div id="top" class="anim"></div>
+  <p>There should be a green square moving with no red.</p>
+</div>
+<div id="log"></div>
+
+<script src='testharness.js'></script>
+<script src='testharnessreport.js'></script>
+<script src="web-animation.js"></script>
+<link rel='stylesheet' href='testharness.css'>
+<script>
+
+var leftDown = new SeqGroup([]);
+leftDown.locallyPaused = true;
+
+var left = new ParGroup([], {}, leftDown);
+var down = new ParGroup([], {}, leftDown);
+
+testLeft = async_test("Verify the elements move left in parallel");
+testTop = async_test("Verify the elements move down in parallel");
+testMoveLeft = async_test("Verify the elements move left");
+testMoveDown = async_test("Verify the elements move down");
+
+
+var topObject = document.getElementById("top");
+var compTop = topObject.currentStyle || getComputedStyle(topObject, null);
+
+var bottomObject = document.getElementById("bottom");
+var compBottom = bottomObject.currentStyle || getComputedStyle(bottomObject, null);
+
+var topLeft = new Animation(topObject, {left: ["100px", "500px"]}, {duration: 1}, left);
+var bottomLeft = new Animation(bottomObject, {left: ["100px", "500px"]}, {duration: 1}, left);
+
+var topDown = new Animation(topObject, {top: ["100px", "500px"]}, {duration: 1}, down);
+var bottomDown = new Animation(bottomObject, {top: ["100px", "500px"]}, {duration: 1}, down);
+
+var testing = setInterval(leftRightStep, 10);
+
+console.log(bottomObject);
+console.log(compBottom);
+
+leftDown.play();
+
+setTimeout(endIter, 2000);
+
+setTimeout(function() {
+  testMoveLeft.step(function() {
+    assert_not_equals(compTop.left, "100px", "The elements have not moved left");    
+  });
+  testMoveLeft.done();
+}, 500);
+
+setTimeout(function() {
+  testMoveDown.step(function() {
+    assert_not_equals(compTop.top, "100px", "The elements have not moved right");    
+  });
+  testMoveDown.done();
+}, 1500);
+
+function endIter() {
+  testLeft.done();
+  testTop.done();
+  clearInterval(testing);
+}
+
+function leftRightStep() {
+  testLeft.step(function() {
+    assert_equals(compTop.left, compBottom.left, "The elements are not in parrallel");    
+  });
+  testTop.step(function() {
+    assert_equals(compTop.top, compBottom.top, "The elements are not in parrallel");    
+  });
+}
+
+</script>
