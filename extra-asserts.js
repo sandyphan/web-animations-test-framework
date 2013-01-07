@@ -13,16 +13,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-//Maybe change so you pass in the colour name e.g. green
-function assert_color(component, red, green, blue, message) {
+//Pass in either the css colour name to expectedColor OR 
+//a rbg string e.g. "0,0,0". Each number must be separated by a comma
+function assert_color(component, expectedColor, message) {
   var params = document.defaultView.getComputedStyle(component, null);
   var color = params.backgroundColor;
   color = color.replace(/[^0-9,]/g, "");
   var rgbValues = color.split(",");
-  assert_approx_equals(parseInt(rgbValues[0]), red, 2, "red " +message);
-  assert_approx_equals(parseInt(rgbValues[1]), green, 2, "green " +message);
-  assert_approx_equals(parseInt(rgbValues[2]), blue, 2, "blue " +message);
+
+  var parsedColor = expectedColor.replace(/[^0-9,]/g, "");
+  if(parsedColor.length != 0) expectedColor = parsedColor.split(",");
+  else expectedColor = convertToRgb(expectedColor);
+
+  assert_approx_equals(parseInt(rgbValues[0]), expectedColor[0], 2, "red " +message);
+  assert_approx_equals(parseInt(rgbValues[1]), expectedColor[1], 2, "green " +message);
+  assert_approx_equals(parseInt(rgbValues[2]), expectedColor[2], 2, "blue " +message);
 }
+
+//This whole function is kind of hacky... unsure how to do this properly
+function convertToRgb(englishColor) {
+    var tempDiv = document.createElement("div");
+    document.querySelector("#log").appendChild(tempDiv); 
+    tempDiv.style.backgroundColor = englishColor;
+    var p = document.defaultView.getComputedStyle(tempDiv, null);
+    var color = p.backgroundColor;
+    color = color.replace(/[^0-9,]/g, "");
+    var rgbValues = color.split(",");
+    tempDiv.remove(); 
+    return rgbValues;
+}
+
 
 function calculateEpsilon(givenAnim) {
   var startLocal = parseInt(givenAnim.animationFunction.frames.frames[0].value);
