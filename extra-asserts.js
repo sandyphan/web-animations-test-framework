@@ -55,6 +55,13 @@ function convertToRgb(englishColor) {
 //This function takes an animation object and error message
 //and verifies the set end point of the given animation.
 function assert_end_location(myAnim, message) {
+  var endTarget = parseInt(myAnim.animationFunction.frames.frames[1].value);
+  assert_location(myAnim, endTarget, message);
+}
+
+//Pass in animation, target location as an integer and error message
+//Asserts the animation is at the target location
+function assert_location(myAnim, target, message) {
   var object = myAnim.targetElement;
   var comp = object.currentStyle || getComputedStyle(object, null);
   pairings = {
