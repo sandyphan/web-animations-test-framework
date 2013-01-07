@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 //Pass in either the css colour name to expectedColor OR 
 //a rbg string e.g. "0,0,0". Each number must be separated by a comma
 function assert_color(component, expectedColor, message) {
@@ -30,7 +31,7 @@ function assert_color(component, expectedColor, message) {
   assert_approx_equals(parseInt(rgbValues[2]), expectedColor[2], 2, "blue " +message);
 }
 
-//This whole function is kind of hacky... unsure how to do this properly
+//This whole function is kind of hacky... unsure how to do this properly. Suggestions?
 function convertToRgb(englishColor) {
     var tempDiv = document.createElement("div");
     document.querySelector("#log").appendChild(tempDiv); 
@@ -43,7 +44,8 @@ function convertToRgb(englishColor) {
     return rgbValues;
 }
 
-
+//This function calculates the required margin of error for the approx_equals
+//assert. It depends on the speed of the moving object.
 function calculateEpsilon(givenAnim) {
   var startLocal = parseInt(givenAnim.animationFunction.frames.frames[0].value);
   var endLocal = parseInt(givenAnim.animationFunction.frames.frames[1].value);
