@@ -72,7 +72,10 @@ new Animation(document.querySelector("#c"), {"background-color": [{offset: 0.25,
 
 setTimeout(function(){
   colourCheck.step(function(){
-    assert_color(document.querySelector("#a"), "blue", "I'm not green!");
+    var elems = document.querySelectorAll(".anim");
+    for (var i = 0; i < elems.length; i++) {
+      assert_color(elems[i], "green", "I'm not green!");
+    }
   });
   colourCheck.done();
 }, 2500);
