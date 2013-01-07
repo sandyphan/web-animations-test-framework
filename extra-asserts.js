@@ -14,6 +14,14 @@
  * limitations under the License.
  */
 
+//Pass in an animation and error message
+//asserts the animation is at the end color
+ function assert_end_color(myAnim, message) {
+  var object = myAnim.targetElement;
+  var endColor = myAnim.animationFunction.frames.frames[1].value;
+  assert_color(object, endColor, message);
+}
+
 //Pass in either the css colour name to expectedColor OR 
 //a rbg string e.g. "0,0,0". Each number must be separated by a comma
 function assert_color(component, expectedColor, message) {
@@ -44,7 +52,8 @@ function convertToRgb(englishColor) {
     return rgbValues;
 }
 
-//This function finds the end point of the animation and verifies the animation is there
+//This function takes an animation object and error message
+//and verifies the set end point of the given animation.
 function assert_end_location(myAnim, message) {
   var object = myAnim.targetElement;
   var comp = object.currentStyle || getComputedStyle(object, null);
