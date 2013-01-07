@@ -44,6 +44,19 @@ function convertToRgb(englishColor) {
     return rgbValues;
 }
 
+//This function finds the end point of the animation and verifies the animation is there
+function assert_end_location(myAnim, message) {
+  var object = myAnim.targetElement;
+  var comp = object.currentStyle || getComputedStyle(object, null);
+  pairings = {
+    left: parseInt(comp.left),
+    top: parseInt(comp.top)
+  }
+  var endTarget = parseInt(myAnim.animationFunction.frames.frames[1].value);
+  var endLocal = pairings[myAnim.animationFunction.property];
+  assert_approx_equals(endLocal, endTarget, calculateEpsilon(myAnim), message);
+}
+
 //This function calculates the required margin of error for the approx_equals
 //assert. It depends on the speed of the moving object.
 function calculateEpsilon(givenAnim) {
