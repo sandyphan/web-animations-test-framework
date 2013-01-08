@@ -1,0 +1,101 @@
+<!-- 
+Copyright 2012 Google Inc. All Rights Reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+
+<!DOCTYPE html>
+<style>
+.anim {
+	left: 50px;
+	width: 100px;
+	height: 100px;
+	background-color: lightsteelblue;
+	position: relative;
+}
+
+#a {
+	top: 0px
+}
+
+#b {
+	top: 0px;
+}
+
+#c {
+	top: 0px;
+        background-color: green;
+}
+
+</style>
+
+<div>
+	<div id="a" class="anim"></div>
+	<div id="b" class="anim"></div>
+	<div id="c" class="anim"></div>
+	<div id="log"></div>
+</div>
+
+<script src='../testharness/testharness.js'></script>
+<script src='../testharness/testharnessreport.js'></script>
+<script src="../../web-animations-js/web-animation.js"></script>
+<script src="../extra-asserts.js"></script>
+<link rel='stylesheet' href='../testharness/testharness.css'>
+<script>
+
+topTest = async_test("Testing the top element changes colors");
+midTest = async_test("Testing the middle element changes colors");
+bottomTest = async_test("Testing the bottom element changes colors");
+
+var objectA = document.getElementById("a");
+var compA = objectA.currentStyle || getComputedStyle(objectA, null);
+
+var objectB = document.getElementById("b");
+var compB = objectB.currentStyle || getComputedStyle(objectB, null);
+
+var objectC = document.getElementById("c");
+var compC = objectC.currentStyle || getComputedStyle(objectC, null);
+
+var topAnim = new Animation(objectA, {"background-color": ["red", "green"]}, 2);
+var midAnim = new Animation(objectB, {"background-color": "rgb(0, 128, 0)"}, 2);
+var bottomAnim = new Animation(objectC, {"background-color": [{offset: 0.25, value: "rgb(255, 0, 0)"}, {offset: 0.75, value: "rgb(0, 0, 255)"}], operation: "add"}, 2);
+
+setTimeout(timoutFunc, 2000);
+
+function timoutFunc() {
+  topTest.step(function() {
+    assert_end_color(topAnim);
+  });
+  midTest.step(function() {
+    assert_end_color(midAnim);
+  });
+  bottomTest.step(function() {
+    assert_color(objectC, "green");
+  });
+  topTest.done();
+  midTest.done();
+  bottomTest.done();
+}
+
+/*function assert_color(component, red, green, blue, message) {
+  var color = component.backgroundColor;
+  color = color.replace("rgb(", "");
+  color = color.replace(")", "");
+  color = color.replace(" ", "");
+  var rgbValues = color.split(",");
+  assert_approx_equals(parseInt(rgbValues[0]), red, 2, "red " +message);
+  assert_approx_equals(parseInt(rgbValues[1]), green, 2, "green " +message);
+  assert_approx_equals(parseInt(rgbValues[2]), blue, 2, "blue " +message);
+}*/
+
+</script>

@@ -16,9 +16,6 @@ limitations under the License.
 
 <!DOCTYPE html>
 <style>
-#main {
-  position: relative;
-}
 
 .anim {
   position: absolute;
@@ -42,11 +39,9 @@ limitations under the License.
 
 </style>
 
-<div id="main">
-  <div id="bottom" class="anim"></div>
-  <div id="top" class="anim"></div>
-  <p>There should be a green square moving with no red.</p>
-</div>
+<div id="bottom" class="anim"></div>
+<div id="top" class="anim"></div>
+<p>There should be a green square moving with no red.</p>
 <div id="log"></div>
 
 <script src="../../web-animations-js/web-animation.js"></script>
@@ -82,9 +77,6 @@ var bottomDown = new Animation(bottomObject, {top: ["100px", "500px"]}, {duratio
 
 var testing = setInterval(leftRightStep, 10);
 
-console.log(bottomObject);
-console.log(compBottom);
-
 leftDown.play();
 
 setTimeout(endIter, 2000);
@@ -111,10 +103,10 @@ function endIter() {
 
 function leftRightStep() {
   testLeft.step(function() {
-    assert_equals(compTop.left, compBottom.left, "The elements are not in parrallel");    
+    assert_same(topLeft, bottomLeft, "The elements are not in parrallel")    
   });
   testTop.step(function() {
-    assert_equals(compTop.top, compBottom.top, "The elements are not in parrallel");    
+    assert_same(topDown, bottomDown, "The elements are not in parrallel")    
   });
 }
 

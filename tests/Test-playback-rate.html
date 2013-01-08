@@ -1,0 +1,123 @@
+<!-- 
+Copyright 2012 Google Inc. All Rights Reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+
+<!DOCTYPE html>
+<style>
+.anim {
+  position: relative;
+  height: 50px;
+  width: 50px;
+  left: 100px;  
+  
+}
+
+.bottom {
+  background-color: red;
+
+}
+
+.top {
+  background-color: green;
+  top: -200px;
+}
+
+
+</style>
+
+
+<div class="anim bottom"></div>
+<div class="anim bottom"></div>
+<div class="anim bottom"></div>
+<div class="anim bottom"></div>
+<div class="anim top"></div>
+<div class="anim top"></div>
+<div class="anim top"></div>
+<div class="anim top"></div>
+<div id="log"></div>
+
+
+<script src='../testharness/testharness.js'></script>
+<script src='../testharness/testharnessreport.js'></script>
+<script src="../../web-animations-js/web-animation.js"></script>
+<link rel='stylesheet' href='../testharness.css'>
+<script>
+
+testLeft = async_test("Verify the elements move left in parallel");
+testMoveLeft = async_test("Verify the elements move left");
+
+
+var topObjects = document.querySelectorAll(".top");
+
+var compBottom = new Array();
+var compTop = new Array();
+for (var i = 0; i <topObjects.length; i++){
+  compTop[i] = topObjects[i].currentStyle || getComputedStyle(topObjects[i], null);
+}
+
+var bottomObjects = document.querySelectorAll(".bottom");
+for (var i = 0; i < bottomObjects.length; i++) {
+  compBottom[i] = bottomObjects[i].currentStyle || getComputedStyle(bottomObjects[i], null);
+}
+
+for (var i = 0; i < topObjects.length; i++) {
+  new Animation(topObjects[i], {left: ["100px", "600px"]}, {duration: 2*(i + 1), playbackRate: i + 1 });
+}
+for (var i = 0; i < bottomObjects.length; i++) {
+  new Animation(bottomObjects[i], {left: ["100px", "600px"]}, {duration: 2});
+}
+
+var testing = setInterval(leftRightStep, 10);
+
+setTimeout(endIter, 2000);
+
+setTimeout(function() {
+  testMoveLeft.step(function() {
+    for(var i=0; i < compTop.length; i++) {
+      assert_not_equals(compTop[i].left, "100px", "The elements have not moved left");
+    }    
+  });
+  testMoveLeft.done();
+}, 500);
+
+for (var i = 0; i < compBottom.length; i++) {
+      assert_approx_equals(parseInt(compBottom[i].left), 600, 4, "The top element did not end properly"); 
+    } 
+function endIter() {
+  testLeft.step(function() {
+    for (var i = 0; i < compTop.length; i++) {
+      assert_approx_equals(parseInt(compTop[i].left), 600, 4, "The top element did not end properly"); 
+    } 
+    
+    for (var i = 0; i < compBottom.length; i++) {
+      assert_approx_equals(parseInt(compBottom[i].left), 600, 4, "The bottom element did not end properly");   
+    } 
+
+
+  });
+  testLeft.done();
+  clearInterval(testing);
+}
+
+function leftRightStep() {
+  testLeft.step(function() {
+    for (var i = 0; i < compTop.length && i < compBottom.length; i++) {
+      assert_equals(compTop[i].left, compBottom[i].left, "The elements are not in parrallel");
+    }     
+  });
+}
+
+</script>
+

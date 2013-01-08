@@ -13,6 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//Pass in two animations and verify they are at the same position
+ function assert_same(anim1, anim2, message) {
+  var object1 = anim1.targetElement;
+  var comp1 = object1.currentStyle || getComputedStyle(object1, null);
+
+  var object2 = anim2.targetElement;
+  var comp2 = object2.currentStyle || getComputedStyle(object1, null);
+
+  pairings = {
+    left: [parseInt(comp1.left), parseInt(comp2.left)],
+    top: [parseInt(comp1.top), parseInt(comp2.top)]
+  }
+  var direction = anim1.animationFunction.property;
+  assert_equals(pairings[direction][0], pairings[direction][1], message);
+}
+
+//Pass in an animation and error message
+//asserts the animation is at the end color
+ function assert_end_color(myAnim, message) {
+  var object = myAnim.targetElement;
+  var endColor = myAnim.animationFunction.frames.frames[1].value;
+  assert_color(object, endColor, message);
+}
 
 //Pass in either the css colour name to expectedColor OR 
 //a rbg string e.g. "0,0,0". Each number must be separated by a comma
@@ -26,9 +49,9 @@ function assert_color(component, expectedColor, message) {
   if(parsedColor.length != 0) expectedColor = parsedColor.split(",");
   else expectedColor = convertToRgb(expectedColor);
 
-  assert_approx_equals(parseInt(rgbValues[0]), expectedColor[0], 2, "red " +message);
-  assert_approx_equals(parseInt(rgbValues[1]), expectedColor[1], 2, "green " +message);
-  assert_approx_equals(parseInt(rgbValues[2]), expectedColor[2], 2, "blue " +message);
+  assert_approx_equals(parseInt(rgbValues[0]), expectedColor[0], 12, "red " +message);
+  assert_approx_equals(parseInt(rgbValues[1]), expectedColor[1], 12, "green " +message);
+  assert_approx_equals(parseInt(rgbValues[2]), expectedColor[2], 12, "blue " +message);
 }
 
 //This whole function is kind of hacky... unsure how to do this properly. Suggestions?
@@ -42,6 +65,27 @@ function convertToRgb(englishColor) {
     var rgbValues = color.split(",");
     tempDiv.remove(); 
     return rgbValues;
+}
+
+//This function takes an animation object and error message
+//and verifies the set end point of the given animation.
+function assert_end_location(myAnim, message) {
+  var endTarget = parseInt(myAnim.animationFunction.frames.frames[1].value);
+  assert_location(myAnim, endTarget, message);
+}
+
+//Pass in animation, target location as an integer and error message
+//Asserts the animation is at the target location
+function assert_location(myAnim, target, message) {
+  var object = myAnim.targetElement;
+  var comp = object.currentStyle || getComputedStyle(object, null);
+  pairings = {
+    left: parseInt(comp.left),
+    top: parseInt(comp.top)
+  }
+  var endTarget = parseInt(myAnim.animationFunction.frames.frames[1].value);
+  var endLocal = pairings[myAnim.animationFunction.property];
+  assert_approx_equals(endLocal, endTarget, calculateEpsilon(myAnim), message);
 }
 
 //This function calculates the required margin of error for the approx_equals
