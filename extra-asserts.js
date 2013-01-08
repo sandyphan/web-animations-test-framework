@@ -13,6 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//Pass in two animations and verify they are at the same position
+ function assert_same(anim1, anim2, message) {
+  var object1 = anim1.targetElement;
+  var comp1 = object1.currentStyle || getComputedStyle(object1, null);
+
+  var object2 = anim2.targetElement;
+  var comp2 = object2.currentStyle || getComputedStyle(object1, null);
+
+  pairings = {
+    left: [parseInt(comp1.left), parseInt(comp2.left)],
+    top: [parseInt(comp1.top), parseInt(comp2.top)]
+  }
+  var direction = anim1.animationFunction.property;
+  assert_equals(pairings[direction][0], pairings[direction][1], message);
+}
 
 //Pass in an animation and error message
 //asserts the animation is at the end color
@@ -34,9 +49,9 @@ function assert_color(component, expectedColor, message) {
   if(parsedColor.length != 0) expectedColor = parsedColor.split(",");
   else expectedColor = convertToRgb(expectedColor);
 
-  assert_approx_equals(parseInt(rgbValues[0]), expectedColor[0], 2, "red " +message);
-  assert_approx_equals(parseInt(rgbValues[1]), expectedColor[1], 2, "green " +message);
-  assert_approx_equals(parseInt(rgbValues[2]), expectedColor[2], 2, "blue " +message);
+  assert_approx_equals(parseInt(rgbValues[0]), expectedColor[0], 12, "red " +message);
+  assert_approx_equals(parseInt(rgbValues[1]), expectedColor[1], 12, "green " +message);
+  assert_approx_equals(parseInt(rgbValues[2]), expectedColor[2], 12, "blue " +message);
 }
 
 //This whole function is kind of hacky... unsure how to do this properly. Suggestions?
