@@ -23,12 +23,10 @@ Written By Sarah Heimlich
   height: 50px;
   width: 50px;
   left: 100px;  
-  
 }
 
 .bottom {
   background-color: red;
-
 }
 
 .top {
@@ -39,6 +37,17 @@ Written By Sarah Heimlich
 
 </style>
 
+<head>
+  <title>Test Speed</title>
+  <link rel="author" title="Sarah Heimlich", href="mailto:sarahheimlich@google.com">
+  <link rel="help" href="https://dvcs.w3.org/hg/FXTF/raw-file/tip/web-anim/index.html#speed-control">
+  <meta name="flags" content="dom">
+  <meta name="assert" content="Verify the objects move at the same speed."
+</head>
+
+<body>
+  <p>There should be a green rectangle moving across the screen, with no red.</p>
+</body>
 
 <div class="anim bottom"></div>
 <div class="anim bottom"></div>
@@ -49,7 +58,6 @@ Written By Sarah Heimlich
 <div class="anim top"></div>
 <div class="anim top"></div>
 <div id="log"></div>
-
 
 <script src='../testharness/testharness.js'></script>
 <script src='../testharness/testharnessreport.js'></script>
