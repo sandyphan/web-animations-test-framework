@@ -50,8 +50,17 @@ Written by Steph McArthur
 
 </style>
 
-All three boxes should end up the same color as the outline.
+<head>
+  <title>Test Color</title>
+  <link rel="author" title="Steph McArthur", href="mailto:stephm@google.com">
+  <link rel="help" href="https://dvcs.w3.org/hg/FXTF/raw-file/tip/web-anim/index.html#the-animationeffect-interface">
+  <meta name="flags" content="dom">
+  <meta name="assert" content="Verifying the rgb values of the objects are green."
+</head>
 
+<body>
+  <p>All three boxes should end up the same color as the outline.</p>
+</body>
 <div id="container">
   <div id="a" class="anim"></div>
   <div id="b" class="anim"></div>
@@ -65,7 +74,10 @@ All three boxes should end up the same color as the outline.
 <link rel='stylesheet' href='../testharness/testharness.css'>
 
 <script>
-var colourCheck = async_test("Checking it ends up as green");
+var colourCheck = async_test("Checking it ends up as green", {
+    
+  });
+
 new Animation(document.querySelector("#a"), {"background-color": ["red", "green"]}, 2);
 new Animation(document.querySelector("#b"), {"background-color": "rgb(0, 128, 0)"}, 2);
 new Animation(document.querySelector("#c"), {"background-color": [{offset: 0.25, value: "rgb(255, 0, 0)"}, {offset: 0.75, value: "rgb(0, 0, 255)"}], operation: "add"}, 2);
