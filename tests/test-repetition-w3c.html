@@ -1,0 +1,127 @@
+<!-- 
+Copyright 2012 Google Inc. All Rights Reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+
+<!DOCTYPE html>
+<style>
+
+.test {
+  width: 100px;
+  height: 25px;
+  background-color: #FAA;
+  position: relative;
+  top: 0px;
+  left: 0px;
+}
+
+
+</style>
+
+<!-- <div class="test" id="a">1</div> -->
+<div class="test" id="b">2</div>
+<!-- <div class="test" id="b">3</div> -->
+
+<div id="log"></div>
+
+
+<script src="../../web-animations-js/web-animation.js"></script>
+<script src="../testharness/testharness.js"></script>
+<script src='../testharness/testharnessreport.js'></script>
+<script src='../extra-asserts.js'></script>
+<link rel='stylesheet' href='../testharness/testharness.css'>
+
+<script>	
+
+/*
+ * All animation script starts here
+ */
+
+var elems = document.querySelectorAll(".test");
+var anim = [];
+var props = [];
+
+
+for (var i = 0; i < elems.length; i++) {
+  var element = elems[i];
+  props[i] = getComputedStyle(element, null);
+  anim[i] = new Animation(element, {left: ["0px", "200px"]}, 1.0, new ParGroup([], {iterationCount: element.textContent}));
+}
+
+/*
+ * All test scripts starts here
+ * 
+ * Logic of the test scripts:
+ *      firstly, collect all necessary data for different time
+ *      intervals and store it in an array
+ *      then runs the rest of the iterations and compare
+ *      the results to the array of data we have to approximation
+ *      if all data are approximately correct (with epsilon of around 3)
+ *      the animation will then pass the test
+ */
+
+// declare variables
+results = [];
+var time = anim[0].duration; // at this point, duration is 1000 miliseconds
+var intervalCount = 5; // wants to assert at 5 different points in 1000 miliseconds
+var intervalTime = time / 5; // each interval time should be 200 miliseconds long
+var timeDiff = intervalTime; // time should be in the unit of seconds
+var runNum = 0;
+
+// collects the data for the very first iteration
+var firstIter = function() {
+  var collectData = setInterval(function() {
+    for (var i = 0; i < elems.length; i++) {
+      results[runNum] = parseInt(props[i].left);
+    }
+    runNum++;
+
+  }, 200);
+
+  setTimeout(function() {
+    clearInterval(collectData);
+  }, 1005);
+}
+
+// var repeated = false;
+
+var testIter = function() { 
+  var j = 0;
+  setTimeout(function() {
+    var checkRepeat = setInterval(function() {  
+      for (var i = 0; i < elems.length; i++) {
+        console.log("Actual: " + parseInt(props[i].left) + " : " + document.animationTimeline.animationTime);
+        console.log("Expected: " + results[j] + " : " + document.animationTimeline.animationTime);
+        assert_approx_equals(parseInt(props[i].left), results[j], 3, "Check that results are approximately equal");
+        j++;
+      }
+    }, 200);
+  
+    setTimeout(function() {
+      clearInterval(checkRepeat);
+    }, 1005);
+  }, 1000); 
+}
+
+
+var test_repeat = async_test("Verify that all distances are equal at different time intervals");
+setTimeout(function() {
+  test_repeat.step(function() {
+    firstIter();
+    testIter();
+  });
+  test_repeat.done();
+}, 0);
+
+</script>
