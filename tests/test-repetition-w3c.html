@@ -15,6 +15,10 @@ limitations under the License.
 -->
 
 <!DOCTYPE html>
+<title>Test repetition with proper assert function</title>
+<link rel="author" title="Sandy Phan"m href="mailto:sandyphan@google.com")>
+<meta name="flags" content="dom">
+
 <style>
 
 .test {
@@ -29,9 +33,17 @@ limitations under the License.
 
 </style>
 
+<p>This is another repetition test with short durations and repetitions as well as fewer time intervals</p>
+<p>This test should have 3 blocks of element moving from left to right repetively.</p>
+<p>The number of iteration is written in the box</p>
+<p>The test should return true for blocks that repeat more than 1 time and flase for blocks that repeat less than 1 time</p>
+
 <div class="test" id="a">1</div>
+<p></p>
 <div class="test" id="b">2</div>
+<p></p>
 <div class="test" id="b">3</div>
+<p></p>
 
 <div id="log"></div>
 

@@ -15,6 +15,10 @@ limitations under the License.
 -->
 
 <!DOCTYPE html>
+<title>Test repetition with proper assert function</title>
+<link rel="author" title="Sandy Phan"m href="mailto:sandyphan@google.com")>
+<meta name="flags" content="dom">
+
 <style>
 
 .test {
@@ -29,9 +33,18 @@ limitations under the License.
 
 </style>
 
-<div class="test" id="a">2</div>
-<div class="test" id="b">5</div>
-<div class="test" id="b">4</div>
+<p>This is another repetition test with greater repetition times,longer duration and more time intervals</p>
+<p>This test should have 3 blocks of element moving from left to right repetively.</p>
+<p>The number of iteration is written in the box</p>
+<p>The test should return true for blocks that repeat more than 1 time and flase for blocks that repeat less than 1 time</p>
+
+
+<div class="test" id="a">1.4</div>
+<p></p>
+<div class="test" id="b">2.7</div>
+<p></p>
+<div class="test" id="b">4.3</div>
+<p></p>
 
 <div id="log"></div>
 
@@ -56,7 +69,7 @@ var props = [];
 for (var i = 0; i < elems.length; i++) {
   var element = elems[i];
   props[i] = getComputedStyle(element, null);
-  anim[i] = new Animation(element, {left: ["0px", "200px"]}, 2, new ParGroup([], {iterationCount: element.textContent}));
+  anim[i] = new Animation(element, {left: ["0px", "200px"]}, 1, new ParGroup([], {iterationCount: element.textContent}));
 }
 
 /*
@@ -80,6 +93,8 @@ var assert_repeat = function(elem, distance, animTime, intervalNum, iterCount, m
   var timeOutDur = (animTime * 1000) * iterCount + 5;
   var repeatCount = 0;
   var flag = false;
+  
+  console.log(iterCount);
   
   if (timeOutDur > 5000) {
     setup({timeout: 100000});
@@ -122,8 +137,10 @@ var assert_repeat = function(elem, distance, animTime, intervalNum, iterCount, m
   setTimeout(function() {
     myTest.step(function() {
       if (iterCount <= 1) {
+        console.log(repeated);
         assert_false(repeated, "assert that the element is not repeated");
       } else {
+        console.log(repeated);
         assert_true(repeated, "assert that the element is repeated");
       }
     });
@@ -133,9 +150,9 @@ var assert_repeat = function(elem, distance, animTime, intervalNum, iterCount, m
 
 
 test(function() {
-  assert_repeat(elems[0], 200, anim[0].duration, 5, elems[0].textContent, "Check that block 1 is not repeated");
-  assert_repeat(elems[1], 200, anim[1].duration, 5, elems[1].textContent, "Check that block 2 is repeated");
-  assert_repeat(elems[2], 200, anim[2].duration, 5, elems[2].textContent, "Check that block 3 is repeated");
+  assert_repeat(elems[0], 200, anim[0].duration, 10, elems[0].textContent, "Check that block 1 is repeated at a decimal point of time");
+  assert_repeat(elems[1], 200, anim[1].duration, 10, elems[1].textContent, "Check that block 2 is repeated at a decimal point of time");
+  assert_repeat(elems[2], 200, anim[2].duration, 10, elems[2].textContent, "Check that block 3 is repeated at a decimal point of time");
 }, "Test that object is repeated");
 
 </script>
