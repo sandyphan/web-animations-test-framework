@@ -51,6 +51,7 @@ Written by Steph McArthur
 <script src='../testharness/testharnessreport.js'></script>
 <script src='../extra-asserts.js'></script>
 <link rel='stylesheet' href='../testharness/testharness.css'>
+<link rel='stylesheet' type="text/css" href="../animation-test-style.css">
 
 <script>
 setup({ timeout: 20000 });
@@ -88,6 +89,7 @@ setTimeout(function() {
 setTimeout(function() {
 	compareSnapshot(1);
 	sgroup.play();
+	setLog(anims[anims.length-1]);
 }, 5000);
 
 var pauseCheck = [async_test("Checking the animation has doesn't change whilst paused 1st time"),
