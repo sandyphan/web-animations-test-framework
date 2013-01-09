@@ -29,9 +29,9 @@ limitations under the License.
 
 </style>
 
-<!-- <div class="test" id="a">1</div> -->
+<div class="test" id="a">1</div>
 <div class="test" id="b">2</div>
-<!-- <div class="test" id="b">3</div> -->
+<div class="test" id="b">3</div>
 
 <div id="log"></div>
 
@@ -56,72 +56,72 @@ var props = [];
 for (var i = 0; i < elems.length; i++) {
   var element = elems[i];
   props[i] = getComputedStyle(element, null);
-  anim[i] = new Animation(element, {left: ["0px", "200px"]}, 1.0, new ParGroup([], {iterationCount: element.textContent}));
+  anim[i] = new Animation(element, {left: ["0px", "200px"]}, 1, new ParGroup([], {iterationCount: element.textContent}));
 }
 
 /*
  * All test scripts starts here
  * 
  * Logic of the test scripts:
- *      firstly, collect all necessary data for different time
- *      intervals and store it in an array
- *      then runs the rest of the iterations and compare
- *      the results to the array of data we have to approximation
- *      if all data are approximately correct (with epsilon of around 3)
+ *      calculate the percentage of the animation time compare
+ *      to the animation duration for one iteration
+ *      calculate the percentage of movement compare to 
+ *      the total movement required
+ *      then compare both percentage if they are approximately equal
  *      the animation will then pass the test
  */
 
 // declare variables
-results = [];
-var time = anim[0].duration; // at this point, duration is 1000 miliseconds
-var intervalCount = 5; // wants to assert at 5 different points in 1000 miliseconds
-var intervalTime = time / 5; // each interval time should be 200 miliseconds long
-var timeDiff = intervalTime; // time should be in the unit of seconds
-var runNum = 0;
+var timePercent = 0;
+var distPercent = 0;
 
-// collects the data for the very first iteration
-var firstIter = function() {
-  var collectData = setInterval(function() {
-    for (var i = 0; i < elems.length; i++) {
-      results[runNum] = parseInt(props[i].left);
-    }
-    runNum++;
+setup({timeout: 10000});
 
-  }, 200);
+var repeated = [false, false, false];
 
-  setTimeout(function() {
-    clearInterval(collectData);
-  }, 1005);
-}
-
-// var repeated = false;
-
-var testIter = function() { 
-  var j = 0;
-  setTimeout(function() {
-    var checkRepeat = setInterval(function() {  
-      for (var i = 0; i < elems.length; i++) {
-        console.log("Actual: " + parseInt(props[i].left) + " : " + document.animationTimeline.animationTime);
-        console.log("Expected: " + results[j] + " : " + document.animationTimeline.animationTime);
-        assert_approx_equals(parseInt(props[i].left), results[j], 3, "Check that results are approximately equal");
-        j++;
-      }
-    }, 200);
+var test_repeat = function(n, distance, animTime, iterCount) {
+  var timeOutDur = (animTime * 1000) * iterCount + 5;
+  console.log(animTime);
+  var intervalTime = (animTime * 1000) / 5;
+  var checkPercent = setInterval(function() {
+    getPercentRepeat(n, distance, animTime, iterCount);
+  }, intervalTime);
   
-    setTimeout(function() {
-      clearInterval(checkRepeat);
-    }, 1005);
-  }, 1000); 
+  setTimeout(function() {
+    clearInterval(checkPercent);
+  }, timeOutDur);
 }
 
+var getPercentRepeat = function(n, distance, animTime, iterCount) {
+  var p = getComputedStyle(elems[n], null);
+  var currTime = document.animationTimeline.animationTime;
+  while (currTime > animTime + 0.05) {
+    currTime = currTime - animTime;
+  }
+  
+  timePercent = Math.round((currTime / animTime) * 1000)/1000;
+  distPercent = Math.round((parseInt(p.left) / distance) * 1000)/1000;
+  
+  assert_approx_equals(timePercent, distPercent, 0.3, "Check that the time percentage is equal to the distance percentage");
+  if (iterCount > 1) {
+    repeated[n] = true;
+  }
+}
 
-var test_repeat = async_test("Verify that all distances are equal at different time intervals");
+test_repeat(0, 200, anim[0].duration, 1);
+test_repeat(1, 200, anim[1].duration, 2);
+test_repeat(2, 200, anim[2].duration, 3);
+
+var testRep = async_test("Test the blocks are repeated");
+
 setTimeout(function() {
-  test_repeat.step(function() {
-    firstIter();
-    testIter();
+  testRep.step(function() {
+    assert_false(repeated[0], "Block 1 is not repeated");
+    assert_true(repeated[1], "Block 2 is repeated twice");
+    assert_true(repeated[2], "Block 3 is repeated 3 times");
   });
-  test_repeat.done();
-}, 0);
+  testRep.done();
+}, 3005);
+
 
 </script>
