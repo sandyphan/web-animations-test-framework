@@ -88,6 +88,13 @@ function assert_location(myAnim, target, message) {
   assert_approx_equals(endLocal, endTarget, calculateEpsilon(myAnim), message);
 }
 
+function setLog(bottomAnim) {
+  var bottomObject = bottomAnim.targetElement;
+  var bottomComp = bottomObject.currentStyle || getComputedStyle(bottomObject, null);
+  var bottomPoint = (parseInt(bottomComp.top) + 300) +"px";
+  document.getElementById("log").style.top = bottomPoint;
+}
+
 //This function calculates the required margin of error for the approx_equals
 //assert. It depends on the speed of the moving object.
 function calculateEpsilon(givenAnim) {
@@ -96,4 +103,66 @@ function calculateEpsilon(givenAnim) {
   var time = givenAnim.duration;
   var epsilon = Math.max(1, 2 * (endLocal - startLocal)/(100*time*time));
   return epsilon;
+}
+
+// pass in the element, the distance it requires to move,
+// the animation time for 1 repetition, the number of intervals
+// you want the data to be retrieved and the iteration count
+// the test should return true if the element passed in is repeated more than 1 time
+// and return false if the element is repeated less than or equal to 1 time
+var assert_repeat = function(elem, distance, animTime, intervalNum, iterCount, message) {
+  var timepercent = 0;
+  var disPercent = 0;
+  var repeated = false;
+  var myTest = async_test(message);
+  var timeOutDur = (animTime * 1000) * iterCount + 5;
+  var repeatCount = 0;
+  var flag = false;
+  
+  if (timeOutDur > 5000) {
+    setup({timeout: 100000});
+  }
+
+  var intervalTime = ((animTime * 1000) / intervalNum) - 2;
+  var checkPercent = setInterval(function() {
+    getPercentRepeat(elem, distance, animTime, iterCount);
+  }, intervalTime);
+  
+  setTimeout(function() {
+    clearInterval(checkPercent);
+  }, timeOutDur);
+  
+  var getPercentRepeat = function(elem, distance, animTime, iterCount) {
+    var p = getComputedStyle(elem, null);
+    var currTime = document.animationTimeline.animationTime;
+    while (currTime > animTime + 0.05) {
+      currTime = currTime - animTime;
+    }
+  
+    timePercent = Math.round((currTime / animTime) * 1000)/1000;
+    distPercent = Math.round((parseInt(p.left) / distance) * 1000)/1000;
+    assert_approx_equals(timePercent, distPercent, 0.3, "Check that the time percentage is equal to the distance percentage");
+    
+    var totalIntervalNum = intervalNum * iterCount;
+    flag = true;
+    repeatCount++;
+    if (repeatCount === totalIntervalNum) {
+      if (iterCount <= 1) {
+        repeated = false;
+      } else {
+        repeated = true;
+      }
+    }
+  }
+  
+  setTimeout(function() {
+    myTest.step(function() {
+      if (iterCount <= 1) {
+        assert_false(repeated, "assert that the element is not repeated");
+      } else {
+        assert_true(repeated, "assert that the element is repeated");
+      }
+    });
+    myTest.done();
+  }, timeOutDur);
 }

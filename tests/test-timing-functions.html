@@ -32,6 +32,23 @@ This will check if the timing functions create the desired acceleration over the
 body { margin: 0px; }
 </style>
 
+<<<<<<< HEAD
+=======
+<head>
+  <title>Test Timing Functions</title>
+  <link rel="author" title="Steph McArthur", href="mailto:stephm@google.com">
+  <link rel="help" href="https://dvcs.w3.org/hg/FXTF/raw-file/tip/web-anim/index.html#the-timingfunction-interface">
+  <meta name="flags" content="dom">
+  <meta name="assert" content="Verify the objects move at the correct speed(s)"
+</head>
+
+<body>
+  <p>*insert heading here*</p>
+</body>
+
+<div id=expectation> </div>
+
+>>>>>>> 9732928ce1ae212efe59cdba3270dd4bae5d63dc
 <div> 
   <div class="anim test">ease-in</div>
   <div class="anim test">ease-out</div>
@@ -44,12 +61,21 @@ body { margin: 0px; }
 <script src='../testharness/testharnessreport.js'></script>
 <script src='../extra-asserts.js'></script>
 <link rel='stylesheet' href='../testharness/testharness.css'>
+<<<<<<< HEAD
+=======
+<link rel='stylesheet' type="text/css" href="../animation-test-style.css">
+>>>>>>> 9732928ce1ae212efe59cdba3270dd4bae5d63dc
 
 <script>
 var elems = document.querySelectorAll(".test");
+var anims = [];
 for (var i = 0; i < elems.length; i++) {
   var element = elems[i];
+<<<<<<< HEAD
   new Animation(element, {left: "200px"}, {duration: 2, timingFunction: element.textContent});
+=======
+  anims[i] = new Animation(element, {left: "200px"}, {startDelay: 1, duration: 2, timingFunction: element.textContent});
+>>>>>>> 9732928ce1ae212efe59cdba3270dd4bae5d63dc
 }
 
 var endTest = async_test("Testing final locations");
@@ -62,6 +88,7 @@ setTimeout(function (){
     }
   });
   endTest.done();
+  setLog(anims[anims.length-1])
 }, 3500);
 
 var stepCount = async_test("Checking the animation has the right number of steps");
@@ -95,30 +122,6 @@ setTimeout(function(){
   });
   stepCount.done();
 }, 3500);
-
-
-//====================================\\
-// 13thParallel.org Beziér Curve Code \\
-//   by Dan Pupius (www.pupius.net)   \\
-//====================================\\
-
-coord = function (x,y) {
-  if(!x) var x=0;
-  if(!y) var y=0;
-  return {x: x, y: y};
-}
-
-function B1(t) { return t*t*t }
-function B2(t) { return 3*t*t*(1-t) }
-function B3(t) { return 3*t*(1-t)*(1-t) }
-function B4(t) { return (1-t)*(1-t)*(1-t) }
-
-function getBezier(percent,C1,C2,C3,C4) {
-  var pos = new coord();
-  pos.x = C1.x*B1(percent) + C2.x*B2(percent) + C3.x*B3(percent) + C4.x*B4(percent);
-  pos.y = C1.y*B1(percent) + C2.y*B2(percent) + C3.y*B3(percent) + C4.y*B4(percent);
-  return pos;
-}
 
 
 </script>

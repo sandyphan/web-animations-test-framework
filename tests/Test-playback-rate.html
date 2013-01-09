@@ -23,12 +23,10 @@ Written By Sarah Heimlich
   height: 50px;
   width: 50px;
   left: 100px;  
-  
 }
 
 .bottom {
   background-color: red;
-
 }
 
 .top {
@@ -39,6 +37,17 @@ Written By Sarah Heimlich
 
 </style>
 
+<head>
+  <title>Test Speed</title>
+  <link rel="author" title="Sarah Heimlich", href="mailto:sarahheimlich@google.com">
+  <link rel="help" href="https://dvcs.w3.org/hg/FXTF/raw-file/tip/web-anim/index.html#speed-control">
+  <meta name="flags" content="dom">
+  <meta name="assert" content="Verify the objects move at the same speed."
+</head>
+
+<body>
+  <p>There should be a green rectangle moving across the screen, with no red.</p>
+</body>
 
 <div class="anim bottom"></div>
 <div class="anim bottom"></div>
@@ -50,11 +59,11 @@ Written By Sarah Heimlich
 <div class="anim top"></div>
 <div id="log"></div>
 
-
 <script src='../testharness/testharness.js'></script>
 <script src='../testharness/testharnessreport.js'></script>
 <script src="../../web-animations-js/web-animation.js"></script>
-<link rel='stylesheet' href='../testharness.css'>
+<link rel='stylesheet' href='../testharness/testharness.css'>
+<link rel='stylesheet' type="text/css" href="../animation-test-style.css">
 <script>
 
 testLeft = async_test("Verify the elements move left in parallel");
@@ -73,9 +82,9 @@ var bottomObjects = document.querySelectorAll(".bottom");
 for (var i = 0; i < bottomObjects.length; i++) {
   compBottom[i] = bottomObjects[i].currentStyle || getComputedStyle(bottomObjects[i], null);
 }
-
+var topAnims = [];
 for (var i = 0; i < topObjects.length; i++) {
-  new Animation(topObjects[i], {left: ["100px", "600px"]}, {duration: 2*(i + 1), playbackRate: i + 1 });
+  topAnims[i] = new Animation(topObjects[i], {left: ["100px", "600px"]}, {duration: 2*(i + 1), playbackRate: i + 1 });
 }
 for (var i = 0; i < bottomObjects.length; i++) {
   new Animation(bottomObjects[i], {left: ["100px", "600px"]}, {duration: 2});
@@ -106,11 +115,10 @@ function endIter() {
     for (var i = 0; i < compBottom.length; i++) {
       assert_approx_equals(parseInt(compBottom[i].left), 600, 4, "The bottom element did not end properly");   
     } 
-
-
   });
   testLeft.done();
   clearInterval(testing);
+  setLog(topAnims[topsAnims.length-1]);
 }
 
 function leftRightStep() {

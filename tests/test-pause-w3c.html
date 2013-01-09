@@ -27,6 +27,18 @@ Written by Steph McArthur
 }
 </style>
 
+<head>
+  <title>Test Pause</title>
+  <link rel="author" title="Steph McArthur", href="mailto:stephm@google.com">
+  <link rel="help" href="https://dvcs.w3.org/hg/FXTF/raw-file/tip/web-anim/index.html#pausing-a-timed-item">
+  <meta name="flags" content="dom">
+  <meta name="assert" content="Verify the boxes pause and play correctly."
+</head>
+
+<body>
+  <p>All three boxes should should pause and play as directed.</p>
+</body>
+
 <div>
 	<div class="anim test"></div>
 	<div class="anim test"></div>
@@ -39,6 +51,7 @@ Written by Steph McArthur
 <script src='../testharness/testharnessreport.js'></script>
 <script src='../extra-asserts.js'></script>
 <link rel='stylesheet' href='../testharness/testharness.css'>
+<link rel='stylesheet' type="text/css" href="../animation-test-style.css">
 
 <script>
 setup({ timeout: 20000 });
@@ -76,6 +89,7 @@ setTimeout(function() {
 setTimeout(function() {
 	compareSnapshot(1);
 	sgroup.play();
+	setLog(anims[anims.length-1]);
 }, 5000);
 
 var pauseCheck = [async_test("Checking the animation has doesn't change whilst paused 1st time"),

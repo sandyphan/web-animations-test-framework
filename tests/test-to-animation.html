@@ -54,6 +54,18 @@ limitations under the License.
 
 </style>
 
+<head>
+  <title>Test Animation Creation</title>
+  <link rel="author" title="Shane Stephens, Sarah Heimlich", href="mailto:shans@google.com, sarahheimlich@google.com">
+  <link rel="help" href="https://dvcs.w3.org/hg/FXTF/raw-file/tip/web-anim/index.html#animations">
+  <meta name="flags" content="dom">
+  <meta name="assert" content="Verify the objects move to the correct locations"
+</head>
+
+<body>
+  <p>There should be no red showing at the end.</p>
+</body>
+
 <div class="expectation" style="top: 0px; left: 100px;"></div>
 <div class="expectation" style="top: 100px; left: 200px;"></div>
 <div class="expectation" style="top: 200px; left: 300px;"></div>
@@ -71,7 +83,8 @@ limitations under the License.
 <script src="../testharness/testharness.js"></script>
 <script src='../testharness/testharnessreport.js'></script>
 <script src='../extra-asserts.js'></script>
-<link rel='stylesheet' href='../testharness/testharness.css'>
+<link rel='stylesheet' type="text/css" href="../animation-test-style.css">
+<link rel='stylesheet' type="text/css" href="../animation-test-style.css">
 <script>
 
 var divs = document.querySelectorAll(".anim");
@@ -90,7 +103,8 @@ setTimeout(function() {
 			assert_end_location(anim[i], "Failed on elemet " +i);
 			tests[i].done();
 		})
-	}
+	};
+	setLog(anim[anim.length-1]);
 }, 3000)
 
 </script>

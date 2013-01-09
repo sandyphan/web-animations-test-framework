@@ -37,6 +37,18 @@ Written by Steph McArthur
 body { margin: 0px; }
 </style>
 
+<head>
+  <title>Test Stepping</title>
+  <link rel="author" title="Steph McArthur", href="mailto:stephm@google.com">
+  <link rel="help" href="https://dvcs.w3.org/hg/FXTF/raw-file/tip/web-anim/index.html#timing-in-discrete-steps">
+  <meta name="flags" content="dom">
+  <meta name="assert" content="Verify the objects move in the correct number of discreet steps"
+</head>
+
+<body>
+  <p>At the end, no red should be visible.</p>
+</body>
+
 <div id=expectation> </div>
 
 <div>
@@ -55,13 +67,14 @@ body { margin: 0px; }
 <script src='../testharness/testharnessreport.js'></script>
 <script src='../extra-asserts.js'></script>
 <link rel='stylesheet' href='../testharness/testharness.css'>
-
+<link rel='stylesheet' type="text/css" href="../animation-test-style.css">
 
 <script>
 var elems = document.querySelectorAll(".test");
+var anims = [];
 for (var i = 0; i < elems.length; i++) {
   var element = elems[i];
-  new Animation(element, {left: "200px"}, {startDelay: 1, duration: 2, timingFunction: element.textContent});
+  anims[i] = new Animation(element, {left: "200px"}, {startDelay: 1, duration: 2, timingFunction: element.textContent});
 }
 
 var endTest = async_test("Testing final locations");
@@ -74,6 +87,7 @@ setTimeout(function (){
     }
   });
   endTest.done();
+  setLog(anims[anims.length-1]);
 }, 3500);
 
 var stepCount = async_test("Checking the animation has the right number of steps");
