@@ -39,11 +39,11 @@ Written by Steph McArthur
   <p>All three boxes should should pause and play as directed.</p>
 </body>
 
-<div>
-	<div class="anim test"></div>
-	<div class="anim test"></div>
-	<div class="anim test"></div>
-	<div class="anim test"></div>
+<div id="test">
+	<div class="anim"></div>
+	<div class="anim"></div>
+	<div class="anim"></div>
+	<div class="anim"></div>
 </div>
 
 <script src="../../web-animations-js/web-animation.js"></script>
@@ -56,7 +56,7 @@ Written by Steph McArthur
 <script>
 setup({ timeout: 20000 });
 
-var elems = document.querySelectorAll(".test");
+var elems = document.querySelectorAll(".anim");
 var anims = [];
 for (var i = 0; i < elems.length; i++) {
   var element = elems[i];
@@ -89,7 +89,7 @@ setTimeout(function() {
 setTimeout(function() {
 	compareSnapshot(1);
 	sgroup.play();
-	setLog(anims[anims.length-1]);
+	//setLog();
 }, 5000);
 
 var pauseCheck = [async_test("Checking the animation has doesn't change whilst paused 1st time"),

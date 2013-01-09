@@ -53,12 +53,11 @@ body { margin: 0px; }
 
 <div id=expectation> </div>
 
-<div> 
-  <div class="anim test">ease-in</div>
-  <div class="anim test">ease-out</div>
-  <div class="anim test">cubic-bezier(0, 0.2, 0.8, 1)</div>
-  <div class="anim test">cubic-bezier(0.5, -1.5, 0.5, 2.5)</div>
-
+<div id="test"> 
+  <div class="anim">ease-in</div>
+  <div class="anim">ease-out</div>
+  <div class="anim">cubic-bezier(0, 0.2, 0.8, 1)</div>
+  <div class="anim">cubic-bezier(0.5, -1.5, 0.5, 2.5)</div>
 </div>
 
 <script src="../../web-animations-js/web-animation.js"></script>
@@ -86,7 +85,7 @@ setTimeout(function (){
     }
   });
   endTest.done();
-  setLog(anims[anims.length-1])
+  setLog();
 }, 3500);
 
 var stepCount = async_test("Checking the animation has the right number of steps");

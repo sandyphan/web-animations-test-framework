@@ -39,8 +39,8 @@ Written by Steph McArthur
   background-color: green;
 }
 
-#container {
-  position: relative;
+#test {
+  position: absolute;
   left: 0px;
   top: 50px;
   width: 400px;
@@ -61,7 +61,7 @@ Written by Steph McArthur
 <body>
   <p>All three boxes should end up the same color as the outline.</p>
 </body>
-<div id="container">
+<div id="test">
   <div id="a" class="anim"></div>
   <div id="b" class="anim"></div>
   <div id="c" class="anim"></div>
@@ -91,7 +91,7 @@ setTimeout(function(){
     }
   });
   colourCheck.done();
-  setLog(bottomAnim);
+  setLog();
 }, 2500);
 
 </script>

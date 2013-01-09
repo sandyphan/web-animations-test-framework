@@ -51,15 +51,15 @@ body { margin: 0px; }
 
 <div id=expectation> </div>
 
-<div>
-  <div class="anim test">steps(3, start)</div>
-  <div class="anim test">steps(20, middle)</div>
-  <div class="anim test">steps(7, end)</div>
-  <div class="anim test">steps(70, end)</div>
-  <div class="anim test">steps(47, start)</div>
-  <div class="anim test">steps(4, start)</div>
-  <div class="anim test">steps(63, middle)</div>
-  <div class="anim test">steps(1, start)</div>
+<div id="test">
+  <div class="anim">steps(3, start)</div>
+  <div class="anim">steps(20, middle)</div>
+  <div class="anim">steps(7, end)</div>
+  <div class="anim">steps(70, end)</div>
+  <div class="anim">steps(47, start)</div>
+  <div class="anim">steps(4, start)</div>
+  <div class="anim">steps(63, middle)</div>
+  <div class="anim">steps(1, start)</div>
 </div>
 
 <script src="../../web-animations-js/web-animation.js"></script>
@@ -70,7 +70,7 @@ body { margin: 0px; }
 <link rel='stylesheet' type="text/css" href="../animation-test-style.css">
 
 <script>
-var elems = document.querySelectorAll(".test");
+var elems = document.querySelectorAll(".anim");
 var anims = [];
 for (var i = 0; i < elems.length; i++) {
   var element = elems[i];
@@ -87,7 +87,7 @@ setTimeout(function (){
     }
   });
   endTest.done();
-  setLog(anims[anims.length-1]);
+  setLog();
 }, 3500);
 
 var stepCount = async_test("Checking the animation has the right number of steps");

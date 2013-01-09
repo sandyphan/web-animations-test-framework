@@ -17,7 +17,7 @@ limitations under the License.
 <!DOCTYPE html>
 <style>
 
-.test {
+.anim {
   width: 100px;
   height: 25px;
   background-color: #FAA;
@@ -29,9 +29,11 @@ limitations under the License.
 
 </style>
 
-<div class="test" id="a">1</div>
-<div class="test" id="b">2</div>
-<div class="test" id="b">3</div>
+<div id="test">
+  <div class="anim" id="a">1</div>
+  <div class="anim" id="b">2</div>
+  <div class="anim" id="b">3</div>
+</div>
 
 <div id="log"></div>
 
@@ -48,7 +50,7 @@ limitations under the License.
  * All animation script starts here
  */
 
-var elems = document.querySelectorAll(".test");
+var elems = document.querySelectorAll(".anim");
 var anim = [];
 var props = [];
 
@@ -119,6 +121,7 @@ setTimeout(function() {
     assert_true(repeated[2], "Block 3 is repeated 3 times");
   });
   testRep.done();
+  setLog();
 }, 3005);
 
 

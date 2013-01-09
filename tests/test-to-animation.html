@@ -71,7 +71,7 @@ limitations under the License.
 <div class="expectation" style="top: 200px; left: 300px;"></div>
 <div class="expectation" style="top: 300px; left: 400px;"></div>
 
-<div>
+<div id="test">
 	<div id="a" class="anim"></div>
 	<div id="b" class="anim"></div>
 	<div id="c" class="anim"></div>
@@ -104,7 +104,8 @@ setTimeout(function() {
 			tests[i].done();
 		})
 	};
-	setLog(anim[anim.length-1]);
+	console.log(document.getElementById("test").querySelectorAll(".anim"));
+	setLog();
 }, 3000)
 
 </script>
