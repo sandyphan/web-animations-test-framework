@@ -29,24 +29,14 @@ This will check if the timing functions create the desired acceleration over the
   border-bottom: solid white 1px;
 }
 
-#expectation {
-  position: absolute;
-  left: 200px;
-  width: 200px;
-  height: 200px;
-  background: red;
-}
 body { margin: 0px; }
 </style>
-
-<div id=expectation> </div>
 
 <div> 
   <div class="anim test">ease-in</div>
   <div class="anim test">ease-out</div>
   <div class="anim test">cubic-bezier(0, 0.2, 0.8, 1)</div>
   <div class="anim test">cubic-bezier(0.5, -1.5, 0.5, 2.5)</div>
-
 </div>
 
 <script src="../../web-animations-js/web-animation.js"></script>
@@ -55,12 +45,11 @@ body { margin: 0px; }
 <script src='../extra-asserts.js'></script>
 <link rel='stylesheet' href='../testharness/testharness.css'>
 
-
 <script>
 var elems = document.querySelectorAll(".test");
 for (var i = 0; i < elems.length; i++) {
   var element = elems[i];
-  new Animation(element, {left: "200px"}, {startDelay: 1, duration: 2, timingFunction: element.textContent});
+  new Animation(element, {left: "200px"}, {duration: 2, timingFunction: element.textContent});
 }
 
 var endTest = async_test("Testing final locations");
