@@ -1,0 +1,150 @@
+<!-- 
+Copyright 2013 Google Inc. All Rights Reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+
+<!DOCTYPE html>
+<title>Test repetition with proper assert function</title>
+<link rel="author" title="Sandy Phan"m href="mailto:sandyphan@google.com")>
+<meta name="flags" content="dom">
+
+<style>
+  #main{
+    width: 700px;
+    height: 700px;
+    left: 0px;
+    top: 0px;
+    border: 1px solid black;
+    position: relative;
+  }
+  .test {
+    width: 100px;
+    height: 50px;
+    top: 0px;
+    left: 0px;
+    background-color: #AFA;
+    position: absolute;
+  }
+  .expected {
+    background-color: red;
+    top: 0px;
+    width: 100px;
+    height: 50px;
+    position: absolute;
+    float: left;
+    opacity: 0;
+  }
+</style>
+
+<p>A test that take snap shots of the animation and generate another animation with boxes that flashes up</p>
+
+<div id="main">
+  <div id="a" class="test"></div>
+  <div id="b" class="test"></div>
+  <div id="c" class="test"></div>
+</div>
+
+
+
+
+<script src="../../web-animations-js/web-animation.js"></script>
+<script src="../testharness/testharness.js"></script>
+<script src='../testharness/testharnessreport.js'></script>
+<script src='../extra-asserts.js'></script>
+<link rel='stylesheet' href='../testharness/testharness.css'>
+
+<script>
+
+/*
+ * all animation scripts start here
+ *
+ */
+
+var eleLength = document.querySelectorAll('.test').length;
+var elems = [];
+var props = [];
+var anims = [];
+var c = 'a';
+
+for (var i = 0; i < eleLength; i++) {
+  elems[i] = document.getElementById(c);
+  props[i] = getComputedStyle(elems[i], null);
+  anims[i] = new Animation(elems[i], {left: '500px'}, 1.0);
+  c = String.fromCharCode(c.charCodeAt() + 1);
+}
+
+//var expectElems = document.querySelectorAll(".expected");
+//var a = expectElems.animate({'opacity': 1}, 2);
+
+/*
+ * all testing scripts start here
+ *
+ 
+ 
+var intervalCount = 5;
+var approxAnimTime = [];
+var approxDist = [];
+var c = 'a';
+
+var test_automated = function(ele, animTime, distance) {
+  var intervalPeriod = (animTime * 1000) / intervalCount;
+  var p = getComputedStyle(ele, null);
+  var distDiffTotal = distance - parseInt(p.left);
+  var n = 0;
+  
+  for (var i = 0; i < intervalCount; i++) {
+    approxAnimTime[i] = (intervalPeriod * (i + 1)) / 1000;
+    approxAnimTime[i] = Math.round(approxAnimTime[i] * 1000) / 1000;
+    intervalDiff = distDiffTotal / intervalCount;
+    approxDist[i] = (distDiffTotal / intervalCount) * (i + 1);
+    create_flash_box(parseInt(p.left) + approxDist[i]);    
+  }
+  
+  var verifyAnim = setInterval(function() {
+    checkFlash();
+  }, (intervalPeriod - 2));
+  
+  var checkFlash = function() {
+    var currTime = document.animationTimeline.animationTime;
+    var currTimePercent = currTime / (animTime);
+    currTimePercent = Math.round(currTimePercent * 1000) / 1000;
+    var expectedElems = document.querySelectorAll('.expected');
+    
+    assert_approx_equals(currTimePercent, approxAnimTime[n], 0.05, "Check that all the percent of time collected is as expected");
+    
+    expectedElems[n].style.opacity = 1;
+    console.log(expectedElems[n].style.left);
+
+    setTimeout(function() {
+      expectedElems[n].style.opacity = 0;
+      n++;
+    }, 100); 
+  }
+  
+  setTimeout(function() {
+    clearInterval(verifyAnim);
+  }, ((animTime * 1000) + 5));
+}
+
+var create_flash_box = function(leftVal) {
+  var _newDiv = document.createElement('div');
+  _newDiv.className = 'expected';
+  _newDiv.style.left = leftVal + 'px';
+  document.getElementById('main').appendChild(_newDiv);
+}
+
+test_automated(elems[0], anims[0].duration, 500);*/
+</script>
+
+<!-- <div id="log"></div> -->
