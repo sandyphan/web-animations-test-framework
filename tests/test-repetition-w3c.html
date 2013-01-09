@@ -81,8 +81,7 @@ var repeated = [false, false, false];
 
 var test_repeat = function(n, distance, animTime, iterCount) {
   var timeOutDur = (animTime * 1000) * iterCount + 5;
-  console.log(animTime);
-  var intervalTime = (animTime * 1000) / 5;
+  var intervalTime = ((animTime * 1000) / 5) - 2;
   var checkPercent = setInterval(function() {
     getPercentRepeat(n, distance, animTime, iterCount);
   }, intervalTime);
@@ -101,7 +100,6 @@ var getPercentRepeat = function(n, distance, animTime, iterCount) {
   
   timePercent = Math.round((currTime / animTime) * 1000)/1000;
   distPercent = Math.round((parseInt(p.left) / distance) * 1000)/1000;
-  
   assert_approx_equals(timePercent, distPercent, 0.3, "Check that the time percentage is equal to the distance percentage");
   if (iterCount > 1) {
     repeated[n] = true;
