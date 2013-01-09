@@ -89,10 +89,24 @@ function assert_location(myAnim, target, message) {
 }
 
 function setLog(bottomAnim) {
-  var bottomObject = bottomAnim.targetElement;
-  var bottomComp = bottomObject.currentStyle || getComputedStyle(bottomObject, null);
-  var bottomPoint = (parseInt(bottomComp.top) + 300) +"px";
-  document.getElementById("log").style.top = bottomPoint;
+  var allElements = document.getElementById("test").querySelectorAll(".anim");
+  //console.log(document.getElementById("test"));
+  var bottomElement = allElements[0].currentStyle || getComputedStyle(allElements[0], null);
+  var bottomPoint = parseInt(bottomElement.top) + parseInt(bottomElement.height);
+  var currentElement;
+  var currentPoint;
+  for (var i = 1; i < allElements.length; i++) {
+    console.log(allElements[i]);
+    currentElement = allElements[i].currentStyle || getComputedStyle(allElements[i], null)
+    currentPoint = parseInt(currentElement.top) + parseInt(currentElement.height);
+    console.log(currentPoint);
+
+    if(currentPoint > bottomPoint) {
+      bottomPoint = currentPoint;
+      bottomElement = currentElement;
+    }
+  }
+  document.getElementById("log").style.top = bottomPoint +100 +"px";
 }
 
 //This function calculates the required margin of error for the approx_equals

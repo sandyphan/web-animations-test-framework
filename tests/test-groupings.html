@@ -46,16 +46,16 @@ Written By Sarah Heimlich
   <meta name="flags" content="dom">
 </head>
 
-<body id="main">
+<body >
   <p>The test passes if there is no red.</p>
-  <div id="bottom" class="anim"></div>
-  <div id="top" class="anim"></div>
 </body>
 
+<div id="test">
+  <div id="bottom" class="anim"></div>
+  <div id="top" class="anim"></div>
+</div>
 
-<footer>
 <div id="log"></div>
-</footer>
 
 <script src="../../web-animations-js/web-animation.js"></script>
 <script src="../testharness/testharness.js"></script>
@@ -126,7 +126,7 @@ function endIter() {
   testLeft.done();
   testTop.done();
   clearInterval(testing);
-  setLog(topDown);
+  setLog();
 }
 
 function leftRightStep() {

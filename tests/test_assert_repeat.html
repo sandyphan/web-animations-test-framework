@@ -17,7 +17,7 @@ limitations under the License.
 <!DOCTYPE html>
 <style>
 
-.test {
+.anim {
   width: 100px;
   height: 25px;
   background-color: #FAA;
@@ -29,9 +29,11 @@ limitations under the License.
 
 </style>
 
-<div class="test" id="a">2</div>
-<div class="test" id="b">5</div>
-<div class="test" id="b">4</div>
+<div id="test">
+  <div class="anim" id="a">2</div>
+  <div class="anim" id="b">5</div>
+  <div class="anim" id="b">4</div>
+</div>
 
 <div id="log"></div>
 
@@ -48,7 +50,7 @@ limitations under the License.
  * All animation script starts here
  */
 
-var elems = document.querySelectorAll(".test");
+var elems = document.querySelectorAll(".anim");
 var anim = [];
 var props = [];
 
@@ -94,6 +96,7 @@ var assert_repeat = function(elem, distance, animTime, intervalNum, iterCount, m
   
   setTimeout(function() {
     clearInterval(checkPercent);
+    setLog();
   }, timeOutDur);
   
   var getPercentRepeat = function(elem, distance, animTime, iterCount) {

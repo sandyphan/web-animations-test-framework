@@ -49,14 +49,17 @@ Written By Sarah Heimlich
   <p>There should be a green rectangle moving across the screen, with no red.</p>
 </body>
 
-<div class="anim bottom"></div>
-<div class="anim bottom"></div>
-<div class="anim bottom"></div>
-<div class="anim bottom"></div>
-<div class="anim top"></div>
-<div class="anim top"></div>
-<div class="anim top"></div>
-<div class="anim top"></div>
+<div id="test">
+  <div class="anim bottom"></div>
+  <div class="anim bottom"></div>
+  <div class="anim bottom"></div>
+  <div class="anim bottom"></div>
+  <div class="anim top"></div>
+  <div class="anim top"></div>
+  <div class="anim top"></div>
+  <div class="anim top"></div>
+</div>
+
 <div id="log"></div>
 
 <script src='../testharness/testharness.js'></script>
@@ -118,7 +121,7 @@ function endIter() {
   });
   testLeft.done();
   clearInterval(testing);
-  setLog(topAnims[topsAnims.length-1]);
+  setLog();
 }
 
 function leftRightStep() {

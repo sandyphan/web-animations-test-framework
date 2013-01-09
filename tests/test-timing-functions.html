@@ -32,8 +32,6 @@ This will check if the timing functions create the desired acceleration over the
 body { margin: 0px; }
 </style>
 
-<<<<<<< HEAD
-=======
 <head>
   <title>Test Timing Functions</title>
   <link rel="author" title="Steph McArthur", href="mailto:stephm@google.com">
@@ -48,12 +46,11 @@ body { margin: 0px; }
 
 <div id=expectation> </div>
 
->>>>>>> 9732928ce1ae212efe59cdba3270dd4bae5d63dc
-<div> 
-  <div class="anim test">ease-in</div>
-  <div class="anim test">ease-out</div>
-  <div class="anim test">cubic-bezier(0, 0.2, 0.8, 1)</div>
-  <div class="anim test">cubic-bezier(0.5, -1.5, 0.5, 2.5)</div>
+<div id="test"> 
+  <div class="anim">ease-in</div>
+  <div class="anim">ease-out</div>
+  <div class="anim">cubic-bezier(0, 0.2, 0.8, 1)</div>
+  <div class="anim">cubic-bezier(0.5, -1.5, 0.5, 2.5)</div>
 </div>
 
 <script src="../../web-animations-js/web-animation.js"></script>
@@ -61,21 +58,14 @@ body { margin: 0px; }
 <script src='../testharness/testharnessreport.js'></script>
 <script src='../extra-asserts.js'></script>
 <link rel='stylesheet' href='../testharness/testharness.css'>
-<<<<<<< HEAD
-=======
 <link rel='stylesheet' type="text/css" href="../animation-test-style.css">
->>>>>>> 9732928ce1ae212efe59cdba3270dd4bae5d63dc
 
 <script>
 var elems = document.querySelectorAll(".test");
 var anims = [];
 for (var i = 0; i < elems.length; i++) {
   var element = elems[i];
-<<<<<<< HEAD
   new Animation(element, {left: "200px"}, {duration: 2, timingFunction: element.textContent});
-=======
-  anims[i] = new Animation(element, {left: "200px"}, {startDelay: 1, duration: 2, timingFunction: element.textContent});
->>>>>>> 9732928ce1ae212efe59cdba3270dd4bae5d63dc
 }
 
 var endTest = async_test("Testing final locations");
@@ -88,7 +78,7 @@ setTimeout(function (){
     }
   });
   endTest.done();
-  setLog(anims[anims.length-1])
+  setLog();
 }, 3500);
 
 var stepCount = async_test("Checking the animation has the right number of steps");
