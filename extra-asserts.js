@@ -88,6 +88,13 @@ function assert_location(myAnim, target, message) {
   assert_approx_equals(endLocal, endTarget, calculateEpsilon(myAnim), message);
 }
 
+function setLog(bottomAnim) {
+  var bottomObject = bottomAnim.targetElement;
+  var bottomComp = bottomObject.currentStyle || getComputedStyle(bottomObject, null);
+  var bottomPoint = (parseInt(bottomComp.top) + 300) +"px";
+  document.getElementById("log").style.top = bottomPoint;
+}
+
 //This function calculates the required margin of error for the approx_equals
 //assert. It depends on the speed of the moving object.
 function calculateEpsilon(givenAnim) {

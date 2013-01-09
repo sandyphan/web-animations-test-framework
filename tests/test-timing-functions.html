@@ -66,13 +66,14 @@ body { margin: 0px; }
 <script src='../testharness/testharnessreport.js'></script>
 <script src='../extra-asserts.js'></script>
 <link rel='stylesheet' href='../testharness/testharness.css'>
-
+<link rel='stylesheet' type="text/css" href="../animation-test-style.css">
 
 <script>
 var elems = document.querySelectorAll(".test");
+var anims = [];
 for (var i = 0; i < elems.length; i++) {
   var element = elems[i];
-  new Animation(element, {left: "200px"}, {startDelay: 1, duration: 2, timingFunction: element.textContent});
+  anims[i] = new Animation(element, {left: "200px"}, {startDelay: 1, duration: 2, timingFunction: element.textContent});
 }
 
 var endTest = async_test("Testing final locations");
@@ -85,6 +86,7 @@ setTimeout(function (){
     }
   });
   endTest.done();
+  setLog(anims[anims.length-1])
 }, 3500);
 
 var stepCount = async_test("Checking the animation has the right number of steps");

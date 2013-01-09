@@ -72,6 +72,7 @@ Written by Steph McArthur
 <script src='../testharness/testharnessreport.js'></script>
 <script src='../extra-asserts.js'></script>
 <link rel='stylesheet' href='../testharness/testharness.css'>
+<link rel='stylesheet' type="text/css" href="../animation-test-style.css">
 
 <script>
 var colourCheck = async_test("Checking it ends up as green", {
@@ -80,7 +81,7 @@ var colourCheck = async_test("Checking it ends up as green", {
 
 new Animation(document.querySelector("#a"), {"background-color": ["red", "green"]}, 2);
 new Animation(document.querySelector("#b"), {"background-color": "rgb(0, 128, 0)"}, 2);
-new Animation(document.querySelector("#c"), {"background-color": [{offset: 0.25, value: "rgb(255, 0, 0)"}, {offset: 0.75, value: "rgb(0, 0, 255)"}], operation: "add"}, 2);
+var bottomAnim = new Animation(document.querySelector("#c"), {"background-color": [{offset: 0.25, value: "rgb(255, 0, 0)"}, {offset: 0.75, value: "rgb(0, 0, 255)"}], operation: "add"}, 2);
 
 setTimeout(function(){
   colourCheck.step(function(){
@@ -90,6 +91,7 @@ setTimeout(function(){
     }
   });
   colourCheck.done();
+  setLog(bottomAnim);
 }, 2500);
 
 </script>

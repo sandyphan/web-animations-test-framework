@@ -41,25 +41,29 @@ Written By Sarah Heimlich
 
 </style>
 <head>
-  <title>Test metadata</title>
+  <title>Test Groupings</title>
   <link rel="author" title="Sarah Heimlich", href="mailto:sarahheimlich@google.com">
   <meta name="flags" content="dom">
 </head>
 
-<body>
+<body id="main">
   <p>The test passes if there is no red.</p>
+  <div id="bottom" class="anim"></div>
+  <div id="top" class="anim"></div>
 </body>
 
-<div id="bottom" class="anim"></div>
-<div id="top" class="anim"></div>
-<p>There should be a green square moving with no red.</p>
+
+<footer>
 <div id="log"></div>
+</footer>
 
 <script src="../../web-animations-js/web-animation.js"></script>
 <script src="../testharness/testharness.js"></script>
 <script src='../testharness/testharnessreport.js'></script>
 <script src='../extra-asserts.js'></script>
+
 <link rel='stylesheet' href='../testharness/testharness.css'>
+<link rel='stylesheet' type="text/css" href="../animation-test-style.css">
 <script>
 
 var leftDown = new SeqGroup([]);
@@ -79,7 +83,7 @@ testTop = async_test("Verify the elements move down in parallel", {
   });
 
 testMoveLeft = async_test("Verify the elements move left", {
-    assert: ["Testing Pargroup and SeqGroup"],
+    assert: ["Elements must move"],
   });
 
 testMoveDown = async_test("Verify the elements move down", {
@@ -98,7 +102,7 @@ var bottomLeft = new Animation(bottomObject, {left: ["100px", "500px"]}, {durati
 var topDown = new Animation(topObject, {top: ["100px", "500px"]}, {duration: 1}, down);
 var bottomDown = new Animation(bottomObject, {top: ["100px", "500px"]}, {duration: 1}, down);
 
-var testing = setInterval(leftRightStep, 10);
+var testing = setInterval(leftRightStep, 100);
 
 leftDown.play();
 
@@ -122,6 +126,7 @@ function endIter() {
   testLeft.done();
   testTop.done();
   clearInterval(testing);
+  setLog(topDown);
 }
 
 function leftRightStep() {
