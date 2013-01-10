@@ -101,19 +101,19 @@ function assert_properties(object, props, targets, message, epsilons){
   }
 }
 
-function setLog(bottomAnim) {
+//Run this function after all animations have finished running, 
+//to have the test log appear below the animation elements.
+//Make sure all your animations have class anim are inside a div
+//with id test.
+function setLog() {
   var allElements = document.getElementById("test").querySelectorAll(".anim");
-  //console.log(document.getElementById("test"));
   var bottomElement = allElements[0].currentStyle || getComputedStyle(allElements[0], null);
   var bottomPoint = parseInt(bottomElement.top) + parseInt(bottomElement.height);
   var currentElement;
   var currentPoint;
   for (var i = 1; i < allElements.length; i++) {
-    //console.log(allElements[i]);
     currentElement = allElements[i].currentStyle || getComputedStyle(allElements[i], null)
     currentPoint = parseInt(currentElement.top) + parseInt(currentElement.height);
-   // console.log(currentPoint);
-
     if(currentPoint > bottomPoint) {
       bottomPoint = currentPoint;
       bottomElement = currentElement;

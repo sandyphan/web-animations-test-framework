@@ -77,7 +77,7 @@ setTimeout(function (){
   });
   endTest.done();
   setLog();
-}, 3500);
+}, 2500);
 
 //with out re-implementing the polyfil we probably have to settle manually generating the x coords for
 //every 200ms for each animation :(
@@ -96,7 +96,7 @@ function checkLocations (){
  posCheck.step(function(){
     var eels = document.querySelectorAll(".anim");
     for(var i = 0; i < eels.length; i++){
-      assert_properties(eels[i], ["left"], [40], "Not moving at the right rate");
+      assert_properties(eels[i], ["top","left"], [100,40], "Not moving at the right rate");
     }
   });
 }
