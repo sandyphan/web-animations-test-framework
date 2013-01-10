@@ -1,0 +1,159 @@
+<!-- 
+Copyright 2013 Google Inc. All Rights Reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+
+<!DOCTYPE html>
+<title>Test repetition with proper assert function</title>
+<link rel="author" title="Sandy Phan"m href="mailto:sandyphan@google.com")>
+<meta name="flags" content="dom">
+
+<style>
+  .test {
+    width: 100px;
+    height: 50px;
+    top: 0px;
+    left: 0px;
+    background-color: #AFA;
+    position: relative;
+  }
+  .rows {
+    position: relative;
+  }
+  .expected {
+    background-color: red;
+    width: 100px;
+    height: 50px;
+    float: left;
+    opacity: 0;
+    position: absolute;
+    top: 0px;
+  }
+</style>
+
+<p>A test that take snap shots of the animation and generate another animation with boxes that flashes up</p>
+
+<div class="rows">
+  <div id="a" class="test"></div>
+</div>
+<div class="rows">
+  <div id="b" class="test"></div>
+</div>
+<div class="rows">
+  <div id="c" class="test"></div>
+</div>
+
+
+
+
+<script src="../../web-animations-js/web-animation.js"></script>
+<script src="../testharness/testharness.js"></script>
+<script src='../testharness/testharnessreport.js'></script>
+<script src='../extra-asserts.js'></script>
+<link rel='stylesheet' href='../testharness/testharness.css'>
+
+<script>
+
+/*
+ * all animation scripts start here
+ *
+ */
+ 
+var animA = new Animation(document.querySelector('#a'), {left: '300px'}, 3);
+var animB = new Animation(document.querySelector('#b'), {left: '500px'}, 6);
+var animC = new Animation(document.querySelector('#c'), {left: '700px'}, 9);
+ 
+ 
+/*
+ * all testing scripts start here
+ *
+ */
+ 
+var intervalCount = 3;
+var approxAnimTime = [];
+var approxDist = [];
+var c = 'a', j = 0;
+
+var test_automated = function(ele, animTime, distance) {
+  var rowCount = document.querySelectorAll('.rows').length;
+  var intervalPeriod = (animTime * 1000) / intervalCount;
+  var p = getComputedStyle(ele, null);
+  var start = parseInt(p.left)
+  var distDiffTotal = distance - start;
+  var rowNum = 0;
+  var created = 0;
+
+  setup({timeout: 100000});
+  console.log(rowCount);
+
+  var n = 0;
+  var create_flash_box = function(leftVal, j) {
+    var _newDiv = document.createElement('div');
+    _newDiv.className = 'expected';
+    _newDiv.style.left = leftVal + 'px';
+    var par = document.getElementsByClassName('rows')[j];
+    par.appendChild(_newDiv);
+    console.log(par);
+  }
+  
+  for (var i = 0; i < intervalCount; i++) {
+    // calculate the approximate percentage of distance in respect
+    // to the approximate time
+    approxAnimTime[i] = (intervalPeriod * (i + 1)) / animTime;
+    approxAnimTime[i] = Math.round(approxAnimTime[i]) / 1000;
+    intervalDiff = distDiffTotal / intervalCount;
+      approxDist[i] = (distDiffTotal / intervalCount) * (i + 1);
+      
+      // create interval-count number of divs as flashing boxes
+      console.log(rowNum);
+      create_flash_box(parseInt(p.left) + approxDist[i], j);
+      created++;
+      if (created === intervalCount) {
+        j++;
+      }
+    }
+
+    var verifyAnim = setInterval(function() {
+      checkFlash();
+    }, (intervalPeriod - 5));
+
+    var checkFlash = function() {
+      var currTime = document.animationTimeline.animationTime;
+      var currTimePercent = currTime / (animTime);
+      currTimePercent = Math.round(currTimePercent * 1000) / 1000;
+      var expectedElems = document.querySelectorAll('.expected');
+
+      assert_approx_equals(currTimePercent, approxAnimTime[n], 0.05, "Check that all the percent of time collected is as expected");
+
+      expectedElems[n].style.opacity = 1;
+
+      setTimeout(function() {
+        expectedElems[n].style.opacity = 0;
+        n++;
+      }, 50);
+    }
+
+    setTimeout(function() {
+      clearInterval(verifyAnim);
+    }, ((animTime * 1000) + 5));
+}
+
+  
+
+test_automated(document.querySelector('#a'), animA.duration, 300);
+test_automated(document.querySelector('#b'), animB.duration, 500);
+test_automated(document.querySelector('#c'), animC.duration, 700);
+</script>
+
+<!-- <div id="log"></div> -->

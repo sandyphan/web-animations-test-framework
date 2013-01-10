@@ -149,7 +149,7 @@ var assert_repeat = function(elem, distance, animTime, intervalNum, iterCount, m
   if (timeOutDur > 5000) {
     setup({timeout: 100000});
   }
-
+  
   var intervalTime = ((animTime * 1000) / intervalNum) - 2;
   var checkPercent = setInterval(function() {
     getPercentRepeat(elem, distance, animTime, iterCount);
