@@ -22,7 +22,7 @@ This will check if the timing functions create the desired acceleration over the
 <style>
 .anim {
   left: 0px;
-  width: 200px;
+  width: 250px;
   height: 24px;
   background-color: lightsteelblue;
   position: relative;
@@ -41,10 +41,8 @@ body { margin: 0px; }
 </head>
 
 <body>
-  <p>*insert heading here*</p>
+  <p>Function timings: Cubic-bezier testing</p>
 </body>
-
-<div id=expectation> </div>
 
 <div id="test"> 
   <div class="anim">ease-in</div>
@@ -52,6 +50,7 @@ body { margin: 0px; }
   <div class="anim">cubic-bezier(0, 0.2, 0.8, 1)</div>
   <div class="anim">cubic-bezier(0.5, -1.5, 0.5, 2.5)</div>
 </div>
+<div id="log"></div>
 
 <script src="../../web-animations-js/web-animation.js"></script>
 <script src="../testharness/testharness.js"></script>
@@ -61,7 +60,7 @@ body { margin: 0px; }
 <link rel='stylesheet' type="text/css" href="../animation-test-style.css">
 
 <script>
-var elems = document.querySelectorAll(".test");
+var elems = document.querySelectorAll(".anim");
 var anims = [];
 for (var i = 0; i < elems.length; i++) {
   var element = elems[i];
@@ -71,7 +70,7 @@ for (var i = 0; i < elems.length; i++) {
 var endTest = async_test("Testing final locations");
 setTimeout(function (){
   endTest.step(function(){
-    var eels = document.querySelectorAll(".test");
+    var eels = document.querySelectorAll(".anim");
     for(var i = 0; i < eels.length; i++){
       var params = document.defaultView.getComputedStyle(eels[i], null);
       assert_equals(params.left, "200px", "Cube " + eels[i].textContent +" didn't finish at the right location");
@@ -92,7 +91,7 @@ for(var i = 0; i < numAnim; i++){
 var counter = setInterval(checkForStep, 10);
 
 function checkForStep (){
-  var eels = document.querySelectorAll(".test");
+  var eels = document.querySelectorAll(".anim");
   for(var i = 0; i < eels.length; i++){
     var params = document.defaultView.getComputedStyle(eels[i], null);
     if(params.left != prevLeft[i]) steps[i]++;
@@ -102,7 +101,7 @@ function checkForStep (){
 
 setTimeout(function(){
   stepCount.step(function(){
-    var eels = document.querySelectorAll(".test");
+    var eels = document.querySelectorAll(".anim");
     for(var i = 0; i < eels.length; i++){
       var params = document.defaultView.getComputedStyle(eels[i], null);
       var numSteps = eels[i].textContent;
@@ -113,10 +112,7 @@ setTimeout(function(){
   stepCount.done();
 }, 3500);
 
-//====================================\\
-// 13thParallel.org Beziér Curve Code \\
-//   by Dan Pupius (www.pupius.net)   \\
-//====================================\\
+/* Code from http://13thparallel.com/archive/bezier-curves/ */
 
 coord = function (x,y) {
   if(!x) var x=0;
@@ -137,6 +133,3 @@ function getBezier(percent,C1,C2,C3,C4) {
 }
 
 </script>
-
-<div id="log"></div>
-
