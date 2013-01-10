@@ -88,6 +88,19 @@ function assert_location(myAnim, target, message) {
   assert_approx_equals(endLocal, endTarget, calculateEpsilon(myAnim), message);
 }
 
+//allows you to choose any combination of single number css properties to 
+//approximatly check if they are correct e.g checks width, top
+//won't work for things like colour and worded properties
+//specify your own epsilons if you want or leave for default
+function assert_properties(object, props, targets, message, epsilons){
+  var comp = object.currentStyle || getComputedStyle(object, null);
+  console.log(comp);
+  for(var i = 0; i < props.length; i++){
+    console.log(comp[props[i]]);
+    assert_approx_equals(parseInt(comp[props[i]]), targets[i], 10, message);
+  }
+}
+
 function setLog(bottomAnim) {
   var allElements = document.getElementById("test").querySelectorAll(".anim");
   //console.log(document.getElementById("test"));
@@ -96,10 +109,10 @@ function setLog(bottomAnim) {
   var currentElement;
   var currentPoint;
   for (var i = 1; i < allElements.length; i++) {
-    console.log(allElements[i]);
+    //console.log(allElements[i]);
     currentElement = allElements[i].currentStyle || getComputedStyle(allElements[i], null)
     currentPoint = parseInt(currentElement.top) + parseInt(currentElement.height);
-    console.log(currentPoint);
+   // console.log(currentPoint);
 
     if(currentPoint > bottomPoint) {
       bottomPoint = currentPoint;

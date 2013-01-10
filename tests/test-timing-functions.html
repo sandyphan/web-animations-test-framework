@@ -16,6 +16,8 @@ limitations under the License.
 Written by Steph McArthur
 
 This will check if the timing functions create the desired acceleration over the time period
+<div class="anim">ease-in</div>
+  <div class="anim">ease-out</div>
 -->
 
 <!DOCTYPE html>
@@ -45,8 +47,6 @@ body { margin: 0px; }
 </body>
 
 <div id="test"> 
-  <div class="anim">ease-in</div>
-  <div class="anim">ease-out</div>
   <div class="anim">cubic-bezier(0, 0.2, 0.8, 1)</div>
   <div class="anim">cubic-bezier(0.5, -1.5, 0.5, 2.5)</div>
 </div>
@@ -61,7 +61,6 @@ body { margin: 0px; }
 
 <script>
 var elems = document.querySelectorAll(".anim");
-var anims = [];
 for (var i = 0; i < elems.length; i++) {
   var element = elems[i];
   new Animation(element, {left: "200px"}, {duration: 2, timingFunction: element.textContent});
@@ -80,39 +79,33 @@ setTimeout(function (){
   setLog();
 }, 3500);
 
-var stepCount = async_test("Checking the animation has the right number of steps");
-var numAnim = (document.querySelectorAll(".test")).length;
-var steps = [];
-var prevLeft = [];
-for(var i = 0; i < numAnim; i++){
-  steps[i] = 0;
-  prevLeft[i] = 0;
-}
-var counter = setInterval(checkForStep, 10);
+//with out re-implementing the polyfil we probably have to settle manually generating the x coords for
+//every 200ms for each animation :(
+// var anims[][];
+// anims[0][0, ];
+// anims[1][0, ];
+// anims[2][0, ];
+// anims[3][0, ];
 
-function checkForStep (){
-  var eels = document.querySelectorAll(".anim");
-  for(var i = 0; i < eels.length; i++){
-    var params = document.defaultView.getComputedStyle(eels[i], null);
-    if(params.left != prevLeft[i]) steps[i]++;
-    prevLeft[i] = params.left;
-  }
+var posCheck = async_test("Checking the animation has the right number of steps");
+var checkTime = 200;
+var checkCount = 0;
+setInterval(checkLocations, checkTime);
+
+function checkLocations (){
+ posCheck.step(function(){
+    var eels = document.querySelectorAll(".anim");
+    for(var i = 0; i < eels.length; i++){
+      assert_properties(eels[i], ["left"], [40], "Not moving at the right rate");
+    }
+  });
 }
 
 setTimeout(function(){
-  stepCount.step(function(){
-    var eels = document.querySelectorAll(".anim");
-    for(var i = 0; i < eels.length; i++){
-      var params = document.defaultView.getComputedStyle(eels[i], null);
-      var numSteps = eels[i].textContent;
-      numSteps = numSteps.replace(/[^0-9]/g, " ");
-      assert_equals(steps[i] -1, parseInt(numSteps),  eels[i].textContent +" didn't have the right steps");
-    }
-  });
-  stepCount.done();
-}, 3500);
+  posCheck.done();
+}, 2000);
 
-/* Code from http://13thparallel.com/archive/bezier-curves/ */
+/* Code below from http://13thparallel.com/archive/bezier-curves/ */
 
 coord = function (x,y) {
   if(!x) var x=0;
@@ -125,10 +118,15 @@ function B2(t) { return 3*t*t*(1-t) }
 function B3(t) { return 3*t*(1-t)*(1-t) }
 function B4(t) { return (1-t)*(1-t)*(1-t) }
 
-function getBezier(percent,C1,C2,C3,C4) {
+function getBezier(percent,P1, P2) {
   var pos = new coord();
-  pos.x = C1.x*B1(percent) + C2.x*B2(percent) + C3.x*B3(percent) + C4.x*B4(percent);
-  pos.y = C1.y*B1(percent) + C2.y*B2(percent) + C3.y*B3(percent) + C4.y*B4(percent);
+  var C1 = new coord(0,0);
+  var C4 = new coord(1,1);
+  console.log(pos);
+  pos.x = C1.x*B1(percent) + P1.x*B2(percent) + P2.x*B3(percent) + C4.x*B4(percent);
+  console.log(pos.x);
+  pos.y = C1.y*B1(percent) + P1.y*B2(percent) + P2.y*B3(percent) + C4.y*B4(percent);
+  console.log(pos.y);
   return pos;
 }
 
