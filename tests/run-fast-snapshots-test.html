@@ -1,0 +1,114 @@
+<!-- 
+Copyright 2013 Google Inc. All Rights Reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+
+<!DOCTYPE html>
+<title>Test repetition with proper assert function</title>
+<link rel="author" title="Sandy Phan"m href="mailto:sandyphan@google.com")>
+<meta name="flags" content="dom">
+
+<style>
+  .test {
+    width: 100px;
+    height: 50px;
+    top: 0px;
+    left: 0px;
+    background-color: #AFA;
+    position: relative;
+  }
+  .rows {
+    position: relative;
+  }
+  .expected {
+    background-color: red;
+    width: 100px;
+    height: 50px;
+    float: left;
+    opacity: 0;
+    position: absolute;
+    top: 0px;
+  }
+</style>
+
+<p>A test that take snap shots of the animation and generate another animation with boxes that flashes up</p>
+
+<div class="rows">
+  <div id="a" class="test"></div>
+</div>
+<!-- <div class="rows">
+  <div id="b" class="test"></div>
+</div> -->
+<!-- <div class="rows">
+  <div id="c" class="test"></div>
+</div> -->
+
+
+<script src="../../web-animations-js/web-animation.js"></script>
+<script src="../testharness/testharness.js"></script>
+<script src='../testharness/testharnessreport.js'></script>
+<script src='../extra-asserts.js'></script>
+<link rel='stylesheet' href='../testharness/testharness.css'>
+<link rel='stylesheet' type="text/css" href="../animation-test-style.css">
+
+<script>
+
+/*
+ * all animation scripts start here
+ *
+ 
+
+var elems = document.querySelectorAll('.test');
+var anims = [];
+
+for (var i = 0; i < elems.length; i++) {
+  anims[i] = new Animation(elems[i], {left: 200 + (i * 300) + 'px'}, 3);
+}*/
+
+var animA = new Animation(document.querySelector(".test"), {left: "500px"}, {duration: 5.0,});
+
+/* 
+ * all testing scripts start here
+ */
+
+var auto = setInterval(test_automated, 300);
+var j = 0;
+
+function test_automated() {
+  console.log(animA["currentTime"]);
+  var object = document.querySelector(".test");
+  var comp = object.currentStyle || getComputedStyle(object, null);
+  var left = parseInt(comp.left);
+  
+  var _newDiv = document.createElement('div');
+  _newDiv.className = 'expected';
+  _newDiv.style.left = left + 'px';
+  document.getElementsByClassName('rows')[0].appendChild(_newDiv);
+  
+  var expElems = document.querySelectorAll(".expected");
+  expElems[j].style.opacity = 1;
+  
+  setTimeout(function() {
+    expElems[j].style.opacity = 0;
+    j++;
+  }, 50);
+}
+
+
+setTimeout(function() {
+  clearInterval(auto);
+}, 5100);
+</script>
+
+<!-- <div id="log"></div> -->
