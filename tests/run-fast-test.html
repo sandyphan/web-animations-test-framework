@@ -37,9 +37,14 @@ Written by Steph McArthur
   <meta name="assert" content="Getting the tests to run much faster">
 </head>
 
+<div id="options"> 
+  <select id="runType"></select>
+</div>
+
 <div id="test">
   <div class="anim"></div>
 </div>
+
 <div id="log"></div>
 
 <script src="../../web-animations-js/web-animation.js"></script>
@@ -50,6 +55,10 @@ Written by Steph McArthur
 <link rel='stylesheet' type="text/css" href="../animation-test-style.css">
 
 <script>
+
+var select = document.getElementById("runType");
+select.options[select.options.length] = new Option('Auto Run', 'Auto');
+select.options[select.options.length] = new Option('Manual Run', 'Manual');
 
 var skippy = new Animation(document.querySelector(".anim"), {left: "500px"}, {duration: 5,});
 skippy.pause();
