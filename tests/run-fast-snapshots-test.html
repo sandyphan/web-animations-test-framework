@@ -69,6 +69,8 @@ limitations under the License.
  *
  */
 
+setup({timeout: 100000});
+
 var elems = document.querySelectorAll('.test');
 var anims = [];
 
@@ -86,33 +88,36 @@ for (var i = 0; i < elems.length; i++) {
  */
 
 function test_automated(anim, n, interval) {
-  setup({timeout: 100000});
-
   // declare variables
-  var auto = setInterval(flashing, (anim.duration * 1000) / interval);
   var j = 0;
   var target = parseInt(anim.animationFunction.frames.frames[1].value);
   var object = document.getElementsByClassName('test')[n];
   var comp = object.currentStyle || getComputedStyle(object, null);
   var vals = [];
+  var flashed = [0, 0, 0];
   
   // store expected distance location values
   for (var i = 1; i <= interval; i++) {
     vals[i-1] = (target / interval) * i;
   }
   
+  
+  var auto = setInterval(flashing, (anim.duration * 1000) / interval);
+  
   // create divs at appropriate locations and flash the divs
   function flashing() {
     var left = parseInt(comp.left);
-    assert_approx_equals(left, vals[j], 3, "Checks that the position are relatively equals");
+    assert_approx_equals(left, vals[j], 5, "Checks that the position are relatively equals");
     
     var _newDiv = document.createElement('div');
     _newDiv.className = 'expected';
+    _newDiv.className += " rows" + n;
     _newDiv.style.left = left + 'px';
     document.getElementsByClassName('rows')[n].appendChild(_newDiv);
   
-    var expElems = document.querySelectorAll(".expected");
+    var expElems = document.querySelectorAll(".rows" + n);
     expElems[j].style.opacity = 1;
+    flashed[n]++;
   
     setTimeout(function() {
       expElems[j].style.opacity = 0;
@@ -120,15 +125,19 @@ function test_automated(anim, n, interval) {
     }, 40);
   }
   
+  var myTest = async_test("Verify that flash boxes appears as the animation " + (n + 1) + " move");
   setTimeout(function() {
     clearInterval(auto);
+    myTest.step(function() {
+      assert_equals(flashed[n], interval, "The flash boxes have flashed the correct number of times");
+    });
+    myTest.done();
   }, 5100);
 }
 
 test_automated(anims[0], 0, 10);
 test_automated(anims[1], 1, 5);
 test_automated(anims[2], 2, 3);
-
 </script>
 
-<!-- <div id="log"></div> -->
+<div id="log"></div>
