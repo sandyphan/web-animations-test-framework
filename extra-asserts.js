@@ -13,6 +13,55 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+//global varibles
+var animObjects = []; //to keep track of all animations
+var testStack = [];
+var runType = document.getElementById("runType"); //to keep track of what the dropdown list state is
+
+function testRecord(test,object, property, target, time, message){
+  this.test = test;
+  this.object = object;
+  this.property = property;
+  this.target = target;
+  this.time = time;
+  this.message = message;
+}
+
+function check(object, property, target, time, message){
+  if(runType.options[runType.selectedIndex].value == "Auto"){
+    //Create new async test
+    var test = async_test(message);
+    //only needs to be done the first time - will sort later
+    for(x in animObjects){
+      animObjects[x].pause();
+    }
+    testStack.push(new testRecord(test, object, property, target, time, "Property "+property+" is not equal to "+target));
+  } else {
+    console.log("Start manual mode");
+  }
+}
+
+//call this after lining up the tests with check
+function runTests(currTest){
+  //if currTest isn't null then do the test for it
+  if(currTest != null){
+    currTest.test.step(function (){
+      assert_properties(currTest.object, currTest.property, currTest.target, currTest.message);
+    });
+    currTest.test.done();
+  }
+  //takes the top test off testStack
+  var nextTest = testStack.pop();
+  if(nextTest != null){
+    //move the entire animation to the right point in time
+    for(x in animObjects){
+      animObjects[x]["currentTime"] = nextTest.time;
+    }
+    window.webkitRequestAnimationFrame(function(){runTests(nextTest);});
+  }
+}
+
 //Pass in two animations and verify they are at the same position
  function assert_same(anim1, anim2, message) {
   var object1 = anim1.targetElement;
@@ -94,11 +143,19 @@ function assert_location(myAnim, target, message) {
 //specify your own epsilons if you want or leave for default
 function assert_properties(object, props, targets, message, epsilons){
   var comp = object.currentStyle || getComputedStyle(object, null);
-  console.log(comp);
   for(var i = 0; i < props.length; i++){
-    console.log(comp[props[i]]);
-    assert_approx_equals(parseInt(comp[props[i]]), targets[i], 10, message);
+    assert_approx_equals(parseInt(comp[props[i]]), targets[i], 1, message);
   }
+}
+
+function setOptionButtons(){
+  runType.options[runType.options.length] = new Option('Auto Run', 'Auto');
+  runType.options[runType.options.length] = new Option('Manual Run', 'Manual');
+}
+
+function restart(){
+  animObjects[0]["currentTime"] = 0;
+  animObjects[1]["currentTime"] = 0;
 }
 
 //Run this function after all animations have finished running, 

@@ -39,9 +39,11 @@ Written by Steph McArthur
 
 <div id="options"> 
   <select id="runType"></select>
+  <button type="button" onclick="restart()"> Restart </button>
 </div>
 
 <div id="test">
+  <div class="anim"></div>
   <div class="anim"></div>
 </div>
 
@@ -56,22 +58,19 @@ Written by Steph McArthur
 
 <script>
 
-var select = document.getElementById("runType");
-select.options[select.options.length] = new Option('Auto Run', 'Auto');
-select.options[select.options.length] = new Option('Manual Run', 'Manual');
+setOptionButtons();
 
-var skippy = new Animation(document.querySelector(".anim"), {left: "500px"}, {duration: 5,});
-skippy.pause();
+//Add all animation objects to animObjects
+//change to new testAnimation to avoid pushing to animObjects
+animObjects.push(new Animation(document.querySelector(".anim"), {left: "500px"}, {duration: 5,}));
+animObjects.push(new Animation(document.querySelectorAll(".anim")[1], {left: "500px"}, {duration: 10,}));
 
-setInterval(printSkippy, 20);
+check(document.querySelector(".anim"), ["left"], [300], 3, "300px at 3 secs");
+check(document.querySelector(".anim"), ["left"], [100], 1, "moved the right amount left");
+check(document.querySelector(".anim"), ["left"], [200], 2, "moved the right rate");
 
-function printSkippy (){
-  skippy["currentTime"] = skippy["currentTime"] + 0.5;
-  var object = document.querySelector(".anim");
-  var comp = object.currentStyle || getComputedStyle(object, null);
-  console.log(comp.left);
-}
-
+runTests();
+setLog();
 </script>
 
 
