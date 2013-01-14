@@ -19,6 +19,7 @@ var animObjects = []; //to keep track of all animations
 var testStack = [];
 var runType = document.getElementById("runType"); //to keep track of what the dropdown list state is
 
+//objects
 function testRecord(test,object, property, target, time, message){
   this.test = test;
   this.object = object;
@@ -26,6 +27,13 @@ function testRecord(test,object, property, target, time, message){
   this.target = target;
   this.time = time;
   this.message = message;
+}
+
+//a wrapper to add each animation to an array
+function testAnimation(a, b, c){
+  var a = new Animation(a, b, c);
+  animObjects.push(a);
+  return a;
 }
 
 function check(object, property, target, time, message){

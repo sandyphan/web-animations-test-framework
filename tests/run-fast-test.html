@@ -60,10 +60,8 @@ Written by Steph McArthur
 
 setOptionButtons();
 
-//Add all animation objects to animObjects
-//change to new testAnimation to avoid pushing to animObjects
-animObjects.push(new Animation(document.querySelector(".anim"), {left: "500px"}, {duration: 5,}));
-animObjects.push(new Animation(document.querySelectorAll(".anim")[1], {left: "500px"}, {duration: 10,}));
+new testAnimation(document.querySelector(".anim"), {left: "500px"}, {duration: 5,});
+new testAnimation(document.querySelectorAll(".anim")[1], {left: "500px"}, {duration: 10,});
 
 check(document.querySelector(".anim"), ["left"], [300], 3, "300px at 3 secs");
 check(document.querySelector(".anim"), ["left"], [100], 1, "moved the right amount left");
