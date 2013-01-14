@@ -15,7 +15,7 @@ limitations under the License.
 -->
 
 <!DOCTYPE html>
-<title>Test repetition with proper assert function</title>
+<title>Test flashing boxes</title>
 <link rel="author" title="Sandy Phan"m href="mailto:sandyphan@google.com")>
 <meta name="flags" content="dom">
 
@@ -47,12 +47,12 @@ limitations under the License.
 <div class="rows">
   <div id="a" class="test"></div>
 </div>
-<!-- <div class="rows">
+<div class="rows">
   <div id="b" class="test"></div>
-</div> -->
-<!-- <div class="rows">
+</div>
+<div class="rows">
   <div id="c" class="test"></div>
-</div> -->
+</div>
 
 
 <script src="../../web-animations-js/web-animation.js"></script>
@@ -67,48 +67,68 @@ limitations under the License.
 /*
  * all animation scripts start here
  *
- 
+ */
 
 var elems = document.querySelectorAll('.test');
 var anims = [];
 
 for (var i = 0; i < elems.length; i++) {
-  anims[i] = new Animation(elems[i], {left: 200 + (i * 300) + 'px'}, 3);
-}*/
+  anims[i] = new Animation(elems[i], {left: '500px'}, 5.0);
+}
 
-var animA = new Animation(document.querySelector(".test"), {left: "500px"}, {duration: 5.0,});
+//var animA = new Animation(document.querySelector("#a"), {left: "500px"}, {duration: 5.0,});
+//var animB = new Animation(document.querySelector("#b"), {left: "500px"}, {duration: 5.0,});
+//var animC = new Animation(document.querySelector("#c"), {left: "500px"}, {duration: 5.0,});
+
 
 /* 
  * all testing scripts start here
  */
 
-var auto = setInterval(test_automated, 300);
-var j = 0;
+function test_automated(anim, n, interval) {
+  setup({timeout: 100000});
 
-function test_automated() {
-  console.log(animA["currentTime"]);
-  var object = document.querySelector(".test");
+  // declare variables
+  var auto = setInterval(flashing, (anim.duration * 1000) / interval);
+  var j = 0;
+  var target = parseInt(anim.animationFunction.frames.frames[1].value);
+  var object = document.getElementsByClassName('test')[n];
   var comp = object.currentStyle || getComputedStyle(object, null);
-  var left = parseInt(comp.left);
+  var vals = [];
   
-  var _newDiv = document.createElement('div');
-  _newDiv.className = 'expected';
-  _newDiv.style.left = left + 'px';
-  document.getElementsByClassName('rows')[0].appendChild(_newDiv);
+  // store expected distance location values
+  for (var i = 1; i <= interval; i++) {
+    vals[i-1] = (target / interval) * i;
+  }
   
-  var expElems = document.querySelectorAll(".expected");
-  expElems[j].style.opacity = 1;
+  // create divs at appropriate locations and flash the divs
+  function flashing() {
+    var left = parseInt(comp.left);
+    assert_approx_equals(left, vals[j], 3, "Checks that the position are relatively equals");
+    
+    var _newDiv = document.createElement('div');
+    _newDiv.className = 'expected';
+    _newDiv.style.left = left + 'px';
+    document.getElementsByClassName('rows')[n].appendChild(_newDiv);
+  
+    var expElems = document.querySelectorAll(".expected");
+    expElems[j].style.opacity = 1;
+  
+    setTimeout(function() {
+      expElems[j].style.opacity = 0;
+      j++;
+    }, 40);
+  }
   
   setTimeout(function() {
-    expElems[j].style.opacity = 0;
-    j++;
-  }, 50);
+    clearInterval(auto);
+  }, 5100);
 }
 
+test_automated(anims[0], 0, 10);
+test_automated(anims[1], 1, 5);
+test_automated(anims[2], 2, 3);
 
-setTimeout(function() {
-  clearInterval(auto);
-}, 5100);
 </script>
 
 <!-- <div id="log"></div> -->
