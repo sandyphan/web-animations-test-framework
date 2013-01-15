@@ -62,6 +62,26 @@ function check(object, property, target, time, message){
   testStack.push(new testRecord(test, object, property, target, time, "Property "+property+" is not equal to "+target, message));
 }
 
+// create divs at appropriate locations and flash the divs
+function flashing(test) {
+  console.log("bam");
+  var _newDiv = document.createElement('div');
+  _newDiv.className = 'expected';
+  _newDiv.style.left = '100px';
+  _newDiv.style.borderColor = 'black';
+  _newDiv.style.borderWidth = 'thick';
+  _newDiv.style.borderStyle = 'solid';
+  
+  document.getElementById("test").appendChild(_newDiv);
+
+  _newDiv.style.opacity = 1;
+
+  setTimeout(function() {
+    _newDiv.style.opacity = 0;
+    console.log(_newDiv);
+  }, 400);
+}
+
 //call this after lining up the tests with check
 function runTests(currTest){
   if(state != "Manual"){
@@ -86,6 +106,17 @@ function runTests(currTest){
       done();
     }
   } else {
+    //Set up a timeout for each test
+    for(x in testStack){
+      setTimeout(function() {
+        testStack[0].test.step(function() {
+          assert_properties(testStack[0].object, testStack[0].property, testStack[0].target, testStack[0].message);
+        });
+        testStack[0].test.done();
+        flashing(testStack[0]);
+      }, testStack[0].time * 1000);
+    }
+    //start all the animations running
     for(x in animObjects){
       animObjects[x]["currentTime"] = 0;
       animObjects[x].play();
