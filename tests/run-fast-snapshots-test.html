@@ -115,7 +115,6 @@ function test_automated(anim, n, interval) {
   // declare variables
   var j = 0;
   var target = parseInt(anim.animationFunction.frames.frames[1].value);
-//  console.log("target location for anim " + n + ": " + target);
   var object = document.getElementsByClassName('test')[n];
   var comp = object.currentStyle || getComputedStyle(object, null);
   var start = parseFloat(comp.left)
@@ -127,12 +126,7 @@ function test_automated(anim, n, interval) {
   // store expected distance location values
   for (var i = 1; i <= interval; i++) {
     vals[i-1] = (target / (interval + 0.0)) * i;
-  }
-//  console.log("expected vals for anim " + n + ": " + vals);
-  
-  
-//  console.log("animation duration for anim " + n + ": " + anim.duration);
-  
+  }  
   
   var auto = setInterval(flashing, (anim.duration * 1000) / interval);
   
@@ -140,8 +134,6 @@ function test_automated(anim, n, interval) {
   function flashing() {
     var left = parseFloat(comp.left);
     var moved = left - start;
-    console.log("anim " + n + " has moved " + moved + "px");
-    console.log("expected vals for anim " + n + ": " + vals[j]);
     assert_approx_equals(moved, vals[j], 3, "Checks that the position are relatively equals");
     
     var _newDiv = document.createElement('div');
@@ -159,8 +151,7 @@ function test_automated(anim, n, interval) {
       j++;
     }, 40);
   }
-  
-//  console.log(anim.duration);
+
   var myTest = async_test("Verify that flash boxes appears as the animation " + (n + 1) + " move");
   setTimeout(function() {
     clearInterval(auto);
