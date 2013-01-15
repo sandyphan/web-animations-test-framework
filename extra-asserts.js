@@ -17,48 +17,79 @@
 //global varibles
 var animObjects = []; //to keep track of all animations
 var testStack = [];
+var doneTests = []; //to allow tests to be run again in a different mode
 var runType = document.getElementById("runType"); //to keep track of what the dropdown list state is
+var state = "Auto"; //current run type of the animation
 
-function testRecord(test,object, property, target, time, message){
+//objects
+function testRecord(test,object, property, target, time, message, testMessage){
   this.test = test;
   this.object = object;
   this.property = property;
   this.target = target;
   this.time = time;
   this.message = message;
+  this.testMessage = testMessage;
+}
+
+//a wrapper to add each animation to an array
+function testAnimation(a, b, c){
+  var a = new Animation(a, b, c);
+  animObjects.push(a);
+  return a;
+}
+
+function restart(){
+  state = runType.options[runType.selectedIndex].value; //Only gets updated on init and Restart button push
+  var url = window.location.href.split("?");
+  window.location.href = url[0] + "?" + state;
+}
+
+function setOptionButtons(){
+  runType.options[runType.options.length] = new Option('Auto Run', 'Auto');
+  runType.options[runType.options.length] = new Option('Manual Run', 'Manual');
+  state = window.location.href.split("?")[1];
+  setup({ explicit_done: true });
 }
 
 function check(object, property, target, time, message){
-  if(runType.options[runType.selectedIndex].value == "Auto"){
-    //Create new async test
-    var test = async_test(message);
-    //only needs to be done the first time - will sort later
-    for(x in animObjects){
-      animObjects[x].pause();
-    }
-    testStack.push(new testRecord(test, object, property, target, time, "Property "+property+" is not equal to "+target));
-  } else {
-    console.log("Start manual mode");
+  //Create new async test
+  var test = async_test(message);
+  //only needs to be done the first time - will sort later
+  for(x in animObjects){
+    animObjects[x].pause();
   }
+  testStack.push(new testRecord(test, object, property, target, time, "Property "+property+" is not equal to "+target, message));
 }
 
 //call this after lining up the tests with check
 function runTests(currTest){
-  //if currTest isn't null then do the test for it
-  if(currTest != null){
-    currTest.test.step(function (){
-      assert_properties(currTest.object, currTest.property, currTest.target, currTest.message);
-    });
-    currTest.test.done();
-  }
-  //takes the top test off testStack
-  var nextTest = testStack.pop();
-  if(nextTest != null){
-    //move the entire animation to the right point in time
-    for(x in animObjects){
-      animObjects[x]["currentTime"] = nextTest.time;
+  if(state != "Manual"){
+    //if currTest isn't null then do the test for it
+    if(currTest != null){
+      currTest.test.step(function (){
+        assert_properties(currTest.object, currTest.property, currTest.target, currTest.message);
+      });
+      currTest.test.done();
+      console.log("test compelte");
     }
-    window.webkitRequestAnimationFrame(function(){runTests(nextTest);});
+    //takes the top test off testStack
+    var nextTest = testStack.pop();
+    if(nextTest != null){
+      doneTests.push(nextTest);
+      //move the entire animation to the right point in time
+      for(x in animObjects){
+        animObjects[x]["currentTime"] = nextTest.time;
+      }
+      window.webkitRequestAnimationFrame(function(){runTests(nextTest);});
+    } else {
+      done();
+    }
+  } else {
+    for(x in animObjects){
+      animObjects[x]["currentTime"] = 0;
+      animObjects[x].play();
+    }
   }
 }
 
@@ -148,15 +179,6 @@ function assert_properties(object, props, targets, message, epsilons){
   }
 }
 
-function setOptionButtons(){
-  runType.options[runType.options.length] = new Option('Auto Run', 'Auto');
-  runType.options[runType.options.length] = new Option('Manual Run', 'Manual');
-}
-
-function restart(){
-  animObjects[0]["currentTime"] = 0;
-  animObjects[1]["currentTime"] = 0;
-}
 
 //Run this function after all animations have finished running, 
 //to have the test log appear below the animation elements.

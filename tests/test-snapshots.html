@@ -16,7 +16,7 @@ limitations under the License.
 
 <!DOCTYPE html>
 <title>Test repetition with proper assert function</title>
-<link rel="author" title="Sandy Phan"m href="mailto:sandyphan@google.com")>
+<link rel="author" title="Sandy Phan" href="mailto:sandyphan@google.com">
 <meta name="flags" content="dom">
 
 <style>
@@ -70,90 +70,82 @@ limitations under the License.
  *
  */
  
-var animA = new Animation(document.querySelector('#a'), {left: '300px'}, 3);
-var animB = new Animation(document.querySelector('#b'), {left: '500px'}, 6);
-var animC = new Animation(document.querySelector('#c'), {left: '700px'}, 9);
- 
- 
-/*
- * all testing scripts start here
- *
- */
- 
-var intervalCount = 3;
-var approxAnimTime = [];
-var approxDist = [];
-var c = 'a', j = 0;
 
-var test_automated = function(ele, animTime, distance) {
-  var rowCount = document.querySelectorAll('.rows').length;
-  var intervalPeriod = (animTime * 1000) / intervalCount;
-  var p = getComputedStyle(ele, null);
-  var start = parseInt(p.left)
-  var distDiffTotal = distance - start;
-  var rowNum = 0;
-  var created = 0;
+setup({timeout: 100000});
 
-  setup({timeout: 100000});
-  console.log(rowCount);
+var elems = document.querySelectorAll('.test');
+var anims = [];
 
-  var n = 0;
-  var create_flash_box = function(leftVal, j) {
-    var _newDiv = document.createElement('div');
-    _newDiv.className = 'expected';
-    _newDiv.style.left = leftVal + 'px';
-    var par = document.getElementsByClassName('rows')[j];
-    par.appendChild(_newDiv);
-    console.log(par);
-  }
-  
-  for (var i = 0; i < intervalCount; i++) {
-    // calculate the approximate percentage of distance in respect
-    // to the approximate time
-    approxAnimTime[i] = (intervalPeriod * (i + 1)) / animTime;
-    approxAnimTime[i] = Math.round(approxAnimTime[i]) / 1000;
-    intervalDiff = distDiffTotal / intervalCount;
-      approxDist[i] = (distDiffTotal / intervalCount) * (i + 1);
-      
-      // create interval-count number of divs as flashing boxes
-      console.log(rowNum);
-      create_flash_box(parseInt(p.left) + approxDist[i], j);
-      created++;
-      if (created === intervalCount) {
-        j++;
-      }
-    }
-
-    var verifyAnim = setInterval(function() {
-      checkFlash();
-    }, (intervalPeriod - 5));
-
-    var checkFlash = function() {
-      var currTime = document.animationTimeline.animationTime;
-      var currTimePercent = currTime / (animTime);
-      currTimePercent = Math.round(currTimePercent * 1000) / 1000;
-      var expectedElems = document.querySelectorAll('.expected');
-
-      assert_approx_equals(currTimePercent, approxAnimTime[n], 0.05, "Check that all the percent of time collected is as expected");
-
-      expectedElems[n].style.opacity = 1;
-
-      setTimeout(function() {
-        expectedElems[n].style.opacity = 0;
-        n++;
-      }, 50);
-    }
-
-    setTimeout(function() {
-      clearInterval(verifyAnim);
-    }, ((animTime * 1000) + 5));
+for (var i = 0; i < elems.length; i++) {
+  anims[i] = new Animation(elems[i], {left: Math.round(Math.random() * 700) + 'px'}, Math.round(Math.random() * 5) + 1);
 }
 
-  
 
-test_automated(document.querySelector('#a'), animA.duration, 300);
-test_automated(document.querySelector('#b'), animB.duration, 500);
-test_automated(document.querySelector('#c'), animC.duration, 700);
+/* 
+ * all testing scripts start here
+ */
+
+function test_automated(anim, n, interval) {
+  // declare variables
+  var j = 0;
+  var target = parseInt(anim.animationFunction.frames.frames[1].value);
+//  console.log("target location for anim " + n + ": " + target);
+  var object = document.getElementsByClassName('test')[n];
+  var comp = object.currentStyle || getComputedStyle(object, null);
+  var start = parseFloat(comp.left)
+  target = target - start;
+  var vals = [];
+  var flashed = [];
+  flashed[n] = 0;
+  
+  // store expected distance location values
+  for (var i = 1; i <= interval; i++) {
+    vals[i-1] = (target / (interval + 0.0)) * i;
+  }
+
+  
+  
+  window.webkitRequestAnimationFrame(flashing);
+  
+  // create divs at appropriate locations and flash the divs
+  function flashing() {
+    var left = parseFloat(comp.left);
+    var moved = left - start;
+    console.log("left values using request animation frame: " + left);
+/*    console.log("anim " + n + " has moved " + moved + "px");
+    console.log("expected vals for anim " + n + ": " + vals[j]);
+    assert_approx_equals(moved, vals[j], 3, "Checks that the position are relatively equals");
+    
+    var _newDiv = document.createElement('div');
+    _newDiv.className = 'expected';
+    _newDiv.className += " rows" + n;
+    _newDiv.style.left = left + 'px';
+    document.getElementsByClassName('rows')[n].appendChild(_newDiv);
+  
+    var expElems = document.querySelectorAll(".rows" + n);
+    expElems[j].style.opacity = 1;
+    flashed[n]++;
+  
+    setTimeout(function() {
+      expElems[j].style.opacity = 0;
+      j++;
+    }, 40);
+  }
+  
+//  console.log(anim.duration);
+  var myTest = async_test("Verify that flash boxes appears as the animation " + (n + 1) + " move");
+  setTimeout(function() {
+    clearInterval(auto);
+    myTest.step(function() {
+      assert_equals(flashed[n], interval, "The flash boxes have flashed the correct number of times");
+    });
+    myTest.done();
+  }, (anim.duration * 1000) + 100); 
+}*/
+
+for (var i = 0; i < anims.length; i++) {
+  test_automated(anims[i], i, Math.round((Math.random() * 5) + 1));
+}
 </script>
 
 <!-- <div id="log"></div> -->
