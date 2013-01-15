@@ -20,6 +20,9 @@ limitations under the License.
 <meta name="flags" content="dom">
 
 <style>
+  body {
+    width: 100%;
+  }
   .test {
     width: 100px;
     height: 50px;
@@ -53,6 +56,27 @@ limitations under the License.
 <div class="rows">
   <div id="c" class="test"></div>
 </div>
+<div class="rows">
+  <div id="d" class="test"></div>
+</div>
+<div class="rows">
+  <div id="e" class="test"></div>
+</div>
+<div class="rows">
+  <div id="f" class="test"></div>
+</div>
+<div class="rows">
+  <div id="g" class="test"></div>
+</div>
+<div class="rows">
+  <div id="h" class="test"></div>
+</div>
+<div class="rows">
+  <div id="i" class="test"></div>
+</div>
+<div class="rows">
+  <div id="j" class="test"></div>
+</div>
 
 
 <script src="../../web-animations-js/web-animation.js"></script>
@@ -69,11 +93,13 @@ limitations under the License.
  *
  */
 
+setup({timeout: 100000});
+
 var elems = document.querySelectorAll('.test');
 var anims = [];
 
 for (var i = 0; i < elems.length; i++) {
-  anims[i] = new Animation(elems[i], {left: '500px'}, 5.0);
+  anims[i] = new Animation(elems[i], {left: Math.round(Math.random() * 700) + 'px'}, Math.round(Math.random() * 5) + 1);
 }
 
 //var animA = new Animation(document.querySelector("#a"), {left: "500px"}, {duration: 5.0,});
@@ -86,33 +112,47 @@ for (var i = 0; i < elems.length; i++) {
  */
 
 function test_automated(anim, n, interval) {
-  setup({timeout: 100000});
-
   // declare variables
-  var auto = setInterval(flashing, (anim.duration * 1000) / interval);
   var j = 0;
   var target = parseInt(anim.animationFunction.frames.frames[1].value);
+//  console.log("target location for anim " + n + ": " + target);
   var object = document.getElementsByClassName('test')[n];
   var comp = object.currentStyle || getComputedStyle(object, null);
+  var start = parseFloat(comp.left)
+  target = target - start;
   var vals = [];
+  var flashed = [];
+  flashed[n] = 0;
   
   // store expected distance location values
   for (var i = 1; i <= interval; i++) {
-    vals[i-1] = (target / interval) * i;
+    vals[i-1] = (target / (interval + 0.0)) * i;
   }
+//  console.log("expected vals for anim " + n + ": " + vals);
+  
+  
+//  console.log("animation duration for anim " + n + ": " + anim.duration);
+  
+  
+  var auto = setInterval(flashing, (anim.duration * 1000) / interval);
   
   // create divs at appropriate locations and flash the divs
   function flashing() {
-    var left = parseInt(comp.left);
-    assert_approx_equals(left, vals[j], 3, "Checks that the position are relatively equals");
+    var left = parseFloat(comp.left);
+    var moved = left - start;
+    console.log("anim " + n + " has moved " + moved + "px");
+    console.log("expected vals for anim " + n + ": " + vals[j]);
+    assert_approx_equals(moved, vals[j], 3, "Checks that the position are relatively equals");
     
     var _newDiv = document.createElement('div');
     _newDiv.className = 'expected';
+    _newDiv.className += " rows" + n;
     _newDiv.style.left = left + 'px';
     document.getElementsByClassName('rows')[n].appendChild(_newDiv);
   
-    var expElems = document.querySelectorAll(".expected");
+    var expElems = document.querySelectorAll(".rows" + n);
     expElems[j].style.opacity = 1;
+    flashed[n]++;
   
     setTimeout(function() {
       expElems[j].style.opacity = 0;
@@ -120,15 +160,20 @@ function test_automated(anim, n, interval) {
     }, 40);
   }
   
+//  console.log(anim.duration);
+  var myTest = async_test("Verify that flash boxes appears as the animation " + (n + 1) + " move");
   setTimeout(function() {
     clearInterval(auto);
-  }, 5100);
+    myTest.step(function() {
+      assert_equals(flashed[n], interval, "The flash boxes have flashed the correct number of times");
+    });
+    myTest.done();
+  }, (anim.duration * 1000) + 100);
 }
 
-test_automated(anims[0], 0, 10);
-test_automated(anims[1], 1, 5);
-test_automated(anims[2], 2, 3);
-
+for (var i = 0; i < anims.length; i++) {
+  test_automated(anims[i], i, Math.round((Math.random() * 5) + 1));
+}
 </script>
 
-<!-- <div id="log"></div> -->
+<div id="log"></div>
