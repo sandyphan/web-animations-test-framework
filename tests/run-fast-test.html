@@ -20,12 +20,14 @@ Written by Steph McArthur
 <style>
 .anim {
   left: 0px;
+  top: 0px;
   width: 200px;
   height: 24px;
   background-color: lightsteelblue;
   position: relative;
   border-bottom: solid white 1px;
 }
+
 
 </style>
 
@@ -64,14 +66,17 @@ new testAnimation(document.querySelector(".anim"), {left: "600px"}, {duration: 3
 new testAnimation(document.querySelectorAll(".anim")[1], {left: "600px"}, {duration: 3,});
 
 check(document.querySelector(".anim"), ["left"], [600], 3, "300px at 3 secs");
-check(document.querySelector(".anim"), ["left"], [400], 2, "moved the right rate");
+check(document.querySelector(".anim"), ["left"], [200], 2, "moved the right rate");
 check(document.querySelector(".anim"), ["left"], [100], 0.5, "moved the right amount left");
 check(document.querySelectorAll(".anim")[1], ["left"], [200], 1, "moved the right amount gfdghhgfd");
 check(document.querySelectorAll(".anim")[1], ["left"], [100], 0.5, "moved the right amount gfdgggg");
 
-
 runTests();
-setLog();
+
+add_completion_callback(function () {
+   setLog();
+});
+
 
 </script>
 

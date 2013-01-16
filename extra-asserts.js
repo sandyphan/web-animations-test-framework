@@ -21,7 +21,7 @@ var runType = document.getElementById("runType"); //to keep track of what the dr
 var state = "Auto"; //current run type of the animation
 
 //objects
-function testRecord(test,object, property, target, time, message, cssStyle){
+function testRecord(test,object, property, target, time, message, cssStyle, offsets){
   this.test = test;
   this.object = object;
   this.property = property;
@@ -29,6 +29,7 @@ function testRecord(test,object, property, target, time, message, cssStyle){
   this.time = time;
   this.message = message;
   this.cssStyle = cssStyle;
+  this.offsets = offsets;
 }
 
 //a wrapper to add each animation to an array
@@ -52,7 +53,7 @@ function setOptionButtons(){
   
   if(state == "Manual") runType.selectedIndex = 1;
   else runType.selectedIndex = 0;
-  setup({ explicit_done: true });
+  setup({ explicit_done: true, timeout: 7000 });
 }
 
 function check(object, property, target, time, message){
@@ -60,9 +61,10 @@ function check(object, property, target, time, message){
   var test = async_test(message);
   //store the inital css style of the animated object so it can be used for manual flashing
   var css = object.currentStyle || getComputedStyle(object, null);
-  //console.log(css);
-
-  testStack.push(new testRecord(test, object, property, target, time, "Property "+property+" is not equal to "+target, css));
+  var offsets = [];
+  offsets["top"] = getOffset(object).top;
+  offsets["left"] = getOffset(object).left;
+  testStack.push(new testRecord(test, object, property, target, time, "Property "+property+" is not equal to "+target, css, offsets));
 }
 
 var pauseTime = 500; //how long to show each manual check for
@@ -72,22 +74,49 @@ function flashing(test) {
   for(x in animObjects){
     animObjects[x].pause();
   }
-  console.log(getOffset( test.object ).left);
+
   var _newDiv = document.createElement('div');
-  _newDiv.style.cssText = test.cssStyle.cssText;
+  document.getElementById("test").appendChild(_newDiv);
+  _newDiv.style.cssText = test.cssStyle.cssText; //copy the objects orginal css style
   _newDiv.style.position = "absolute";
-  _newDiv.style.left = test.target + 'px';
-  _newDiv.style.top = getOffset( test.object ).top+'px';
+
+  var seenTop = false;
+  var seenLeft = false;
+  //console.log(test.offsets["top"]);
+  for(x in test.property){
+    var prop = test.property[x];
+    var tar = test.target[x];
+    if(prop == "left"){
+      seenLeft = true;
+      //tar += test.offsets["left"];
+    } else if(prop == "top"){
+      seenTop = true;
+      //console.log("before"+tar);
+      //tar += test.offsets["top"];
+      //console.log("after"+tar);
+    }
+    console.log("before "+_newDiv.style[prop]);
+    _newDiv.style[prop] = tar + "px";
+    console.log("after "+_newDiv.style[prop]);
+  }
+  console.log("llll "+_newDiv.style.left);
+  
+  if(!seenTop){
+    _newDiv.style.top = getOffset(test.object).top+"px";
+  }
+  console.log(getOffset(test.object).top);
+  if(!seenLeft){
+    _newDiv.style.left = getOffset(test.object).left+"px";
+  }
+
+  //Set up the border
   _newDiv.style.borderColor = 'black';
   _newDiv.style.borderWidth = 'thick';
   _newDiv.style.borderStyle = 'solid';
-  console.log(_newDiv.style.left);
-  document.getElementById("test").appendChild(_newDiv);
-
   _newDiv.style.opacity = 1;
 
   setTimeout(function() {
-    _newDiv.style.opacity = 0;
+    _newDiv.parentNode.removeChild(_newDiv);
     for(x in animObjects){
       animObjects[x].play();
     }
@@ -280,7 +309,7 @@ function setLog() {
       bottomElement = currentElement;
     }
   }
-  document.getElementById("log").style.top = bottomPoint +100 +"px";
+  document.getElementById("log").style.top = bottomPoint +50 +"px";
 }
 
 //This function calculates the required margin of error for the approx_equals
