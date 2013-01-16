@@ -17,26 +17,26 @@
 //global varibles
 var animObjects = []; //to keep track of all animations
 var testStack = [];
-var doneTests = []; //to allow tests to be run again in a different mode
 var runType = document.getElementById("runType"); //to keep track of what the dropdown list state is
 var state = "Auto"; //current run type of the animation
 
 //objects
-function testRecord(test,object, property, target, time, message, testMessage){
+function testRecord(test,object, property, target, time, message, cssStyle){
   this.test = test;
   this.object = object;
   this.property = property;
   this.target = target;
   this.time = time;
   this.message = message;
-  this.testMessage = testMessage;
+  this.cssStyle = cssStyle;
 }
 
 //a wrapper to add each animation to an array
 function testAnimation(a, b, c){
-  var a = new Animation(a, b, c);
-  animObjects.push(a);
-  return a;
+  var x = new Animation(a, b, c);
+  x.pause();
+  animObjects.push(x);
+  return x;
 }
 
 function restart(){
@@ -49,39 +49,63 @@ function setOptionButtons(){
   runType.options[runType.options.length] = new Option('Auto Run', 'Auto');
   runType.options[runType.options.length] = new Option('Manual Run', 'Manual');
   state = window.location.href.split("?")[1];
+  
+  if(state == "Manual") runType.selectedIndex = 1;
+  else runType.selectedIndex = 0;
   setup({ explicit_done: true });
 }
 
 function check(object, property, target, time, message){
   //Create new async test
   var test = async_test(message);
-  //only needs to be done the first time - will sort later
+  //store the inital css style of the animated object so it can be used for manual flashing
+  var css = object.currentStyle || getComputedStyle(object, null);
+  //console.log(css);
+
+  testStack.push(new testRecord(test, object, property, target, time, "Property "+property+" is not equal to "+target, css));
+}
+
+var pauseTime = 500; //how long to show each manual check for
+// create divs at appropriate locations and flash the divs
+function flashing(test) {
+  //pause all animations
   for(x in animObjects){
     animObjects[x].pause();
   }
-  testStack.push(new testRecord(test, object, property, target, time, "Property "+property+" is not equal to "+target, message));
-}
-
-// create divs at appropriate locations and flash the divs
-function flashing(test) {
-  console.log("bam");
+  console.log(getOffset( test.object ).left);
   var _newDiv = document.createElement('div');
-  _newDiv.className = 'expected';
-  _newDiv.style.left = '100px';
+  _newDiv.style.cssText = test.cssStyle.cssText;
+  _newDiv.style.position = "absolute";
+  _newDiv.style.left = test.target + 'px';
+  _newDiv.style.top = getOffset( test.object ).top+'px';
   _newDiv.style.borderColor = 'black';
-  _newDiv.style.borderWidth = 'thick';
+  _newDiv.style.borderWidth = 'thin';
   _newDiv.style.borderStyle = 'solid';
-  
+  console.log(_newDiv.style.left);
   document.getElementById("test").appendChild(_newDiv);
 
   _newDiv.style.opacity = 1;
 
   setTimeout(function() {
     _newDiv.style.opacity = 0;
-    console.log(_newDiv);
-  }, 400);
+    for(x in animObjects){
+      animObjects[x].play();
+    }
+  }, pauseTime);
 }
 
+function getOffset( el ) {
+    var _x = 0;
+    var _y = 0;
+    while( el && !isNaN( el.offsetLeft ) && !isNaN( el.offsetTop ) ) {
+        _x += el.offsetLeft - el.scrollLeft;
+        _y += el.offsetTop - el.scrollTop;
+        el = el.offsetParent;
+    }
+    return { top: _y, left: _x };
+}
+
+var testIndex = 0;
 //call this after lining up the tests with check
 function runTests(currTest){
   if(state != "Manual"){
@@ -96,7 +120,6 @@ function runTests(currTest){
     //takes the top test off testStack
     var nextTest = testStack.pop();
     if(nextTest != null){
-      doneTests.push(nextTest);
       //move the entire animation to the right point in time
       for(x in animObjects){
         animObjects[x]["currentTime"] = nextTest.time;
@@ -109,13 +132,17 @@ function runTests(currTest){
     //Set up a timeout for each test
     for(x in testStack){
       setTimeout(function() {
-        testStack[0].test.step(function() {
-          assert_properties(testStack[0].object, testStack[0].property, testStack[0].target, testStack[0].message);
+        testStack[testIndex].test.step(function() {
+          assert_properties(testStack[testIndex].object, testStack[testIndex].property, testStack[testIndex].target, testStack[testIndex].message);
         });
-        testStack[0].test.done();
-        flashing(testStack[0]);
-      }, testStack[0].time * 1000);
+        testStack[testIndex].test.done();
+        flashing(testStack[testIndex]);
+        testIndex++;
+      }, (testStack[testIndex].time * 1000)+(pauseTime*testIndex));
+      testIndex++;
+      console.log(testIndex);
     }
+    testIndex = 0;
     //start all the animations running
     for(x in animObjects){
       animObjects[x]["currentTime"] = 0;
@@ -206,7 +233,7 @@ function assert_location(myAnim, target, message) {
 function assert_properties(object, props, targets, message, epsilons){
   var comp = object.currentStyle || getComputedStyle(object, null);
   for(var i = 0; i < props.length; i++){
-    assert_approx_equals(parseInt(comp[props[i]]), targets[i], 1, message);
+    assert_approx_equals(parseInt(comp[props[i]]), targets[i], 5, message);
   }
 }
 
