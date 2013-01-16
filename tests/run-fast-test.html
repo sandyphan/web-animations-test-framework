@@ -61,11 +61,14 @@ Written by Steph McArthur
 setOptionButtons();
 
 new testAnimation(document.querySelector(".anim"), {left: "600px"}, {duration: 3,});
-//new testAnimation(document.querySelectorAll(".anim")[1], {left: "500px"}, {duration: 1,});
+new testAnimation(document.querySelectorAll(".anim")[1], {left: "600px"}, {duration: 3,});
 
-check(document.querySelector(".anim"), ["left"], [100], 0.5, "moved the right amount left");
-check(document.querySelector(".anim"), ["left"], [400], 2, "moved the right rate");
 check(document.querySelector(".anim"), ["left"], [600], 3, "300px at 3 secs");
+check(document.querySelector(".anim"), ["left"], [400], 2, "moved the right rate");
+check(document.querySelector(".anim"), ["left"], [100], 0.5, "moved the right amount left");
+check(document.querySelectorAll(".anim")[1], ["left"], [200], 1, "moved the right amount gfdghhgfd");
+check(document.querySelectorAll(".anim")[1], ["left"], [100], 0.5, "moved the right amount gfdgggg");
+
 
 runTests();
 setLog();

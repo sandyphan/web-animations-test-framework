@@ -79,7 +79,7 @@ function flashing(test) {
   _newDiv.style.left = test.target + 'px';
   _newDiv.style.top = getOffset( test.object ).top+'px';
   _newDiv.style.borderColor = 'black';
-  _newDiv.style.borderWidth = 'thin';
+  _newDiv.style.borderWidth = 'thick';
   _newDiv.style.borderStyle = 'solid';
   console.log(_newDiv.style.left);
   document.getElementById("test").appendChild(_newDiv);
@@ -106,6 +106,7 @@ function getOffset( el ) {
 }
 
 var testIndex = 0;
+var testPacket = [];
 //call this after lining up the tests with check
 function runTests(currTest){
   if(state != "Manual"){
@@ -129,16 +130,35 @@ function runTests(currTest){
       done();
     }
   } else {
+    //Sort tests by time to set up timeouts properly
+    testStack.sort(testTimeSort);
+
     //Set up a timeout for each test
-    for(x in testStack){
+    for(var x =0; x<testStack.length; x++){
+      //check for all tests that happen at the same time
+      //And add them to the test packet
+      testPacket[testIndex] = [];
+      testPacket[testIndex].push(testStack[x]);
+      while(x < (testStack.length-1)){
+        if(testStack[x].time == testStack[x+1].time){
+          console.log("ham");
+          x++;
+          testPacket[testIndex].push(testStack[x]);
+        } else break;
+      }
+
       setTimeout(function() {
-        testStack[testIndex].test.step(function() {
-          assert_properties(testStack[testIndex].object, testStack[testIndex].property, testStack[testIndex].target, testStack[testIndex].message);
-        });
-        testStack[testIndex].test.done();
-        flashing(testStack[testIndex]);
+        console.log("bam");
+        for(x in testPacket[testIndex]){
+          testPacket[testIndex][x].test.step(function() {
+            assert_properties(testPacket[testIndex][x].object, testPacket[testIndex][x].property, testPacket[testIndex][x].target, testPacket[testIndex][x].message);
+          });
+          testPacket[testIndex][x].test.done();
+          flashing(testPacket[testIndex][x]);
+        }
         testIndex++;
-      }, (testStack[testIndex].time * 1000)+(pauseTime*testIndex));
+      }, (testPacket[testIndex][0].time * 1000)+(pauseTime*testIndex));
+
       testIndex++;
       console.log(testIndex);
     }
@@ -149,6 +169,10 @@ function runTests(currTest){
       animObjects[x].play();
     }
   }
+}
+
+function testTimeSort(a,b){
+  return(a.time - b.time);
 }
 
 //Pass in two animations and verify they are at the same position
@@ -233,7 +257,7 @@ function assert_location(myAnim, target, message) {
 function assert_properties(object, props, targets, message, epsilons){
   var comp = object.currentStyle || getComputedStyle(object, null);
   for(var i = 0; i < props.length; i++){
-    assert_approx_equals(parseInt(comp[props[i]]), targets[i], 5, message);
+    assert_approx_equals(parseInt(comp[props[i]]), targets[i], 10, message);
   }
 }
 
