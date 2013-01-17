@@ -114,18 +114,13 @@ function flashing(test) {
     var tar = test.target[x];
     if(prop == "left"){
       seenLeft = true;
-      //tar += test.offsets["left"];
+      tar += parseInt(test.offsets["left"]);
     } else if(prop == "top"){
       seenTop = true;
-      //console.log("before"+tar);
-      //tar += test.offsets["top"];
-      //console.log("after"+tar);
+      tar += parseInt(test.offsets["top"]);
     }
-    console.log("before "+_newDiv.style[prop]);
     _newDiv.style[prop] = tar + "px";
-    console.log("after "+_newDiv.style[prop]);
   }
-  console.log("llll "+_newDiv.style.left);
   
   if(!seenTop){
     _newDiv.style.top = getOffset(test.object).top+"px";

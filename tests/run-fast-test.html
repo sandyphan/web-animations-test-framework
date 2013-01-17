@@ -29,7 +29,7 @@ Written by Steph McArthur
 }
 
 .testBox {
-  height: 600px;
+  height: 250px;
 }
 
 </style>
@@ -58,13 +58,13 @@ Written by Steph McArthur
 
 setupTests();
 
-new testAnimation(document.querySelector(".anim"), {top: "600px"}, {duration: 2,});
-new testAnimation(document.querySelectorAll(".anim")[1], {left: "600px"}, {duration: 3,});
+new testAnimation(document.querySelector(".anim"), {left: "600px"}, {duration: 2});
+new testAnimation(document.querySelectorAll(".anim")[1], {top: "200px"}, {duration: 2});
 
-check(document.querySelector(".anim"), ["top"], [100], 1, "300px at 3 secs");
-check(document.querySelector(".anim"), ["top"], [200], 2, "moved the right rate");
-check(document.querySelectorAll(".anim")[1], ["left"], [200], 1, "moved the right amount gfdghhgfd");
-check(document.querySelectorAll(".anim")[1], ["left"], [100], 0.5, "moved the right amount gfdgggg");
+check(document.querySelector(".anim"), ["left"], [300], 1, "300px at 3 secs");
+check(document.querySelector(".anim"), ["left"], [600], 2, "moved the right rate");
+check(document.querySelectorAll(".anim")[1], ["top"], [200], 2, "moved the right amount gfdghhgfd");
+check(document.querySelectorAll(".anim")[1], ["top"], [100], 1, "moved the right amount gfdgggg");
 
 runTests();
 
