@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-
-//global varibles
 var animObjects = []; //to keep track of all animations
 var testStack = [];
 var runType; //to keep track of what the dropdown list state is
 var state = "Auto"; //current run type of the animation
+var testIndex = 0; //Holds which test packet we are up to
+var testPacket = []; //Each index holds all the tests that occur at the same time
+var pauseTime = 500; //how long to show each manual check for
 
-//objects
 function testRecord(test,object, property, target, time, message, cssStyle, offsets){
   this.test = test;
   this.object = object;
@@ -41,12 +41,8 @@ function testAnimation(a, b, c){
   return x;
 }
 
-function restart(){
-  state = runType.options[runType.selectedIndex].value; //Only gets updated on init and Restart button push
-  var url = window.location.href.split("?");
-  window.location.href = url[0] + "?" + state;
-}
-
+//Call this function before setting up any checks
+//It generates the testing buttons and log and the testharness setup
 function setupTests(){
   //Set up padding for option bar
   var padding = document.createElement('div');
@@ -84,6 +80,7 @@ function setupTests(){
   setup({ explicit_done: true, timeout: 7000 });
 }
 
+//Adds each test to a list to be processed when runTests is called
 function check(object, property, target, time, message){
   //Create new async test
   var test = async_test(message);
@@ -95,70 +92,9 @@ function check(object, property, target, time, message){
   testStack.push(new testRecord(test, object, property, target, time, "Property "+property+" is not equal to "+target, css, offsets));
 }
 
-var pauseTime = 500; //how long to show each manual check for
-// create divs at appropriate locations and flash the divs
-function flashing(test) {
-  //pause all animations
-  for(x in animObjects){
-    animObjects[x].pause();
-  }
-
-  var _newDiv = document.createElement('div');
-  document.getElementById("test").appendChild(_newDiv);
-  _newDiv.style.cssText = test.cssStyle.cssText; //copy the objects orginal css style
-  _newDiv.style.position = "absolute";
-
-  var seenTop = false;
-  var seenLeft = false;
-  for(x in test.property){
-    var prop = test.property[x];
-    var tar = test.target[x];
-    if(prop == "left"){
-      seenLeft = true;
-      tar += parseInt(test.offsets["left"]);
-    } else if(prop == "top"){
-      seenTop = true;
-      tar += parseInt(test.offsets["top"]);
-    }
-    _newDiv.style[prop] = tar + "px";
-  }
-  
-  if(!seenTop){
-    _newDiv.style.top = getOffset(test.object).top+"px";
-  }
-  console.log(getOffset(test.object).top);
-  if(!seenLeft){
-    _newDiv.style.left = getOffset(test.object).left+"px";
-  }
-
-  //Set up the border
-  _newDiv.style.borderColor = 'black';
-  _newDiv.style.borderWidth = 'thick';
-  _newDiv.style.borderStyle = 'solid';
-  _newDiv.style.opacity = 1;
-
-  setTimeout(function() {
-    _newDiv.parentNode.removeChild(_newDiv);
-    for(x in animObjects){
-      animObjects[x].play();
-    }
-  }, pauseTime);
-}
-
-function getOffset( el ) {
-    var _x = 0;
-    var _y = 0;
-    while( el && !isNaN( el.offsetLeft ) && !isNaN( el.offsetTop ) ) {
-        _x += el.offsetLeft - el.scrollLeft;
-        _y += el.offsetTop - el.scrollTop;
-        el = el.offsetParent;
-    }
-    return { top: _y, left: _x };
-}
-
-var testIndex = 0;
-var testPacket = [];
-//call this after lining up the tests with check
+//Call this after lining up the tests with check
+//For auto state: It is called each frame render to run the currently loaded test
+//For manual state: It sets up the appropiate timeout for each group of tests that happen at the same time
 function runTests(currTest){
   if(state != "Manual"){
     //if currTest isn't null then do the test for it
@@ -225,6 +161,75 @@ function runTests(currTest){
 function testTimeSort(a,b){
   return(a.time - b.time);
 }
+
+function restart(){
+  state = runType.options[runType.selectedIndex].value; //Only gets updated on init and Restart button push
+  var url = window.location.href.split("?");
+  window.location.href = url[0] + "?" + state;
+}
+
+// create divs at appropriate locations and flash the divs for manual testing
+function flashing(test) {
+  //pause all animations
+  for(x in animObjects){
+    animObjects[x].pause();
+  }
+
+  var _newDiv = document.createElement('div');
+  document.getElementById("test").appendChild(_newDiv);
+  _newDiv.style.cssText = test.cssStyle.cssText; //copy the objects orginal css style
+  _newDiv.style.position = "absolute";
+
+  var seenTop = false;
+  var seenLeft = false;
+  for(x in test.property){
+    var prop = test.property[x];
+    var tar = test.target[x];
+    if(prop == "left"){
+      seenLeft = true;
+      tar += parseInt(test.offsets["left"]);
+    } else if(prop == "top"){
+      seenTop = true;
+      tar += parseInt(test.offsets["top"]);
+    }
+    _newDiv.style[prop] = tar + "px";
+  }
+  
+  if(!seenTop){
+    _newDiv.style.top = getOffset(test.object).top+"px";
+  }
+  console.log(getOffset(test.object).top);
+  if(!seenLeft){
+    _newDiv.style.left = getOffset(test.object).left+"px";
+  }
+
+  //Set up the border
+  _newDiv.style.borderColor = 'black';
+  _newDiv.style.borderWidth = 'thick';
+  _newDiv.style.borderStyle = 'solid';
+  _newDiv.style.opacity = 1;
+
+  setTimeout(function() {
+    _newDiv.parentNode.removeChild(_newDiv);
+    for(x in animObjects){
+      animObjects[x].play();
+    }
+  }, pauseTime);
+}
+
+//Helper function which the current absolute position of an object
+//Shamelessly stolen from http://stackoverflow.com/questions/442404/dynamically-retrieve-the-position-x-y-of-an-html-element
+function getOffset( el ) {
+    var _x = 0;
+    var _y = 0;
+    while( el && !isNaN( el.offsetLeft ) && !isNaN( el.offsetTop ) ) {
+        _x += el.offsetLeft - el.scrollLeft;
+        _y += el.offsetTop - el.scrollTop;
+        el = el.offsetParent;
+    }
+    return { top: _y, left: _x };
+}
+
 
 /////////////////////////////////////////////////////////////////////////
 //  All asserts below here                                             //
