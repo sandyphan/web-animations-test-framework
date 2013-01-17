@@ -17,7 +17,7 @@
 //global varibles
 var animObjects = []; //to keep track of all animations
 var testStack = [];
-var runType = document.getElementById("runType"); //to keep track of what the dropdown list state is
+var runType; //to keep track of what the dropdown list state is
 var state = "Auto"; //current run type of the animation
 
 //objects
@@ -46,11 +46,38 @@ function restart(){
   window.location.href = url[0] + "?" + state;
 }
 
-function setOptionButtons(){
+function setupTests(){
+  //Set up padding for option bar
+  var padding = document.createElement('div');
+  padding.id ="padding";
+  padding.style.height = "30px";
+  document.body.appendChild(padding);
+
+  //generate options bar
+  var optionBar = document.createElement('div');
+  optionBar.id ="options";
+  var select = document.createElement("select");
+  select.setAttribute("id", "runType");
+  var button = document.createElement("button");
+  button.setAttribute("type", "button");
+  button.setAttribute("onclick", "restart()");
+  button.innerHTML = "Restart";
+  document.body.appendChild(optionBar);
+  document.getElementById("options").appendChild(select);
+  document.getElementById("options").appendChild(button);
+
+  //Generate the log div
+  var log = document.createElement('div');
+  log.id ="log";
+  document.getElementById("options").appendChild(log);
+
+  //Set buttons
+  runType = document.getElementById("runType");
   runType.options[runType.options.length] = new Option('Auto Run', 'Auto');
   runType.options[runType.options.length] = new Option('Manual Run', 'Manual');
   state = window.location.href.split("?")[1];
   
+  //Initalse state and setup
   if(state == "Manual") runType.selectedIndex = 1;
   else runType.selectedIndex = 0;
   setup({ explicit_done: true, timeout: 7000 });
@@ -82,7 +109,6 @@ function flashing(test) {
 
   var seenTop = false;
   var seenLeft = false;
-  //console.log(test.offsets["top"]);
   for(x in test.property){
     var prop = test.property[x];
     var tar = test.target[x];
