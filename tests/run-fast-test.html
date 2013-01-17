@@ -20,11 +20,16 @@ Written by Steph McArthur
 <style>
 .anim {
   left: 0px;
+  top: 0px;
   width: 200px;
   height: 24px;
   background-color: lightsteelblue;
   position: relative;
   border-bottom: solid white 1px;
+}
+
+.testBox {
+  height: 250px;
 }
 
 </style>
@@ -37,17 +42,11 @@ Written by Steph McArthur
   <meta name="assert" content="Getting the tests to run much faster">
 </head>
 
-<div id="options"> 
-  <select id="runType"></select>
-  <button type="button" onclick="restart()"> Restart </button>
-</div>
-
-<div id="test">
+<div id="test" class = "testBox">
+  <div class="anim"></div>
   <div class="anim"></div>
   <div class="anim"></div>
 </div>
-
-<div id="log"></div>
 
 <script src="../../web-animations-js/web-animation.js"></script>
 <script src="../testharness/testharness.js"></script>
@@ -58,20 +57,19 @@ Written by Steph McArthur
 
 <script >
 
-setOptionButtons();
+setupTests();
 
-new testAnimation(document.querySelector(".anim"), {left: "600px"}, {duration: 3,});
-new testAnimation(document.querySelectorAll(".anim")[1], {left: "600px"}, {duration: 3,});
+new testAnimation(document.querySelector(".anim"), {left: "600px"}, {duration: 2});
+new testAnimation(document.querySelectorAll(".anim")[1], {top: "200px"}, {duration: 2});
+new testAnimation(document.querySelectorAll(".anim")[2], {top: "200px", left:"600px"}, {duration: 2});
 
-check(document.querySelector(".anim"), ["left"], [600], 3, "300px at 3 secs");
-check(document.querySelector(".anim"), ["left"], [400], 2, "moved the right rate");
-check(document.querySelector(".anim"), ["left"], [100], 0.5, "moved the right amount left");
-check(document.querySelectorAll(".anim")[1], ["left"], [200], 1, "moved the right amount gfdghhgfd");
-check(document.querySelectorAll(".anim")[1], ["left"], [100], 0.5, "moved the right amount gfdgggg");
-
-
+check(document.querySelector(".anim"), ["left"], [300], 1, "300px at 3 secs");
+check(document.querySelector(".anim"), ["left"], [600], 2, "moved the right rate");
+check(document.querySelectorAll(".anim")[1], ["top"], [200], 2, "moved the right amount gfdghhgfd");
+check(document.querySelectorAll(".anim")[1], ["top"], [100], 1, "moved the right amount gfdgggg");
+check(document.querySelectorAll(".anim")[2], ["top"], [100], 1, "moved the right amount ffggg");
+check(document.querySelectorAll(".anim")[2], ["left"], [400], 1.33, "moved the right amount ffg");
 runTests();
-setLog();
 
 </script>
 
