@@ -39,13 +39,17 @@ Written by Steph McArthur
   background-color: green;
 }
 
-#test {
+#container {
   position: absolute;
   left: 0px;
   top: 50px;
   width: 400px;
   height: 200px;
   background-color: green;
+}
+
+.testBox {
+  height: 200px;
 }
 
 </style>
@@ -61,10 +65,13 @@ Written by Steph McArthur
 <body>
   <p>All three boxes should end up the same color as the outline.</p>
 </body>
-<div id="test">
-  <div id="a" class="anim"></div>
-  <div id="b" class="anim"></div>
-  <div id="c" class="anim"></div>
+
+<div id="test" class = "testBox">
+  <div id="container">
+    <div id="a" class="anim"></div>
+    <div id="b" class="anim"></div>
+    <div id="c" class="anim"></div>
+  </div>
 </div>
 
 <script src="../../web-animations-js/web-animation.js"></script>
@@ -75,24 +82,18 @@ Written by Steph McArthur
 <link rel='stylesheet' type="text/css" href="../animation-test-style.css">
 
 <script>
-var colourCheck = async_test("Checking it ends up as green", {
-    
-  });
 
-new Animation(document.querySelector("#a"), {"background-color": ["red", "green"]}, 2);
-new Animation(document.querySelector("#b"), {"background-color": "rgb(0, 128, 0)"}, 2);
-new Animation(document.querySelector("#c"), {"background-color": [{offset: 0.25, value: "rgb(255, 0, 0)"}, {offset: 0.75, value: "rgb(0, 0, 255)"}], operation: "add"}, 2);
+setupTests();
 
-setTimeout(function(){
-  colourCheck.step(function(){
-    var elems = document.querySelectorAll(".anim");
-    for (var i = 0; i < elems.length; i++) {
-      assert_color(elems[i], "green", "I'm not green!");
-    }
-  });
-  colourCheck.done();
-  setLog();
-}, 2500);
+new testAnimation(document.querySelector("#a"), {"background-color": ["red", "green"]}, 2);
+new testAnimation(document.querySelector("#b"), {"background-color": "rgb(0, 128, 0)"}, 2);
+new testAnimation(document.querySelector("#c"), {"background-color": [{offset: 0.25, value: "rgb(255, 0, 0)"}, {offset: 0.75, value: "rgb(0, 0, 255)"}], operation: "add"}, 2);
+
+check(document.querySelector("#a"), ["backgroundColor"], ["green"], 2, "Is not green");
+check(document.querySelector("#a"), ["backgroundColor"], ["red"], 0, "Is not red"); //Fix that begining error
+check(document.querySelector("#b"), ["backgroundColor"], ["lightsteelblue"], 0, "Is not lightsteelblue");
+runTests();
+
 
 </script>
 

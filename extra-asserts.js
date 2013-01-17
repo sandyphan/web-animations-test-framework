@@ -77,7 +77,7 @@ function setupTests(){
   //Initalse state and setup
   if(state == "Manual") runType.selectedIndex = 1;
   else runType.selectedIndex = 0;
-  setup({ explicit_done: true, timeout: 7000 });
+  //setup({ explicit_done: true, timeout: 7000 });
 }
 
 //Adds each test to a list to be processed when runTests is called
@@ -109,6 +109,11 @@ function runTests(currTest){
     var nextTest = testStack.pop();
     if(nextTest != null){
       //move the entire animation to the right point in time
+
+      //enough to let the first frame render
+      //stops bug: where at time zero if x is blue then is told to animate from red to green
+      //and a check is performed at time zero for color red - before this it checked when x was still blue
+      if(nextTest.time == 0 ) nextTest.time += 0.01;
       for(x in animObjects){
         animObjects[x]["currentTime"] = nextTest.time;
       }
@@ -134,6 +139,7 @@ function runTests(currTest){
         } else break;
       }
 
+      if(testPacket[testIndex][0].time == 0 ) testPacket[testIndex][0].time += 0.01;
       setTimeout(function() {
         console.log("bam");
         for(x in testPacket[testIndex]){
@@ -243,6 +249,42 @@ function getOffset( el ) {
 function assert_properties(object, props, targets, message, epsilons){
   var comp = object.currentStyle || getComputedStyle(object, null);
   for(var i = 0; i < props.length; i++){
-    assert_approx_equals(parseInt(comp[props[i]]), targets[i], 10, message);
+    if(props[i].indexOf("olor") != -1){ //for anything with the word color in it do the color assert (C is not there because it could be a c or C)
+      assert_color(object, targets[i], message);
+    } else {
+      console.log("urgh here");
+      assert_approx_equals(parseInt(comp[props[i]]), targets[i], 10, message);
+    }
+    
   }
+}
+
+//Pass in either the css colour name to expectedColor OR 
+//a rbg string e.g. "0,0,0". Each number must be separated by a comma
+function assert_color(component, expectedColor, message) {
+  var params = document.defaultView.getComputedStyle(component, null);
+  var color = params.backgroundColor;
+  color = color.replace(/[^0-9,]/g, "");
+  var rgbValues = color.split(",");
+
+  var parsedColor = expectedColor.replace(/[^0-9,]/g, "");
+  if(parsedColor.length != 0) expectedColor = parsedColor.split(",");
+  else expectedColor = convertToRgb(expectedColor);
+
+  assert_approx_equals(parseInt(rgbValues[0]), expectedColor[0], 12, "red " +message);
+  assert_approx_equals(parseInt(rgbValues[1]), expectedColor[1], 12, "green " +message);
+  assert_approx_equals(parseInt(rgbValues[2]), expectedColor[2], 12, "blue " +message);
+}
+
+//This whole function is kind of hacky... unsure how to do this properly. Suggestions?
+function convertToRgb(englishColor) {
+    var tempDiv = document.createElement("div");
+    document.querySelector("#log").appendChild(tempDiv); 
+    tempDiv.style.backgroundColor = englishColor;
+    var p = document.defaultView.getComputedStyle(tempDiv, null);
+    var color = p.backgroundColor;
+    color = color.replace(/[^0-9,]/g, "");
+    var rgbValues = color.split(",");
+    tempDiv.remove(); 
+    return rgbValues;
 }
