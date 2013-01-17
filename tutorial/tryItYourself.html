@@ -73,7 +73,14 @@
         </div>
         <div class="code">
           <div id="label">HTML Code</div>
-          <textarea id="htmlCode" class="code"></textarea>
+          <textarea id="htmlCode" class="code"><html>
+  <head>
+
+  </head>
+  <body>
+
+  </body>
+</html></textarea>
           <div id="label">CSS Style</div>
           <textarea id="cssCode" class="code"></textarea>
           <div id="label">Javascript</div>
@@ -125,7 +132,7 @@
       var displayDefault = function() {
         frames['display'].document.documentElement.innerHTML = defaultHTMLVal;
         includes.setAttribute('type', 'text/javascript');
-        includes.setAttribute('src', 'web-animations-js/web-animation.js');
+        includes.setAttribute('src', '../../web-animations-js/web-animation.js');
         scriptEle.setAttribute('type', 'type/javascript');
         cssEle.innerHTML = defaultCSSVal;
 
@@ -137,12 +144,15 @@
         var cssVal = document.getElementById('cssCode').value;
         var jsVal = document.getElementById('jsCode').value;
 
-        frames['display'].document.documentElement.innerHTML = defaultHTMLVal + htmlVal;
         var par = frames['display'].document.getElementsByTagName('style')[0];
-        par.innerText = defaultCSSVal + cssVal;
+        console.log(par);
+        par.innerHTML = defaultCSSVal + cssVal;
+        console.log(par.innerHTML)
         par = frames['display'].document.getElementsByTagName('script')[1];
         console.log(par);
-        par.innerText = "\r\n" + jsVal + "\r\n";
+        par.innerHTML = "\r\n" + jsVal + "\r\n";
+        console.log(par.innerHTML);
+//        frames['display'].document.documentElement.innerHTML = defaultHTMLVal + htmlVal;
 
 /*        scriptEle.innerHTML = "\r\n" + jsVal + "\r\n";
         cssEle.innerHTML = defaultCSSVal + cssVal;*/
