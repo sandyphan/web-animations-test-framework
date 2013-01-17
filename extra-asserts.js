@@ -170,11 +170,8 @@ function restart(){
 
 // create divs at appropriate locations and flash the divs for manual testing
 function flashing(test) {
-
   //pause all animations
   for(x in animObjects){
-    //Check if the animation as already finished
-
     animObjects[x].pause();
   }
 
@@ -201,7 +198,6 @@ function flashing(test) {
   if(!seenTop){
     _newDiv.style.top = getOffset(test.object).top+"px";
   }
-  console.log(getOffset(test.object).top);
   if(!seenLeft){
     _newDiv.style.left = getOffset(test.object).left+"px";
   }
@@ -215,7 +211,6 @@ function flashing(test) {
   setTimeout(function() {
     _newDiv.parentNode.removeChild(_newDiv);
     for(x in animObjects){
-      console.log(animObjects[x]["currentTime"]);
       if(animObjects[x]["currentTime"] < animObjects[x]["duration"]){
         animObjects[x].play();
       }
