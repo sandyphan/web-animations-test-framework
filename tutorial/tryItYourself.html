@@ -114,9 +114,6 @@
     </textarea>
     
     <script type="text/javascript">
-      // get iframe object from document
-      var iframe = document.getElementById('display');
-
       // get default html values
       var defaultCSSVal = document.getElementById('defaultCSS').value;
       var defaultHTMLVal = document.getElementById('defaultHTML').value;
@@ -139,23 +136,21 @@
         appendObjects();
       }
 
+      // executed when button called update is clicked
+      // extract texts from the 3 text areas,
       function update() {
         var htmlVal = document.getElementById('htmlCode').value;
         var cssVal = document.getElementById('cssCode').value;
         var jsVal = document.getElementById('jsCode').value;
 
+        frames['display'].document.documentElement.innerHTML += htmlVal;
+        
         var par = frames['display'].document.getElementsByTagName('style')[0];
-        console.log(par);
         par.innerHTML = defaultCSSVal + cssVal;
-        console.log(par.innerHTML)
+
         par = frames['display'].document.getElementsByTagName('script')[1];
         console.log(par);
-        par.innerHTML = "\r\n" + jsVal + "\r\n";
-        console.log(par.innerHTML);
-//        frames['display'].document.documentElement.innerHTML = defaultHTMLVal + htmlVal;
-
-/*        scriptEle.innerHTML = "\r\n" + jsVal + "\r\n";
-        cssEle.innerHTML = defaultCSSVal + cssVal;*/
+        par.innerHTML = "\r\n" + jsVal + "\r\n";        
       }
 
       var appendObjects = function() {
