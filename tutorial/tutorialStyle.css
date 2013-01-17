@@ -1,13 +1,12 @@
 #main {
-  margin 0px auto;
+  margin: 50px auto;
   width: 80%;
-  border: 1px solid black;
 }
-/*      #tryIt {
+#tryIt {
   margin: 30px auto;
-  width: 80%;
-}*/
-#title {
+  width: 70%;
+}
+.heading {
   background-color: #AFA;
   border-radius: 10px;
   padding: 20px;
@@ -63,4 +62,23 @@
 }
 .default {
   visibility: hidden;
+}
+#description {
+  font: 1em Arial;
+}
+#title {
+  font: bold 2em Verdana;
+  color: #680;
+  text-align: center;
+  padding: 10px;
+  margin: 2px;
+}
+.content{
+  padding: 3px;
+  width: 80%;
+  margin: 3px auto;
+}
+#subTitle {
+  background-color: #ABCDEF;
+  padding: 10px; 
 }
