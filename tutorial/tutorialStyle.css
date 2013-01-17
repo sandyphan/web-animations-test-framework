@@ -1,0 +1,66 @@
+#main {
+  margin 0px auto;
+  width: 80%;
+  border: 1px solid black;
+}
+/*      #tryIt {
+  margin: 30px auto;
+  width: 80%;
+}*/
+#title {
+  background-color: #AFA;
+  border-radius: 10px;
+  padding: 20px;
+  margin: 5px;
+  font: bold 1.2em Arial;
+}
+#update {
+  border-radius: 10px;
+  background-color: white;
+  float: right;
+  width: 10%;
+  height: 5%;
+  font: 1em Arial;
+  padding: 3px;
+}
+.code {
+  margin: 0 auto;
+  border-radius: 2px;
+  border: 1px solid black;
+  height: 600px;
+  width: 55%;
+  float: left;
+  overflow: auto;
+}
+#htmlCode {
+  width: 99%;
+  height: 200px;
+  overflow-x: hidden;
+}
+#jsCode {
+  width: 99%;
+  height: 200px;
+  overflow-x: hidden;
+}
+#cssCode {
+  width: 99%;
+  height: 200px;
+  float: left;
+  overflow-x: hidden;
+}
+#display {
+  border-radius: 2px;
+  border: 1px solid black;
+  width: 44%;
+  height: 600px;
+  clear: right;
+  float: right;
+}
+#label {
+  font: bold 1em Arial;
+  padding: 5px;
+  margin: 2px;
+}
+.default {
+  visibility: hidden;
+}

@@ -1,74 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <style>
-      #main {
-        margin 0px auto;
-        width: 80%;
-        border: 1px solid black;
-      }
-/*      #tryIt {
-        margin: 30px auto;
-        width: 80%;
-      }*/
-      #title {
-        background-color: #AFA;
-        border-radius: 10px;
-        padding: 20px;
-        margin: 5px;
-        font: bold 1.2em Arial;
-      }
-      #update {
-        border-radius: 10px;
-        background-color: white;
-        float: right;
-        width: 10%;
-        height: 5%;
-        font: 1em Arial;
-        padding: 3px;
-      }
-      .code {
-        margin: 0 auto;
-        border-radius: 2px;
-        border: 1px solid black;
-        height: 600px;
-        width: 55%;
-        float: left;
-        overflow: auto;
-      }
-      #htmlCode {
-        width: 99%;
-        height: 200px;
-        overflow-x: hidden;
-      }
-      #jsCode {
-        width: 99%;
-        height: 200px;
-        overflow-x: hidden;
-      }
-      #cssCode {
-        width: 99%;
-        height: 200px;
-        float: left;
-        overflow-x: hidden;
-      }
-      #display {
-        border-radius: 2px;
-        border: 1px solid black;
-        width: 44%;
-        height: 600px;
-        clear: right;
-        float: right;
-      }
-      #label {
-        font: bold 1em Arial;
-        padding: 5px;
-        margin: 2px;
-      }
-      .default {
-        visibility: hidden;
-      }
-    </style>
+    <link rel="stylesheet" type="text/css" href="tutorialStyle.css">
   </head>
 
   <body onload="displayDefault()">
@@ -115,64 +48,6 @@
       </textarea>
     </div>
     
-    <script type="text/javascript">
-      // get default html values
-      var defaultCSSVal = document.getElementById('defaultCSS').value;
-      var htmlVal = document.getElementById('htmlCode').value;
-
-      // create new style and scripts object elements
-      
-      var includes = document.createElement('script');
-      var cssEle = document.createElement('style');
-
-      // elements such as animation divs and its associated style
-      // is appended into the body of iframe as well as any associating
-      // js scripts
-      var displayDefault = function() {
-        frames['display'].document.documentElement.innerHTML = htmlVal;
-        includes.setAttribute('src', '../../web-animations-js/web-animation.js');
-        cssEle.innerHTML = defaultCSSVal;
-
-        appendObjects();
-      }
-
-      // executed when button called update is clicked
-      // extract texts from the 3 text areas,
-      function update() {
-        var scriptEle = document.createElement('script');
-
-        // get values from 3 textboxes
-        htmlVal = document.getElementById('htmlCode').value;
-        var cssVal = document.getElementById('cssCode').value;
-        var jsVal = document.getElementById('jsCode').value;
-
-        // change the body and css in value in inframe
-        frames['display'].document.documentElement.innerHTML += htmlVal;
-        
-        var par;
-
-        // change the scripts in iframe
-        if (frames['display'].document.getElementsByTagName('script')[1]) {
-          var oldScript = frames['display'].document.getElementsByTagName('script')[1];
-          scriptEle.innerHTML = "\n" + jsVal + "\n";
-          frames['display'].document.getElementsByTagName('body')[0].replaceChild(scriptEle, oldScript);
-        } else {
-          scriptEle.innerHTML = jsVal;
-          par = frames['display'].document.getElementsByTagName('body')[0];
-          par.appendChild(scriptEle);
-        }
-
-        par = frames['display'].document.getElementsByTagName('style')[0];
-         par.innerHTML = defaultCSSVal + cssVal;       
-      }
-
-      var appendObjects = function() {
-        var par = frames['display'].document.getElementsByTagName('body')[0];
-        par.appendChild(includes);
-        par = frames['display'].document.getElementsByTagName('head')[0];
-        par.appendChild(cssEle);
-      }
-    </script>
-
+    <script type="text/javascript" src="tryItYourself.js"></script>
   </body>
 </html>
