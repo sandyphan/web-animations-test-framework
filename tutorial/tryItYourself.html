@@ -3,9 +3,14 @@
   <head>
     <style>
       #main {
+        margin 0px auto;
+        width: 80%;
+        border: 1px solid black;
+      }
+/*      #tryIt {
         margin: 30px auto;
         width: 80%;
-      }
+      }*/
       #title {
         background-color: #AFA;
         border-radius: 10px;
@@ -68,55 +73,52 @@
 
   <body onload="displayDefault()">
     <div id="main">
-        <div id="title">TRY IT YOURSELF
-          <input onclick="update()" id="update" type="submit" value="Update">
-        </div>
-        <div class="code">
-          <div id="label">HTML Code</div>
-          <textarea id="htmlCode" class="code"><html>
+      <div class="content">
+        <p>To create animations on objects such as moving left, right, up, down, change colours, etc, use the following interface:</p>
+        <code>new Animation(element, {effect(s)}, {optional: timed items})</code>
+        <p>'new Animation' creates an animation object, 'element' is the DOM object or animation target that we want to animate and it is a compulsory component and can be nullable. For instance, 'element' can be a 'div' with, a 'p' (paragraph). 'effects' defines the types of effects in animation such as move left, or right, or change colours, or change opacity, etc. 'effects' is also a compulsory component as well as nullable. 'timed items' can be of type double or timing dictionary and is nullable and optional component. When this parameter is double, then it specifies the duartion of a single iteration of the animation. If it is null, then the default value for iteration duration would be zero is specified in the Timing Dictionary</p>
+
+      </div>
+      <div id="tryIt">
+          <div id="title">TRY IT YOURSELF
+            <input onclick="update()" id="update" type="submit" value="Update">
+          </div>
+          <div class="code">
+            <div id="label">HTML Code</div>
+            <textarea id="htmlCode" class="code">
+<html>
   <head>
 
   </head>
   <body>
-
-  </body>
-</html></textarea>
-          <div id="label">CSS Style</div>
-          <textarea id="cssCode" class="code"></textarea>
-          <div id="label">Javascript</div>
-          <textarea id="jsCode" class="code"></textarea>
-        </div>
-        
-        <iframe id="display">
-          <div id="label">Output</div>
-        </iframe>
-    </div>
-    <textarea id="defaultHTML" class="default">
-<html>
-  <head>
-
-  <head>
-  <body>
     <div id="a" class="test"></div>
   </body>
-</html>
-    </textarea>
+</html></textarea>
+            <div id="label">CSS Style</div>
+            <textarea id="cssCode" class="code"></textarea>
+            <div id="label">Javascript</div>
+            <textarea id="jsCode" class="code"></textarea>
+          </div>
+          
+          <iframe id="display"></iframe>
+      </div>
 
-    <textarea id="defaultCSS" class="default">
-.test {
-  background-color: red;
-  border-radius: 10px;
-  width: 100px;
-  height: 50px;
-  top: 0px;
-  left: 0px;
-}
-    </textarea>
+      <textarea id="defaultCSS" class="default">
+  .test {
+    background-color: red;
+    border-radius: 10px;
+    width: 100px;
+    height: 50px;
+    top: 0px;
+    left: 0px;
+  }
+      </textarea>
+    </div>
     
     <script type="text/javascript">
       // get default html values
       var defaultCSSVal = document.getElementById('defaultCSS').value;
-      var defaultHTMLVal = document.getElementById('defaultHTML').value;
+      var htmlVal = document.getElementById('htmlCode').value;
 
       // create new style and scripts object elements
       
@@ -127,7 +129,7 @@
       // is appended into the body of iframe as well as any associating
       // js scripts
       var displayDefault = function() {
-        frames['display'].document.documentElement.innerHTML = defaultHTMLVal;
+        frames['display'].document.documentElement.innerHTML = htmlVal;
         includes.setAttribute('src', '../../web-animations-js/web-animation.js');
         cssEle.innerHTML = defaultCSSVal;
 
@@ -140,7 +142,7 @@
         var scriptEle = document.createElement('script');
 
         // get values from 3 textboxes
-        var htmlVal = document.getElementById('htmlCode').value;
+        htmlVal = document.getElementById('htmlCode').value;
         var cssVal = document.getElementById('cssCode').value;
         var jsVal = document.getElementById('jsCode').value;
 
