@@ -170,8 +170,11 @@ function restart(){
 
 // create divs at appropriate locations and flash the divs for manual testing
 function flashing(test) {
+
   //pause all animations
   for(x in animObjects){
+    //Check if the animation as already finished
+
     animObjects[x].pause();
   }
 
@@ -212,7 +215,10 @@ function flashing(test) {
   setTimeout(function() {
     _newDiv.parentNode.removeChild(_newDiv);
     for(x in animObjects){
-      animObjects[x].play();
+      console.log(animObjects[x]["currentTime"]);
+      if(animObjects[x]["currentTime"] < animObjects[x]["duration"]){
+        animObjects[x].play();
+      }
     }
   }, pauseTime);
 }
