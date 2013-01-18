@@ -60,11 +60,9 @@
   padding: 5px;
   margin: 2px;
 }
-.default {
-  visibility: hidden;
-}
 #description {
-  font: 1em Arial;
+  font: 1em sans-serif, "Comic Sans MS", cursive;
+  clear: both;
 }
 #title {
   font: bold 2em Verdana;
@@ -77,8 +75,20 @@
   padding: 3px;
   width: 80%;
   margin: 3px auto;
+  text-align: justify;
 }
 #subTitle {
   background-color: #ABCDEF;
   padding: 10px; 
+}
+code {
+  color: #94704D;
+}
+.exercises {
+  font: bold 1em "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+  background: #FFFF00;
+  width: 20%;
+  float: left;
+  padding: 10px;
+  margin: 3px;
 }

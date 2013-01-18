@@ -1,6 +1,6 @@
 // get default html values
-var defaultCSSVal = document.getElementById('defaultCSS').value;
 var htmlVal = document.getElementById('htmlCode').value;
+var cssVal = document.getElementById('cssCode').value;
 
 // create new style and scripts object elements
 
@@ -13,8 +13,7 @@ var cssEle = document.createElement('style');
 var displayDefault = function() {
   frames['display'].document.documentElement.innerHTML = htmlVal;
   includes.setAttribute('src', '../../web-animations-js/web-animation.js');
-  cssEle.innerHTML = defaultCSSVal;
-
+  cssEle.innerHTML = cssVal;
   appendObjects();
 }
 
@@ -25,7 +24,7 @@ function update() {
 
   // get values from 3 textboxes
   htmlVal = document.getElementById('htmlCode').value;
-  var cssVal = document.getElementById('cssCode').value;
+  cssVal = document.getElementById('cssCode').value;
   var jsVal = document.getElementById('jsCode').value;
 
   // change the body and css in value in inframe
