@@ -53,3 +53,8 @@ var appendObjects = function() {
   par = frames['display'].document.getElementsByTagName('head')[0];
   par.appendChild(cssEle);
 }
+
+var toggleSolution = function() {
+  var ele = document.getElementById('toggleText');
+
+}

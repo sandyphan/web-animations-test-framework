@@ -6,12 +6,18 @@
 
   <body onload="displayDefault()">
     <div id="main">
+
       <div id="title">Web Animations Tutorial</div>
+
       <div class="content">
         <p id="description">Web animations is to have a flash or GIF animation intergrated onto the web page. Normal web animations still require the use of plugins such as Java Applets, Shockwave, Adobe Flash. In this tutorial, we will be showing you how to create animations using javascript without the need of installing plugins.</p>
+
         <br />
+
         <div class="heading" id="subTitle">Create a new basic animation</div>
+
         <p id="description">To create animations on objects such as moving left, right, up, down, change colours, etc, use the following interface:</p>
+        
         <code>new Animation(element, {effect(s)}, {optional: timed items});</code>
         <p id="description">'new Animation' creates an animation object, 'element' is the DOM object or animation target that we want to animate and it is a compulsory component and can be nullable. For instance, 'element' can be a 'div' with, a 'p' (paragraph).</p>
         <p id="description">'effects' defines the types of effects in animation such as move left, or right, or change colours, or change opacity, etc. 'effects' is also a compulsory component as well as nullable. This parameter can be of AnimationEffect object or CustomAnimationEffect object. These effects will be shared with any other animation objects referring to the same AnimationEffect or CustomAnimationEffect object. In the case this component being null, the animation will have a null effect.</p>
@@ -20,7 +26,10 @@
         <div class="heading exercises">Exercise 1</div>
         <p id="description">Now let's code some animation out! In the 'Try It Yourself' block, you should see a default div block with class named 'test' and ID named 'a' coloured in red. If you don't like the colour, you can always change it around. Click on 'Update' when you have finished typing in your code.</p>
         <p id="description">Now we want to make the red rounded rectangle move to 300px from left. We should do the following:</p>
-        <code>new Animation(document.querySelector("#a"), {left: "300px"}, 2)</code>
+        <code>new Animation(document.querySelector("#a"), {left: "300px"}, 2);</code>
+        <div class="solution">
+          <p class="hideLabel solution" onclick="toggleSolution">Show Solution</p>
+          <code id="toggleText" class="solution">new Animation(document.querySelector("#a"), {left: "300px"}, 2);</code></div>
         <ol id="description">
           <li><code>'new Animation()'</code> creates a new animation object.</li>
           <li><code>'document.querySelector("#a")'</code> is a DOM method which gets the element with id equals to 'a' from the HTML file. You can always use <code>'document.getElementById("a")'</code> which would result the same thing. Since we have defined its class name as well, we can also select it using <code>'document.querySelector(".test")'.</code></li>
@@ -97,6 +106,11 @@
           
           <iframe id="display"></iframe>
         </div>
+
+        <p id="description">You might wonder why does the rectangle moves diagonally when you have 2 new Animation() commands. That is because you have made 2 animation objects at the same time and let them ran at the same time, if you want the movement in sequence, then you will have to apply a 'startDelay' to the timing as follow:</p>
+        <code>new Animation(document.querySelector("#a"), {left: "300px"}, 2.0);</code><br />
+        <code>new Animation(document.querySelector("#a"), {top: "500px"}, {startDelay: 2, duration: 2});</code>
+        <p id="description">Notice how on the second animation object, we have put 'startDelay' and 'duration' in {}, that is because we are creating a timing dictionary to apply to the animation. Any timing dictionary will have to be stored in {}. You might also notice that number '2' is gone! That is because we have apply number '2' to 'duration' which is the duration of the animation.</p>
 
       </div> <!-- content ending div -->
     </div>

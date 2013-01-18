@@ -4,8 +4,7 @@
 }
 #tryIt {
   margin: 30px auto;
-  width: 70%;
-  margin-bottom: 50px;
+  width: 80%;
 }
 .heading {
   background-color: #AFA;
@@ -86,6 +85,7 @@
 }
 code {
   color: #94704D;
+  font-size: 1.1em;
 }
 .exercises {
   font: bold 1em "Lucida Sans Unicode", "Lucida Grande", sans-serif;
@@ -94,4 +94,6 @@ code {
   float: left;
   padding: 10px;
   margin: 30px 3px;
+}
+.solution {
 }
