@@ -5,6 +5,7 @@
 #tryIt {
   margin: 30px auto;
   width: 70%;
+  margin-bottom: 50px;
 }
 .heading {
   background-color: #AFA;
@@ -59,6 +60,8 @@
   font: bold 1em Arial;
   padding: 5px;
   margin: 2px;
+  float: left;
+  clear: both;
 }
 #description {
   font: 1em sans-serif, "Comic Sans MS", cursive;
@@ -90,5 +93,5 @@ code {
   width: 20%;
   float: left;
   padding: 10px;
-  margin: 3px;
+  margin: 30px 3px;
 }

@@ -17,7 +17,6 @@
         <p id="description">'effects' defines the types of effects in animation such as move left, or right, or change colours, or change opacity, etc. 'effects' is also a compulsory component as well as nullable. This parameter can be of AnimationEffect object or CustomAnimationEffect object. These effects will be shared with any other animation objects referring to the same AnimationEffect or CustomAnimationEffect object. In the case this component being null, the animation will have a null effect.</p>
         <p id="description">'timed items' can be of type double or timing dictionary and is nullable and optional component. When this parameter is double, then it specifies the duartion of a single iteration of the animation. If it is null, then the default value for iteration duration would be zero is specified in the Timing Dictionary.</p>
         <br />
-        <br />
         <div class="heading exercises">Exercise 1</div>
         <p id="description">Now let's code some animation out! In the 'Try It Yourself' block, you should see a default div block with class named 'test' and ID named 'a' coloured in red. If you don't like the colour, you can always change it around. Click on 'Update' when you have finished typing in your code.</p>
         <p id="description">Now we want to make the red rounded rectangle move to 300px from left. We should do the following:</p>
@@ -29,8 +28,7 @@
           <li><code>'2'</code> will set the duration of the animation to 2 seconds. The bigger the number, the slower the animation speed and vice versa.</li>
         </ol>
 
-      </div>
-      <div id="tryIt">
+        <div id="tryIt">
           <div class="heading">TRY IT YOURSELF
             <input onclick="update()" id="update" type="submit" value="Update">
           </div>
@@ -60,9 +58,48 @@
           </div>
           
           <iframe id="display"></iframe>
-      </div>
+        </div>
+
+        <div></div>
+
+        <div class="exercises">Exercise 2</div>
+        <p id="description">Now try move the red rectangle 500px from top. Try it one time without replacing the original code you have entered, then try another time with all old javascript code replaced. What do you see?</p>
+        <br />
+
+        <div id="tryIt">
+          <div class="heading">TRY IT YOURSELF
+            <input onclick="update()" id="update" type="submit" value="Update">
+          </div>
+          <div class="code">
+            <div id="label">HTML Code</div>
+            <textarea id="htmlCode" class="code">
+<html>
+  <head>
+
+  </head>
+  <body>
+    <div id="a" class="test"></div>
+  </body>
+</html></textarea>
+            <div id="label">CSS Style</div>
+            <textarea id="cssCode" class="code">
+.test {
+  background-color: red;
+  border-radius: 10px;
+  width: 100px;
+  height: 50px;
+  top: 0px;
+  left: 0px;
+}</textarea>
+            <div id="label">Javascript</div>
+            <textarea id="jsCode" class="code"></textarea>
+          </div>
+          
+          <iframe id="display"></iframe>
+        </div>
+
+      </div> <!-- content ending div -->
     </div>
-    
     <script type="text/javascript" src="tryItYourself.js"></script>
   </body>
 </html>
