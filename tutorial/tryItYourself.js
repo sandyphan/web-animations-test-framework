@@ -56,5 +56,14 @@ var appendObjects = function() {
 
 var toggleSolution = function() {
   var ele = document.getElementById('toggleText');
+  var p = getComputedStyle(ele, null);
+  var label = document.getElementById('hideLabel');
 
+  if (p.display === 'none') {
+    ele.style.display = 'block';
+    label.innerHTML = 'Hide Solution';
+  } else if (p.display === 'block') {
+    ele.style.display = 'none';
+    label.innerHTML = 'Show Solution';
+  }
 }
