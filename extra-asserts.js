@@ -96,7 +96,7 @@ function check(object, property, target, time, message){
 //For auto state: It is called each frame render to run the currently loaded test
 //For manual state: It sets up the appropiate timeout for each group of tests that happen at the same time
 function runTests(currTest){
-  if(state != "Manual"){
+  if(state == "Auto"){
     //if currTest isn't null then do the test for it
     if(currTest != null){
       currTest.test.step(function (){
@@ -113,7 +113,7 @@ function runTests(currTest){
       //enough to let the first frame render
       //stops bug: where at time zero if x is blue then is told to animate from red to green
       //and a check is performed at time zero for color red - before this it checked when x was still blue
-      if(nextTest.time == 0 ) nextTest.time += 0.01;
+      if(nextTest.time == 0 ) nextTest.time += 0.05;
       for(x in animObjects){
         animObjects[x]["currentTime"] = nextTest.time;
       }
@@ -133,7 +133,6 @@ function runTests(currTest){
       testPacket[testIndex].push(testStack[x]);
       while(x < (testStack.length-1)){
         if(testStack[x].time == testStack[x+1].time){
-          console.log("ham");
           x++;
           testPacket[testIndex].push(testStack[x]);
         } else break;
@@ -141,7 +140,6 @@ function runTests(currTest){
 
       if(testPacket[testIndex][0].time == 0 ) testPacket[testIndex][0].time += 0.01;
       setTimeout(function() {
-        console.log("bam");
         for(x in testPacket[testIndex]){
           testPacket[testIndex][x].test.step(function() {
             assert_properties(testPacket[testIndex][x].object, testPacket[testIndex][x].property, testPacket[testIndex][x].target, testPacket[testIndex][x].message);
@@ -153,7 +151,6 @@ function runTests(currTest){
       }, (testPacket[testIndex][0].time * 1000)+(pauseTime*testIndex));
 
       testIndex++;
-      console.log(testIndex);
     }
     testIndex = 0;
     //start all the animations running
@@ -191,14 +188,21 @@ function flashing(test) {
   for(x in test.property){
     var prop = test.property[x];
     var tar = test.target[x];
-    if(prop == "left"){
-      seenLeft = true;
-      tar += parseInt(test.offsets["left"]);
-    } else if(prop == "top"){
-      seenTop = true;
-      tar += parseInt(test.offsets["top"]);
+    if(test.cssStyle.position == "relative"){
+      if(prop == "left"){
+        seenLeft = true;
+        tar = parseInt(tar);
+        tar += parseInt(test.offsets["left"]);
+        tar = tar + "px";
+        console.log("in left");
+      } else if(prop == "top"){
+        seenTop = true;
+        tar = parseInt(tar);
+        tar += parseInt(test.offsets["top"]);
+        tar = tar + "px";
+      }
     }
-    _newDiv.style[prop] = tar + "px";
+    _newDiv.style[prop] = tar;
   }
   
   if(!seenTop){
@@ -224,7 +228,7 @@ function flashing(test) {
   }, pauseTime);
 }
 
-//Helper function which the current absolute position of an object
+//Helper function which gets the current absolute position of an object
 //Shamelessly stolen from http://stackoverflow.com/questions/442404/dynamically-retrieve-the-position-x-y-of-an-html-element
 function getOffset( el ) {
     var _x = 0;
@@ -252,8 +256,7 @@ function assert_properties(object, props, targets, message, epsilons){
     if(props[i].indexOf("olor") != -1){ //for anything with the word color in it do the color assert (C is not there because it could be a c or C)
       assert_color(object, targets[i], message);
     } else {
-      console.log("urgh here");
-      assert_approx_equals(parseInt(comp[props[i]]), targets[i], 10, message);
+      assert_approx_equals(parseInt(comp[props[i]]), parseInt(targets[i]), 10, message);
     }
     
   }
