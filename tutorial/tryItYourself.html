@@ -4,7 +4,7 @@
     <link rel="stylesheet" type="text/css" href="tutorialStyle.css">
   </head>
 
-  <body>
+  <body  onload="displayDefault()">
     <div id="main">
 
       <div id="title">Web Animations Tutorial</div>
@@ -46,7 +46,7 @@
         </ol>
 
 <!--         <button onclick="generateEditor()">Try It</button> -->
-<!--        <div id="tryIt" onload="generateEditor()">
+       <div id="tryIt">
           <div class="heading">TRY IT YOURSELF
              <input onclick="update()" id="update" type="submit" value="Update">
           </div>
@@ -75,7 +75,8 @@
             <textarea id="jsCode" class="code"></textarea>
           </div>
           
-          <iframe id="display"></iframe> -->
+          <iframe id="display"></iframe>
+        </div>
 
         <div></div>
 
@@ -122,7 +123,6 @@
         <code>new Animation(document.querySelector("#a"), {left: "300px"}, 2.0);</code><br />
         <code>new Animation(document.querySelector("#a"), {top: "500px"}, {startDelay: 2, duration: 2});</code>
         <p id="description">Notice how on the second animation object, we have put 'startDelay' and 'duration' in {}, that is because we are creating a timing dictionary to apply to the animation. Any timing dictionary will have to be stored in {}. You might also notice that number '2' is gone! That is because we have apply number '2' to 'duration' which is the duration of the animation.</p>
-
       </div>
     </div> <!-- content ending div -->
     <script type="text/javascript" src="tryItYourself.js"></script>

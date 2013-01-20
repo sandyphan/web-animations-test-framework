@@ -56,6 +56,7 @@ var appendObjects = function() {
   par.appendChild(cssEle);
 }
 
+// make the solution box toggleable
 var toggleSolution = function() {
   var ele = document.getElementById('toggleText');
   var p = getComputedStyle(ele, null);
@@ -70,7 +71,7 @@ var toggleSolution = function() {
   }
 }
 
-var generateEditor = function() {
+/*var generateEditor = function() {
   // a wrapper for the whole try it editor section
   var tryIt = document.querySelector('#tryIt');
   console.log(tryIt);
@@ -133,4 +134,4 @@ var generateEditor = function() {
   var iframe = document.createElement('iframe');
   iframe.id = 'display';
   tryIt.appendChild(iframe);
-}
+}*/
