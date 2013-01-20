@@ -1,108 +1,68 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <style>
-      #main {
-        margin: 30px auto;
-        width: 80%;
-      }
-      #title {
-        background-color: #AFA;
-        border-radius: 10px;
-        padding: 20px;
-        margin: 5px;
-        font: bold 1.2em Arial;
-      }
-      #update {
-        border-radius: 10px;
-        background-color: white;
-        float: right;
-        width: 10%;
-        height: 5%;
-        font: 1em Arial;
-        padding: 3px;
-      }
-      .code {
-        margin: 0 auto;
-        border-radius: 2px;
-        border: 1px solid black;
-        height: 600px;
-        width: 55%;
-        float: left;
-        overflow: auto;
-      }
-      #htmlCode {
-        width: 99%;
-        height: 200px;
-        overflow-x: hidden;
-      }
-      #jsCode {
-        width: 99%;
-        height: 200px;
-        overflow-x: hidden;
-      }
-      #cssCode {
-        width: 99%;
-        height: 200px;
-        float: left;
-        overflow-x: hidden;
-      }
-      #display {
-        border-radius: 2px;
-        border: 1px solid black;
-        width: 44%;
-        height: 600px;
-        clear: right;
-        float: right;
-      }
-      #label {
-        font: bold 1em Arial;
-        padding: 5px;
-        margin: 2px;
-      }
-      .default {
-        visibility: hidden;
-      }
-    </style>
+    <link rel="stylesheet" type="text/css" href="tutorialStyle.css">
   </head>
 
-  <body onload="displayDefault()">
-    <div id="main">
-        <div id="title">TRY IT YOURSELF
-          <input onclick="update()" id="update" type="submit" value="Update">
-        </div>
-        <div class="code">
-          <div id="label">HTML Code</div>
-          <textarea id="htmlCode" class="code"><html>
-  <head>
-
-  </head>
   <body>
+    <div id="main">
 
-  </body>
-</html></textarea>
-          <div id="label">CSS Style</div>
-          <textarea id="cssCode" class="code"></textarea>
-          <div id="label">Javascript</div>
-          <textarea id="jsCode" class="code"></textarea>
-        </div>
-        
-        <iframe id="display">
-          <div id="label">Output</div>
-        </iframe>
-    </div>
-    <textarea id="defaultHTML" class="default">
+      <div id="title">Web Animations Tutorial</div>
+
+      <div class="content">
+        <p id="description">Web animations is to have a flash or GIF animation intergrated onto the web page. Normal web animations still require the use of plugins such as Java Applets, Shockwave, Adobe Flash. In this tutorial, we will be showing you how to create animations using javascript without the need of installing plugins.</p>
+
+        <br />
+
+        <div class="heading" id="subTitle">Create a new basic animation</div>
+
+        <p id="description">To create animations on objects such as moving left, right, up, down, change colours, etc, use the following interface:</p>
+
+        <code>new Animation(element, {effect(s)}, {optional: timed items});</code>
+
+        <p id="description">'new Animation' creates an animation object, 'element' is the DOM object or animation target that we want to animate and it is a compulsory component and can be nullable. For instance, 'element' can be a 'div' with, a 'p' (paragraph).</p>
+
+        <p id="description">'effects' defines the types of effects in animation such as move left, or right, or change colours, or change opacity, etc. 'effects' is also a compulsory component as well as nullable. This parameter can be of AnimationEffect object or CustomAnimationEffect object. These effects will be shared with any other animation objects referring to the same AnimationEffect or CustomAnimationEffect object. In the case this component being null, the animation will have a null effect.</p>
+
+        <p id="description">'timed items' can be of type double or timing dictionary and is nullable and optional component. When this parameter is double, then it specifies the duartion of a single iteration of the animation. If it is null, then the default value for iteration duration would be zero is specified in the Timing Dictionary.</p>
+
+        <br />
+
+        <div class="heading exercises">Exercise 1</div>
+
+        <p id="description">Now let's code some animation out! In the 'Try It Yourself' block, you should see a default div block with class named 'test' and ID named 'a' coloured in red. If you don't like the colour, you can always change it around. Click on 'Update' when you have finished typing in your code.</p>
+        <p id="description">Now we want to make the red rounded rectangle move to 300px from left for 2 seconds. We should do the following:</p>
+
+        <code>new Animation(document.querySelector("#a"), {left: "300px"}, 2);</code>
+
+        <a href="#" onclick="toggleSolution()"><div id="hideLabel">Show Solution</div></a>
+<!--         <div id="toggleText"><code id="toggleText">new Animation(document.querySelector("#a"), {left: "300px"}, 2);</code></div> -->
+
+        <ol id="description">
+          <li><code>'new Animation()'</code> creates a new animation object.</li>
+          <li><code>'document.querySelector("#a")'</code> is a DOM method which gets the element with id equals to 'a' from the HTML file. You can always use <code>'document.getElementById("a")'</code> which would result the same thing. Since we have defined its class name as well, we can also select it using <code>'document.querySelector(".test")'.</code></li>
+          <li><code>'{left: "300px"}'</code> is the effects of the animation. In this case we are letting it move to 300px from left.</li>
+          <li><code>'2'</code> will set the duration of the animation to 2 seconds. The bigger the number, the slower the animation speed and vice versa.</li>
+        </ol>
+
+<!--         <button onclick="generateEditor()">Try It</button> -->
+<!--        <div id="tryIt" onload="generateEditor()">
+          <div class="heading">TRY IT YOURSELF
+             <input onclick="update()" id="update" type="submit" value="Update">
+          </div>
+          <div class="code">
+            <div id="label">HTML Code</div>
+            <textarea id="htmlCode" class="code">
 <html>
   <head>
 
-  <head>
+  </head>
   <body>
     <div id="a" class="test"></div>
   </body>
-</html>
-    </textarea>
-
-    <textarea id="defaultCSS" class="default">
+</html></textarea>
+            <div id="label">CSS Style</div>
+            <textarea id="cssCode" class="code">
 .test {
   background-color: red;
   border-radius: 10px;
@@ -110,67 +70,61 @@
   height: 50px;
   top: 0px;
   left: 0px;
-}
-    </textarea>
-    
-    <script type="text/javascript">
-      // get default html values
-      var defaultCSSVal = document.getElementById('defaultCSS').value;
-      var defaultHTMLVal = document.getElementById('defaultHTML').value;
+}</textarea>
+            <div id="label">Javascript</div>
+            <textarea id="jsCode" class="code"></textarea>
+          </div>
+          
+          <iframe id="display"></iframe> -->
 
-      // create new style and scripts object elements
-      
-      var includes = document.createElement('script');
-      var cssEle = document.createElement('style');
+        <div></div>
 
-      // elements such as animation divs and its associated style
-      // is appended into the body of iframe as well as any associating
-      // js scripts
-      var displayDefault = function() {
-        frames['display'].document.documentElement.innerHTML = defaultHTMLVal;
-        includes.setAttribute('src', '../../web-animations-js/web-animation.js');
-        cssEle.innerHTML = defaultCSSVal;
+        <div class="exercises">Exercise 2</div>
+        <p id="description">Now try move the red rectangle 500px from top for 2 seconds. Try it one time without replacing the original code you have entered, then try another time with all old javascript code replaced. What do you see?</p>
+        <br />
 
-        appendObjects();
-      }
+        <a href="#" onclick="toggleSolution()"><div id="hideLabel">Show Solution</div></a>
+<!--         <div id="toggleText"><code id="toggleText">new Animation(document.querySelector("#a"), {top: "500px"}, 2);</code></div> -->
 
-      // executed when button called update is clicked
-      // extract texts from the 3 text areas,
-      function update() {
-        var scriptEle = document.createElement('script');
+<!--         <div id="tryIt">
+          <div class="heading">TRY IT YOURSELF
+            <input onclick="update()" id="update" type="submit" value="Update">
+          </div>
+          <div class="code">
+            <div id="label">HTML Code</div>
+            <textarea id="htmlCode" class="code">
+<html>
+  <head>
 
-        // get values from 3 textboxes
-        var htmlVal = document.getElementById('htmlCode').value;
-        var cssVal = document.getElementById('cssCode').value;
-        var jsVal = document.getElementById('jsCode').value;
+  </head>
+  <body>
+    <div id="a" class="test"></div>
+  </body>
+</html></textarea>
+            <div id="label">CSS Style</div>
+            <textarea id="cssCode" class="code">
+.test {
+  background-color: red;
+  border-radius: 10px;
+  width: 100px;
+  height: 50px;
+  top: 0px;
+  left: 0px;
+}</textarea>
+            <div id="label">Javascript</div>
+            <textarea id="jsCode" class="code"></textarea>
+          </div>
+          
+          <iframe id="display"></iframe>
+        </div> -->
 
-        // change the body and css in value in inframe
-        frames['display'].document.documentElement.innerHTML += htmlVal;
-        
-        var par;
+        <p id="description">You might wonder why does the rectangle moves diagonally when you have 2 new Animation() commands. That is because you have made 2 animation objects at the same time and let them ran at the same time, if you want the movement in sequence, then you will have to apply a 'startDelay' to the timing as follow:</p>
+        <code>new Animation(document.querySelector("#a"), {left: "300px"}, 2.0);</code><br />
+        <code>new Animation(document.querySelector("#a"), {top: "500px"}, {startDelay: 2, duration: 2});</code>
+        <p id="description">Notice how on the second animation object, we have put 'startDelay' and 'duration' in {}, that is because we are creating a timing dictionary to apply to the animation. Any timing dictionary will have to be stored in {}. You might also notice that number '2' is gone! That is because we have apply number '2' to 'duration' which is the duration of the animation.</p>
 
-        // change the scripts in iframe
-        if (frames['display'].document.getElementsByTagName('script')[1]) {
-          var oldScript = frames['display'].document.getElementsByTagName('script')[1];
-          scriptEle.innerHTML = "\n" + jsVal + "\n";
-          frames['display'].document.getElementsByTagName('body')[0].replaceChild(scriptEle, oldScript);
-        } else {
-          scriptEle.innerHTML = jsVal;
-          par = frames['display'].document.getElementsByTagName('body')[0];
-          par.appendChild(scriptEle);
-        }
-
-        par = frames['display'].document.getElementsByTagName('style')[0];
-         par.innerHTML = defaultCSSVal + cssVal;       
-      }
-
-      var appendObjects = function() {
-        var par = frames['display'].document.getElementsByTagName('body')[0];
-        par.appendChild(includes);
-        par = frames['display'].document.getElementsByTagName('head')[0];
-        par.appendChild(cssEle);
-      }
-    </script>
-
+      </div>
+    </div> <!-- content ending div -->
+    <script type="text/javascript" src="tryItYourself.js"></script>
   </body>
 </html>

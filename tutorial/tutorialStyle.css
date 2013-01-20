@@ -1,0 +1,127 @@
+#main {
+  margin: 50px auto;
+  width: 80%;
+}
+#tryIt {
+  margin: 30px auto;
+  width: 80%;
+  border: 1px solid black;
+}
+.heading {
+  background-color: #AFA;
+  border-radius: 10px;
+  padding: 20px;
+  margin: 5px;
+  font: bold 1.2em Arial;
+}
+#update {
+  border-radius: 10px;
+  background-color: white;
+  float: right;
+  width: 10%;
+  height: 5%;
+  font: 1em Arial;
+  padding: 3px;
+}
+.code {
+  margin: 0 auto;
+  border-radius: 2px;
+  border: 1px solid black;
+  height: 600px;
+  width: 55%;
+  float: left;
+  overflow: auto;
+}
+#htmlCode {
+  width: 99%;
+  height: 200px;
+  overflow-x: hidden;
+}
+#jsCode {
+  width: 99%;
+  height: 200px;
+  overflow-x: hidden;
+}
+#cssCode {
+  width: 99%;
+  height: 200px;
+  float: left;
+  overflow-x: hidden;
+}
+#display {
+  border-radius: 2px;
+  border: 1px solid black;
+  width: 44%;
+  height: 600px;
+  clear: right;
+  float: right;
+}
+#label {
+  font: bold 1em Arial;
+  padding: 5px;
+  margin: 2px;
+  float: left;
+  clear: both;
+}
+#description {
+  font: 1em sans-serif, "Comic Sans MS", cursive;
+  clear: both;
+}
+#title {
+  font: bold 2em Verdana;
+  color: #680;
+  text-align: center;
+  padding: 10px;
+  margin: 2px;
+}
+.content{
+  padding: 3px;
+  width: 80%;
+  margin: 3px auto;
+  text-align: justify;
+}
+#subTitle {
+  background-color: #ABCDEF;
+  padding: 10px; 
+}
+code {
+  color: #94704D;
+  font-size: 1.1em;
+}
+.exercises {
+  font: bold 1em "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+  background: #FFFF00;
+  width: 20%;
+  float: left;
+  padding: 10px;
+  margin: 30px 3px;
+}
+a {
+  text-decoration: none;
+}
+a:visited {
+  color: black;
+}
+a:hover {
+  background-color: #E6E6E6;
+}
+#toggleText {
+  display: none;
+  position: relative;
+  float: right;
+  clear: right;
+  padding: 3px;
+  border: 1px solid black;
+}
+#hideLabel {
+  width: 15%;
+  height: 20px;
+  float: right;
+  background-color: #999999;
+  padding: 5px;
+  margin: 10px;
+  font: 1.1em "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+  color: black;
+  text-align: center;
+  border-radius: 10px;
+}
