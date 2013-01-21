@@ -102,10 +102,8 @@ function check(object, property, target, time, message){
     var maxTime = 2000; //TO DO: automatically calculate this
     //generate a test for each time you want to check the objects
     for(var x = 0; x < 2; x++){
-      console.log(time * x);
       testStack.push(new testRecord(test, object, property, target, time*x, "Property "+property+" is not equal to "+target, css, offsets, true));
     }
-    console.log(time * x);
     testStack.push(new testRecord(test, object, property, target, time*x, "Property "+property+" is not equal to "+target, css, offsets, "Last refTest"));   
   } else {
     testStack.push(new testRecord(test, object, property, target, time, "Property "+property+" is not equal to "+target, css, offsets, false));
@@ -155,7 +153,6 @@ function runTests(){
     //Create a timeout to finish the tests
     setTimeout(function() {
       done();
-      console.log("boom");
     }, (testPacket[testIndex-1][0].time * 1000)+(pauseTime * testIndex)+500);
 
     testIndex = 0;
@@ -180,7 +177,6 @@ function runAutoTest(){
         assert_properties(currTest.object, currTest.property, currTest.target, currTest.message);
       });
       if(currTest.isRefTest == false || currTest.isRefTest == "Last refTest") currTest.test.done();
-      //console.log(currTest);
     }
   }
   if(testIndex < testPacket.length){
@@ -257,7 +253,9 @@ function flashing(test) {
   setTimeout(function() {
     _newDiv.parentNode.removeChild(_newDiv);
     for(x in animObjects){
-      if(animObjects[x]["currentTime"] < animObjects[x]["duration"]){
+      console.log(animObjects[x]["currentTime"] + " " + animObjects[x]["duration"] + " " + animObjects[x]["animationDuration"]);
+      if(animObjects[x]["currentTime"] < animObjects[x]["animationDuration"]){
+        console.log("peanut");
         animObjects[x].play();
       }
     }
@@ -293,7 +291,6 @@ function assert_properties(object, props, targets, message, epsilons){
     for(var i = 1; i < props.length; i++){
       assert_equals(comp[props[i]], tar[props[i]], message);
     }
-    console.log("yay test");
   } else {
     for(var i = 0; i < props.length; i++){
       if(props[i].indexOf("olor") != -1){ //for anything with the word color in it do the color assert (C is not there because it could be a c or C)
