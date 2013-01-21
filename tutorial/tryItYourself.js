@@ -33,13 +33,16 @@ var update = function() {
   
   var par;
   
-  // change the scripts in iframe
+  // change the js scripts in iframe
+  // the 2 scripts are made to run asynchronously
+  // the codes inside the function should be executed after everything
+  // inside includes is executed first
   var includes = document.createElement('script');
   includes.setAttribute('src', '../../web-animations-js/web-animation.js');
   includes.onload = function() {
     if (frames['display'].document.getElementsByTagName('script')[1]) {
       var oldScript = frames['display'].document.getElementsByTagName('script')[1];
-      scriptEle.innerHTML = '\n' + jsVal + '\n';
+      scriptEle.innerHTML = jsVal;
       frames['display'].document.getElementsByTagName('body')[0].replaceChild(scriptEle, oldScript);
     } else {
       scriptEle.innerHTML = jsVal;
@@ -47,8 +50,10 @@ var update = function() {
       par.appendChild(scriptEle);
     }
   }
+  // append the polyfill script link into body
   frames['display'].document.getElementsByTagName('body')[0].appendChild(includes);
 
+  // add css codes to iframe
   cssVal = document.getElementById('cssCode').value;
   frames['display'].document.getElementsByTagName('style')[0].innerHTML = cssVal;
 }
@@ -68,6 +73,8 @@ var toggleSolution = function() {
   }
 }
 
+// checks if the 2 strings are the same
+// return boolean values
 var contentNotEqual = function(oldText, newText) {
   if (oldText !== newText) {
     return true;
