@@ -15,6 +15,7 @@
  */
  /*TO DO:
  - incorperate object notation (JSON) varibles for the test so it is easier to call
+ - Add being able to change the timeouts via setupTests
  */
 
 var animObjects = []; //to keep track of all animations
@@ -26,7 +27,7 @@ var testIndex = 0; //Holds which test packet we are up to
 var testPacket = []; //Each index holds all the tests that occur at the same time
 
 var pauseTime = 500; //how long to show each manual check for
-var testTimeout = 20000; //how long it takes an individual test to timeout
+var testTimeout = 1000; //how long it takes an individual test to timeout
 var frameworkTimeout = 20000; //how long it takes for the whole test system to timeout
 
 function testRecord(test, object, property, target, time, message, cssStyle, offsets, isRefTest){
@@ -51,7 +52,18 @@ function testAnimation(a, b, c){
 
 //Call this function before setting up any checks
 //It generates the testing buttons and log and the testharness setup
-function setupTests(){
+function setupTests(timeouts){
+  //Use any user stated timeouts
+  var supportedProperties = [];
+  supportedProperties["frameworkTimeout"] = 0;
+  supportedProperties["testTimeout"] = 0;
+  for (var candidate in timeouts) {
+    if (supportedProperties.hasOwnProperty(candidate)) {
+      if(candidate == "frameworkTimeout") frameworkTimeout = timeouts.frameworkTimeout;
+      else testTimeout = timeouts.testTimeout;
+    }
+  }
+  
   //Set up padding for option bar
   var padding = document.createElement('div');
   padding.id ="padding";

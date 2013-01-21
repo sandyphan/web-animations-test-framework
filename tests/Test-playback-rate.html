@@ -67,20 +67,20 @@ Written By Sarah Heimlich
 <link rel='stylesheet' type="text/css" href="../animation-test-style.css">
 
 <script>
-setupTests();
+setupTests({testTimeout: 10000});
 
 var topObjects = document.querySelectorAll(".top");
 var bottomObjects = document.querySelectorAll(".bottom");
 
 for (var i = 0; i < topObjects.length; i++) {
-  new testAnimation(topObjects[i], {left: ["100px", "600px"]}, {duration: 13*(i + 1), playbackRate: i + 1 });
-  new testAnimation(bottomObjects[i], {left: ["100px", "600px"]}, {duration: 13});
+  new testAnimation(topObjects[i], {left: ["100px", "600px"]}, {duration: 2*(i + 1), playbackRate: i + 1 });
+  new testAnimation(bottomObjects[i], {left: ["100px", "600px"]}, {duration: 2});
 }
 
 for (var i = 0; i < topObjects.length; i++) {
   check(topObjects[i], ["refTest","left"], bottomObjects[i], 1, "Ref Test "+ i);
-  //check(topObjects[i], ["left"],["100px"], 0, "Start position check "+ i);
-  //check(topObjects[i], ["left"],["600px"], 2, "End position check "+ i);
+  check(topObjects[i], ["left"],["100px"], 0, "Start position check "+ i);
+  check(topObjects[i], ["left"],["600px"], 2, "End position check "+ i);
 }
 
 runTests();
