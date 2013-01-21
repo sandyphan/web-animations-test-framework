@@ -13,6 +13,7 @@
   padding: 20px;
   margin: 5px;
   font: bold 1.2em Arial;
+  height: 25px;
 }
 #update {
   border-radius: 10px;
@@ -63,7 +64,7 @@
   float: left;
   clear: both;
 }
-#description {
+.description {
   font: 1em sans-serif, "Comic Sans MS", cursive;
   clear: both;
 }
@@ -80,7 +81,7 @@
   margin: 3px auto;
   text-align: justify;
 }
-#subTitle {
+.subTitle {
   background-color: #ABCDEF;
   padding: 10px; 
 }
@@ -106,13 +107,15 @@ a:visited {
 a:hover {
   background-color: #E6E6E6;
 }
+div {
+  height: 50px;
+}
 #toggleText {
   display: none;
   position: relative;
   float: right;
   clear: right;
   padding: 3px;
-  border: 1px solid black;
 }
 #hideLabel {
   width: 15%;
