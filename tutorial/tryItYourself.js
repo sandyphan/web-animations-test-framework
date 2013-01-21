@@ -50,12 +50,14 @@ var update = function() {
  // jsVal = jsVal.replace("Animation", "testAnimation");
   console.log(jsVal);
 
-  console.log(htmlVal + "\n" + "<script src='../../web-animations-js/web-animation.js'></script>"
-  + "<script src='../testharness/testharness.js'></script>"
-  + "<script src='../testharness/testharnessreport.js'></script>"
-  + "<script src='../extra-asserts.js'></script>"
-  + "<link rel='stylesheet' href='../testharness/testharness.css'>"
-  + "<link rel='stylesheet' type='text/css' href='../animation-test-style.css'>"); 
+  htmlVal = (htmlVal + "\n" 
+    + "\n" + "<script src='../../web-animations-js/web-animation.js'></script>"
+    + "\n" + "<script src='../testharness/testharness.js'></script>"
+    + "\n" + "<script src='../testharness/testharnessreport.js'></script>"
+    + "\n" + "<script src='../extra-asserts.js'></script>"
+    + "\n" + "<link rel='stylesheet' href='../testharness/testharness.css'>"
+    + "\n" + "<link rel='stylesheet' type='text/css' href='../animation-test-style.css'>"
+    + "\n" + "<div id='b' class='test'></test>"); 
 
   // change the body and css in value in inframe
   frames['display'].document.documentElement.innerHTML = htmlVal;
@@ -65,11 +67,6 @@ var update = function() {
 
   // change the scripts in iframe
   var includes = document.createElement('script');
-  //includes.setAttribute('src', '../../web-animations-js/web-animation.js');
-  //var includeAgain = document.createElement('script');
-  //includeAgain.setAttribute("src", "../extra-asserts.js");
-  //console.log(includes);
-  //console.log(includeAgain);
   includes.onload = function() {
     if (frames['display'].document.getElementsByTagName('script')[1]) {
       var oldScript = frames['display'].document.getElementsByTagName('script')[1];
