@@ -3,8 +3,6 @@ var htmlVal = document.getElementById('htmlCode').value;
 var cssVal = document.getElementById('cssCode').value;
 
 // create new style and scripts object elements
-
-var includes = document.createElement('script');
 var cssEle = document.createElement('style');
 
 // elements such as animation divs and its associated style
@@ -13,20 +11,22 @@ var cssEle = document.createElement('style');
 var displayDefault = function() {
   frames['display'].document.documentElement.innerHTML = htmlVal;
   cssEle.innerHTML = cssVal;
-  par = frames['display'].document.getElementsByTagName('style')[0];
-  par.appendChild(cssEle);
+  frames['display'].document.getElementsByTagName('style')[0].innerHTML = cssVal;
 }
 
 // executed when button called update is clicked
 // extract texts from the 3 text areas,
-function update() {
+var update = function() {  
   var scriptEle = document.createElement('script');
+  scriptEle.async = false;
 
   // get values from 3 textboxes
-  htmlVal = document.getElementById('htmlCode').value;
-  cssVal = document.getElementById('cssCode').value;
+  if (contentNotEqual(htmlVal, document.getElementById('htmlCode').value)) {
+    htmlVal = document.getElementById('htmlCode').value;
+    frames['display'].document.documentElement.innerHTML = htmlVal;
+  }
+
   var jsVal = document.getElementById('jsCode').value;
-  includes.setAttribute('src', '../../web-animations-js/web-animation.js');
 
   // change the body and css in value in inframe
   frames['display'].document.documentElement.innerHTML = htmlVal;
@@ -34,27 +34,23 @@ function update() {
   var par;
   
   // change the scripts in iframe
-  par = frames['display'].document.getElementsByTagName('body')[0];
-  console.log(includes);
-  par.appendChild(includes);
-  
-  if (frames['display'].document.getElementsByTagName('script')[1]) {
-    var oldScript = frames['display'].document.getElementsByTagName('script')[1];
-    scriptEle.innerHTML = '\n' + jsVal + '\n';
-    frames['display'].document.getElementsByTagName('body')[0].replaceChild(scriptEle, oldScript);
-  } else {
-    scriptEle.innerHTML = jsVal;
-    par = frames['display'].document.getElementsByTagName('body')[0];
-    par.appendChild(scriptEle);
+  var includes = document.createElement('script');
+  includes.setAttribute('src', '../../web-animations-js/web-animation.js');
+  includes.onload = function() {
+    if (frames['display'].document.getElementsByTagName('script')[1]) {
+      var oldScript = frames['display'].document.getElementsByTagName('script')[1];
+      scriptEle.innerHTML = '\n' + jsVal + '\n';
+      frames['display'].document.getElementsByTagName('body')[0].replaceChild(scriptEle, oldScript);
+    } else {
+      scriptEle.innerHTML = jsVal;
+      par = frames['display'].document.getElementsByTagName('body')[0];
+      par.appendChild(scriptEle);
+    }
   }
+  frames['display'].document.getElementsByTagName('body')[0].appendChild(includes);
 
-  par = frames['display'].document.getElementsByTagName('style')[0];
-  par.innerHTML = cssVal;       
-}
-
-var appendObjects = function() {
-  
-  
+  cssVal = document.getElementById('cssCode').value;
+  frames['display'].document.getElementsByTagName('style')[0].innerHTML = cssVal;
 }
 
 // make the solution box toggleable
@@ -70,4 +66,11 @@ var toggleSolution = function() {
     ele.style.display = 'none';
     label.innerHTML = 'Show Solution';
   }
+}
+
+var contentNotEqual = function(oldText, newText) {
+  if (oldText !== newText) {
+    return true;
+  }
+  return false;
 }
