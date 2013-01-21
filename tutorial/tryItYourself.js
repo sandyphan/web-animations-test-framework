@@ -58,6 +58,15 @@ var update = function() {
   frames['display'].document.getElementsByTagName('style')[0].innerHTML = cssVal;
 }
 
+// checks if the 2 strings are the same
+// return boolean values
+var contentNotEqual = function(oldText, newText) {
+  if (oldText !== newText) {
+    return true;
+  }
+  return false;
+}
+
 // make the solution box toggleable
 var toggleSolution = function() {
   var ele = document.getElementById('toggleText');
@@ -71,13 +80,4 @@ var toggleSolution = function() {
     ele.style.display = 'none';
     label.innerHTML = 'Show Solution';
   }
-}
-
-// checks if the 2 strings are the same
-// return boolean values
-var contentNotEqual = function(oldText, newText) {
-  if (oldText !== newText) {
-    return true;
-  }
-  return false;
 }
