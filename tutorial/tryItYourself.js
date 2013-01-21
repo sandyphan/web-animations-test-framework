@@ -1,3 +1,20 @@
+/**
+ * Copyright 2013 Google Inc. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+ 
+
 // get default html values
 var htmlVal = document.getElementById('htmlCode').value;
 var cssVal = document.getElementById('cssCode').value;
@@ -17,6 +34,9 @@ var displayDefault = function() {
 // executed when button called update is clicked
 // extract texts from the 3 text areas,
 var update = function() {  
+  var iframe = document.getElementById('display');
+  var innerDoc = iframe.contentDocument || iframe.contentWindow.document;
+
   var scriptEle = document.createElement('script');
   scriptEle.async = false;
 
@@ -27,22 +47,33 @@ var update = function() {
   }
 
   var jsVal = document.getElementById('jsCode').value;
+ // jsVal = jsVal.replace("Animation", "testAnimation");
+  console.log(jsVal);
+
+  console.log(htmlVal + "\n" + "<script src='../../web-animations-js/web-animation.js'></script>"
+  + "<script src='../testharness/testharness.js'></script>"
+  + "<script src='../testharness/testharnessreport.js'></script>"
+  + "<script src='../extra-asserts.js'></script>"
+  + "<link rel='stylesheet' href='../testharness/testharness.css'>"
+  + "<link rel='stylesheet' type='text/css' href='../animation-test-style.css'>"); 
 
   // change the body and css in value in inframe
   frames['display'].document.documentElement.innerHTML = htmlVal;
   
   var par;
   
-  // change the js scripts in iframe
-  // the 2 scripts are made to run asynchronously
-  // the codes inside the function should be executed after everything
-  // inside includes is executed first
+
+  // change the scripts in iframe
   var includes = document.createElement('script');
-  includes.setAttribute('src', '../../web-animations-js/web-animation.js');
+  //includes.setAttribute('src', '../../web-animations-js/web-animation.js');
+  //var includeAgain = document.createElement('script');
+  //includeAgain.setAttribute("src", "../extra-asserts.js");
+  //console.log(includes);
+  //console.log(includeAgain);
   includes.onload = function() {
     if (frames['display'].document.getElementsByTagName('script')[1]) {
       var oldScript = frames['display'].document.getElementsByTagName('script')[1];
-      scriptEle.innerHTML = jsVal;
+      scriptEle.innerHTML = '\n' + jsVal + '\n';
       frames['display'].document.getElementsByTagName('body')[0].replaceChild(scriptEle, oldScript);
     } else {
       scriptEle.innerHTML = jsVal;
@@ -50,21 +81,13 @@ var update = function() {
       par.appendChild(scriptEle);
     }
   }
-  // append the polyfill script link into body
   frames['display'].document.getElementsByTagName('body')[0].appendChild(includes);
 
-  // add css codes to iframe
   cssVal = document.getElementById('cssCode').value;
   frames['display'].document.getElementsByTagName('style')[0].innerHTML = cssVal;
-}
 
-// checks if the 2 strings are the same
-// return boolean values
-var contentNotEqual = function(oldText, newText) {
-  if (oldText !== newText) {
-    return true;
-  }
-  return false;
+  
+  console.log(innerDoc.getElementById("a"));
 }
 
 // make the solution box toggleable
@@ -81,15 +104,10 @@ var toggleSolution = function() {
     label.innerHTML = 'Show Solution';
   }
 }
-<<<<<<< HEAD
 
-// checks if the 2 strings are the same
-// return boolean values
 var contentNotEqual = function(oldText, newText) {
   if (oldText !== newText) {
     return true;
   }
   return false;
 }
-=======
->>>>>>> upstream/master
