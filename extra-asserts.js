@@ -103,7 +103,6 @@ function runTests(currTest){
         assert_properties(currTest.object, currTest.property, currTest.target, currTest.message);
       });
       currTest.test.done();
-      console.log("test compelte");
     }
     //takes the top test off testStack
     var nextTest = testStack.pop();
@@ -112,7 +111,7 @@ function runTests(currTest){
 
       //enough to let the first frame render
       //stops bug: where at time zero if x is blue then is told to animate from red to green
-      //and a check is performed at time zero for color red - before this it checked when x was still blue
+      //and a check is performed at time zero for color red it checked when x was still blue
       if(nextTest.time == 0 ) nextTest.time += 0.05;
       for(x in animObjects){
         animObjects[x]["currentTime"] = nextTest.time;
@@ -138,7 +137,7 @@ function runTests(currTest){
         } else break;
       }
 
-      if(testPacket[testIndex][0].time == 0 ) testPacket[testIndex][0].time += 0.01;
+      if(testPacket[testIndex][0].time == 0 ) testPacket[testIndex][0].time += 0.05;
       setTimeout(function() {
         for(x in testPacket[testIndex]){
           testPacket[testIndex][x].test.step(function() {
@@ -248,8 +247,10 @@ function getOffset( el ) {
 
 //allows you to choose any combination of single number css properties to 
 //approximatly check if they are correct e.g checks width, top
-//won't work for things like colour and worded properties
+//works for colour but other worded/multinumbered properties might not work
 //specify your own epsilons if you want or leave for default
+//For a reference test:
+//Put "refTest" in props[0], time between checks in props[1] var and the base animation in targets
 function assert_properties(object, props, targets, message, epsilons){
   var comp = object.currentStyle || getComputedStyle(object, null);
   for(var i = 0; i < props.length; i++){
@@ -258,7 +259,6 @@ function assert_properties(object, props, targets, message, epsilons){
     } else {
       assert_approx_equals(parseInt(comp[props[i]]), parseInt(targets[i]), 10, message);
     }
-    
   }
 }
 
