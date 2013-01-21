@@ -1,11 +1,11 @@
 #main {
   margin: 50px auto;
   width: 80%;
+  clear: both;
 }
 #tryIt {
   margin: 30px auto;
   width: 80%;
-  border: 1px solid black;
 }
 .heading {
   background-color: #AFA;
@@ -98,6 +98,7 @@ code {
 }
 a {
   text-decoration: none;
+  color: black;
 }
 a:visited {
   color: black;
@@ -124,4 +125,5 @@ a:hover {
   color: black;
   text-align: center;
   border-radius: 10px;
+  cursor: pointer;
 }
