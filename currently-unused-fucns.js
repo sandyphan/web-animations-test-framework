@@ -25,35 +25,7 @@
   assert_color(object, endColor, message);
 }
 
-//Pass in either the css colour name to expectedColor OR 
-//a rbg string e.g. "0,0,0". Each number must be separated by a comma
-function assert_color(component, expectedColor, message) {
-  var params = document.defaultView.getComputedStyle(component, null);
-  var color = params.backgroundColor;
-  color = color.replace(/[^0-9,]/g, "");
-  var rgbValues = color.split(",");
 
-  var parsedColor = expectedColor.replace(/[^0-9,]/g, "");
-  if(parsedColor.length != 0) expectedColor = parsedColor.split(",");
-  else expectedColor = convertToRgb(expectedColor);
-
-  assert_approx_equals(parseInt(rgbValues[0]), expectedColor[0], 12, "red " +message);
-  assert_approx_equals(parseInt(rgbValues[1]), expectedColor[1], 12, "green " +message);
-  assert_approx_equals(parseInt(rgbValues[2]), expectedColor[2], 12, "blue " +message);
-}
-
-//This whole function is kind of hacky... unsure how to do this properly. Suggestions?
-function convertToRgb(englishColor) {
-    var tempDiv = document.createElement("div");
-    document.querySelector("#log").appendChild(tempDiv); 
-    tempDiv.style.backgroundColor = englishColor;
-    var p = document.defaultView.getComputedStyle(tempDiv, null);
-    var color = p.backgroundColor;
-    color = color.replace(/[^0-9,]/g, "");
-    var rgbValues = color.split(",");
-    tempDiv.remove(); 
-    return rgbValues;
-}
 
 //This function takes an animation object and error message
 //and verifies the set end point of the given animation.

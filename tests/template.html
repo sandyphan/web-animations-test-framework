@@ -16,6 +16,11 @@ limitations under the License.
 
 <!DOCTYPE html>
 <style>
+.testBox {
+  /*Changes the height to the lowest point of all your animations
+    This will make sure the test log will not overlap the animation*/
+  height: 250px;
+}
 
 </style>
 
@@ -24,18 +29,12 @@ limitations under the License.
   <link rel="author" title="*YOUR NAME*", href="mailto:*YOUREMAIL@GOOGLE.COM*">
   <link rel="help" href="*LINK TO THE PART OF THE SPEC THIS TESTS">
   <meta name="flags" content="dom">
-  <meta name="assert" content="*EXPLAIN THE ASSERT*"
+  <meta name="assert" content="*EXPLAIN THE ASSERT*">
 </head>
 
-<body>
-  <p>*EXPLAIN WHAT IT SHOULD LOOK LIKE*</p>
-</body>
-
-<div id="test">
+<div id="test" class="testBox">
 	<div id="ANY/ALL ANIMATED DIVS" class="anim"></div>
 </diV>
-
-<div id="log"></div>
 
 <script src="../../web-animations-js/web-animation.js"></script>
 <script src="../testharness/testharness.js"></script>
@@ -45,6 +44,14 @@ limitations under the License.
 <link rel='stylesheet' type="text/css" href="../animation-test-style.css">
 
 <script>
-//Your animations & test code goes here
+setupTests(); //must call at the begining
+//Your animations code goes here
+//e.g. create a new animation
+//new testAnimation(document.querySelector(".anim"), {left: "600px"}, {duration: 2}); 
 
+//Your tests go here
+//e.g. create a new check (test)
+//check(document.querySelector(".anim"), ["left"], ["300px"], 1, "300px at 3 secs");
+
+runTests(); //must call at the end
 </script>

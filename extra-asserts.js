@@ -13,9 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+ /*TO DO:
+ - incorperate dictionary style varibles for the test so it is easier to call
+ */
 
 var animObjects = []; //to keep track of all animations
-var testStack = [];
+var testStack = []; //holds all tests
+var testRefStack = []; //for iteration based checks
 var runType; //to keep track of what the dropdown list state is
 var state = "Auto"; //current run type of the animation
 var testIndex = 0; //Holds which test packet we are up to
@@ -89,59 +93,42 @@ function check(object, property, target, time, message){
   var offsets = [];
   offsets["top"] = getOffset(object).top;
   offsets["left"] = getOffset(object).left;
-  testStack.push(new testRecord(test, object, property, target, time, "Property "+property+" is not equal to "+target, css, offsets));
+  //if(property == "refTest"){
+  //  testRefStack.push(new testRecord(test, object, property, target, time, "Property "+property+" is not equal to "+target, css, offsets));
+ // } else {
+    testStack.push(new testRecord(test, object, property, target, time, "Property "+property+" is not equal to "+target, css, offsets));
+ // }
 }
 
 //Call this after lining up the tests with check
 //For auto state: It is called each frame render to run the currently loaded test
 //For manual state: It sets up the appropiate timeout for each group of tests that happen at the same time
-function runTests(currTest){
-  if(state != "Manual"){
-    //if currTest isn't null then do the test for it
-    if(currTest != null){
-      currTest.test.step(function (){
-        assert_properties(currTest.object, currTest.property, currTest.target, currTest.message);
-      });
-      currTest.test.done();
-      console.log("test compelte");
+function runTests(){
+  //process tests
+  //Sort tests by time to set up timeouts properly
+  testStack.sort(testTimeSort);
+  for(var x =0; x<testStack.length; x++){
+    //check for all tests that happen at the same time
+    //And add them to the test packet
+    testPacket[testIndex] = [];
+    testPacket[testIndex].push(testStack[x]);
+    while(x < (testStack.length-1)){
+      if(testStack[x].time == testStack[x+1].time){
+        x++;
+        testPacket[testIndex].push(testStack[x]);
+      } else break;
     }
-    //takes the top test off testStack
-    var nextTest = testStack.pop();
-    if(nextTest != null){
-      //move the entire animation to the right point in time
+    testIndex++;
+  }
 
-      //enough to let the first frame render
-      //stops bug: where at time zero if x is blue then is told to animate from red to green
-      //and a check is performed at time zero for color red - before this it checked when x was still blue
-      if(nextTest.time == 0 ) nextTest.time += 0.01;
-      for(x in animObjects){
-        animObjects[x]["currentTime"] = nextTest.time;
-      }
-      window.webkitRequestAnimationFrame(function(){runTests(nextTest);});
-    } else {
-      done();
-    }
+  if(state == "Auto"){
+    testIndex = 0;
+    runAutoTest();
   } else {
-    //Sort tests by time to set up timeouts properly
-    testStack.sort(testTimeSort);
-
     //Set up a timeout for each test
-    for(var x =0; x<testStack.length; x++){
-      //check for all tests that happen at the same time
-      //And add them to the test packet
-      testPacket[testIndex] = [];
-      testPacket[testIndex].push(testStack[x]);
-      while(x < (testStack.length-1)){
-        if(testStack[x].time == testStack[x+1].time){
-          console.log("ham");
-          x++;
-          testPacket[testIndex].push(testStack[x]);
-        } else break;
-      }
-
-      if(testPacket[testIndex][0].time == 0 ) testPacket[testIndex][0].time += 0.01;
+    for(testIndex = 0; testIndex<testPacket.length; testIndex++){
+      if(testPacket[testIndex][0].time == 0 ) testPacket[testIndex][0].time += 0.05;
       setTimeout(function() {
-        console.log("bam");
         for(x in testPacket[testIndex]){
           testPacket[testIndex][x].test.step(function() {
             assert_properties(testPacket[testIndex][x].object, testPacket[testIndex][x].property, testPacket[testIndex][x].target, testPacket[testIndex][x].message);
@@ -151,10 +138,8 @@ function runTests(currTest){
         }
         testIndex++;
       }, (testPacket[testIndex][0].time * 1000)+(pauseTime*testIndex));
-
-      testIndex++;
-      console.log(testIndex);
     }
+
     testIndex = 0;
     //start all the animations running
     for(x in animObjects){
@@ -166,6 +151,37 @@ function runTests(currTest){
 
 function testTimeSort(a,b){
   return(a.time - b.time);
+}
+
+function runAutoTest(){
+  //if currTest isn't null then do the test for it
+  if(testIndex != 0 && testIndex < testPacket.length + 1){
+    for(var x in testPacket[testIndex-1]){
+      var currTest = testPacket[testIndex-1][x];
+      currTest.test.step(function (){
+        assert_properties(currTest.object, currTest.property, currTest.target, currTest.message);
+      });
+      currTest.test.done();
+      console.log(currTest);
+    }
+  }
+  if(testIndex < testPacket.length){
+    //move the entire animation to the right point in time
+
+    //enough to let the first frame render
+    //stops bug: where at time zero if x is blue then is told to animate from red to green
+    //and a check is performed at time zero for color red it checked when x was still blue
+    if(testPacket[testIndex][0].time == 0 ){
+      testPacket[testIndex][0].time += 0.05;
+    } 
+    for(x in animObjects){
+      animObjects[x]["currentTime"] = testPacket[testIndex][0].time;
+    }
+    testIndex++;
+    window.webkitRequestAnimationFrame(function(){runAutoTest();});
+  } else {
+    done();
+  }
 }
 
 function restart(){
@@ -191,14 +207,21 @@ function flashing(test) {
   for(x in test.property){
     var prop = test.property[x];
     var tar = test.target[x];
-    if(prop == "left"){
-      seenLeft = true;
-      tar += parseInt(test.offsets["left"]);
-    } else if(prop == "top"){
-      seenTop = true;
-      tar += parseInt(test.offsets["top"]);
+    if(test.cssStyle.position == "relative"){
+      if(prop == "left"){
+        seenLeft = true;
+        tar = parseInt(tar);
+        tar += parseInt(test.offsets["left"]);
+        tar = tar + "px";
+        console.log("in left");
+      } else if(prop == "top"){
+        seenTop = true;
+        tar = parseInt(tar);
+        tar += parseInt(test.offsets["top"]);
+        tar = tar + "px";
+      }
     }
-    _newDiv.style[prop] = tar + "px";
+    _newDiv.style[prop] = tar;
   }
   
   if(!seenTop){
@@ -224,7 +247,7 @@ function flashing(test) {
   }, pauseTime);
 }
 
-//Helper function which the current absolute position of an object
+//Helper function which gets the current absolute position of an object
 //Shamelessly stolen from http://stackoverflow.com/questions/442404/dynamically-retrieve-the-position-x-y-of-an-html-element
 function getOffset( el ) {
     var _x = 0;
@@ -244,18 +267,18 @@ function getOffset( el ) {
 
 //allows you to choose any combination of single number css properties to 
 //approximatly check if they are correct e.g checks width, top
-//won't work for things like colour and worded properties
+//works for colour but other worded/multinumbered properties might not work
 //specify your own epsilons if you want or leave for default
+//For a reference test:
+//Put "refTest" in props[0], time between checks in props[1] var and the base animation in targets
 function assert_properties(object, props, targets, message, epsilons){
   var comp = object.currentStyle || getComputedStyle(object, null);
   for(var i = 0; i < props.length; i++){
     if(props[i].indexOf("olor") != -1){ //for anything with the word color in it do the color assert (C is not there because it could be a c or C)
       assert_color(object, targets[i], message);
     } else {
-      console.log("urgh here");
-      assert_approx_equals(parseInt(comp[props[i]]), targets[i], 10, message);
+      assert_approx_equals(parseInt(comp[props[i]]), parseInt(targets[i]), 10, message);
     }
-    
   }
 }
 

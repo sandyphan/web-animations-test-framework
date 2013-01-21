@@ -34,6 +34,9 @@ Written By Sarah Heimlich
   top: -200px;
 }
 
+.testBox {
+  height: 200px;
+}
 
 </style>
 
@@ -42,14 +45,10 @@ Written By Sarah Heimlich
   <link rel="author" title="Sarah Heimlich", href="mailto:sarahheimlich@google.com">
   <link rel="help" href="https://dvcs.w3.org/hg/FXTF/raw-file/tip/web-anim/index.html#speed-control">
   <meta name="flags" content="dom">
-  <meta name="assert" content="Verify the objects move at the same speed."
+  <meta name="assert" content="Verify the objects move at the same speed.">
 </head>
 
-<body>
-  <p>There should be a green rectangle moving across the screen, with no red.</p>
-</body>
-
-<div id="test">
+<div id="test" class ="testBox">
   <div class="anim bottom"></div>
   <div class="anim bottom"></div>
   <div class="anim bottom"></div>
@@ -60,77 +59,28 @@ Written By Sarah Heimlich
   <div class="anim top"></div>
 </div>
 
-<div id="log"></div>
-
-<script src='../testharness/testharness.js'></script>
-<script src='../testharness/testharnessreport.js'></script>
 <script src="../../web-animations-js/web-animation.js"></script>
+<script src="../testharness/testharness.js"></script>
+<script src='../testharness/testharnessreport.js'></script>
+<script src='../extra-asserts.js'></script>
 <link rel='stylesheet' href='../testharness/testharness.css'>
 <link rel='stylesheet' type="text/css" href="../animation-test-style.css">
+
 <script>
-
-testLeft = async_test("Verify the elements move left in parallel");
-testMoveLeft = async_test("Verify the elements move left");
-
+setupTests();
 
 var topObjects = document.querySelectorAll(".top");
-
-var compBottom = new Array();
-var compTop = new Array();
-for (var i = 0; i <topObjects.length; i++){
-  compTop[i] = topObjects[i].currentStyle || getComputedStyle(topObjects[i], null);
-}
-
 var bottomObjects = document.querySelectorAll(".bottom");
-for (var i = 0; i < bottomObjects.length; i++) {
-  compBottom[i] = bottomObjects[i].currentStyle || getComputedStyle(bottomObjects[i], null);
-}
-var topAnims = [];
+
 for (var i = 0; i < topObjects.length; i++) {
-  topAnims[i] = new Animation(topObjects[i], {left: ["100px", "600px"]}, {duration: 2*(i + 1), playbackRate: i + 1 });
-}
-for (var i = 0; i < bottomObjects.length; i++) {
-  new Animation(bottomObjects[i], {left: ["100px", "600px"]}, {duration: 2});
+  new testAnimation(topObjects[i], {left: ["100px", "600px"]}, {duration: 2*(i + 1), playbackRate: i + 1 });
+  new testAnimation(bottomObjects[i], {left: ["100px", "600px"]}, {duration: 2});
 }
 
-var testing = setInterval(leftRightStep, 10);
-
-setTimeout(endIter, 2000);
-
-setTimeout(function() {
-  testMoveLeft.step(function() {
-    for(var i=0; i < compTop.length; i++) {
-      assert_not_equals(compTop[i].left, "100px", "The elements have not moved left");
-    }    
-  });
-  testMoveLeft.done();
-}, 500);
-
-for (var i = 0; i < compBottom.length; i++) {
-      assert_approx_equals(parseInt(compBottom[i].left), 600, 4, "The top element did not end properly"); 
-    } 
-function endIter() {
-  testLeft.step(function() {
-    for (var i = 0; i < compTop.length; i++) {
-      assert_approx_equals(parseInt(compTop[i].left), 600, 4, "The top element did not end properly"); 
-    } 
-    
-    for (var i = 0; i < compBottom.length; i++) {
-      assert_approx_equals(parseInt(compBottom[i].left), 600, 4, "The bottom element did not end properly");   
-    } 
-  });
-  testLeft.done();
-  clearInterval(testing);
-  setLog();
+for (var i = 0; i < topObjects.length; i++) {
+  check(topObjects[i], ["refTest"], [bottomObjects[i]], 2, "Ref Test "+i);
 }
 
-function leftRightStep() {
-  testLeft.step(function() {
-    for (var i = 0; i < compTop.length && i < compBottom.length; i++) {
-      assert_equals(compTop[i].left, compBottom[i].left, "The elements are not in parrallel");
-    }     
-  });
-}
-
+runTests();
 </script>
 
