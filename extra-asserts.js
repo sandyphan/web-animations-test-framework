@@ -14,7 +14,7 @@
  * limitations under the License.
  */
  /*TO DO:
- - incorperate dictionary style varibles for the test so it is easier to call
+ - incorperate object notation (JSON) varibles for the test so it is easier to call
  */
 
 var animObjects = []; //to keep track of all animations
@@ -24,9 +24,12 @@ var runType; //to keep track of what the dropdown list state is
 var state = "Auto"; //current run type of the animation
 var testIndex = 0; //Holds which test packet we are up to
 var testPacket = []; //Each index holds all the tests that occur at the same time
-var pauseTime = 500; //how long to show each manual check for
 
-function testRecord(test,object, property, target, time, message, cssStyle, offsets){
+var pauseTime = 500; //how long to show each manual check for
+var testTimeout = 10000; //how long it takes an individual test to timeout
+var frameworkTimeout = 20000; //how long it takes for the whole test system to timeout
+
+function testRecord(test, object, property, target, time, message, cssStyle, offsets, isRefTest){
   this.test = test;
   this.object = object;
   this.property = property;
@@ -35,6 +38,7 @@ function testRecord(test,object, property, target, time, message, cssStyle, offs
   this.message = message;
   this.cssStyle = cssStyle;
   this.offsets = offsets;
+  this.isRefTest = isRefTest;
 }
 
 //a wrapper to add each animation to an array
@@ -81,23 +85,29 @@ function setupTests(){
   //Initalse state and setup
   if(state == "Manual") runType.selectedIndex = 1;
   else runType.selectedIndex = 0;
-  //setup({ explicit_done: true, timeout: 7000 });
+  setup({ explicit_done: true, timeout: frameworkTimeout});
 }
 
 //Adds each test to a list to be processed when runTests is called
 function check(object, property, target, time, message){
   //Create new async test
   var test = async_test(message);
+  test.timeout_length = testTimeout;
   //store the inital css style of the animated object so it can be used for manual flashing
   var css = object.currentStyle || getComputedStyle(object, null);
   var offsets = [];
-  offsets["top"] = getOffset(object).top;
-  offsets["left"] = getOffset(object).left;
-  //if(property == "refTest"){
-  //  testRefStack.push(new testRecord(test, object, property, target, time, "Property "+property+" is not equal to "+target, css, offsets));
- // } else {
-    testStack.push(new testRecord(test, object, property, target, time, "Property "+property+" is not equal to "+target, css, offsets));
- // }
+  offsets["top"] = getOffset(object).top - css.top;
+  offsets["left"] = getOffset(object).left - css.left;
+  if(property[0] == "refTest"){
+    var maxTime = 2000; //TO DO: automatically calculate this
+    //generate a test for each time you want to check the objects
+    for(var x = 0; x < 3; x++){
+      testStack.push(new testRecord(test, object, property, target, time*x, "Property "+property+" is not equal to "+target, css, offsets, true));
+    }
+    testStack.push(new testRecord(test, object, property, target, time*x, "Property "+property+" is not equal to "+target, css, offsets, "Last refTest"));   
+  } else {
+    testStack.push(new testRecord(test, object, property, target, time, "Property "+property+" is not equal to "+target, css, offsets, false));
+  }
 }
 
 //Call this after lining up the tests with check
@@ -127,18 +137,23 @@ function runTests(){
   } else {
     //Set up a timeout for each test
     for(testIndex = 0; testIndex<testPacket.length; testIndex++){
-      if(testPacket[testIndex][0].time == 0 ) testPacket[testIndex][0].time += 0.05;
+      if(testPacket[testIndex][0].time == 0 ) testPacket[testIndex][0].time += 0.02;
       setTimeout(function() {
         for(x in testPacket[testIndex]){
-          testPacket[testIndex][x].test.step(function() {
-            assert_properties(testPacket[testIndex][x].object, testPacket[testIndex][x].property, testPacket[testIndex][x].target, testPacket[testIndex][x].message);
+          var currTest = testPacket[testIndex][x];
+          currTest.test.step(function() {
+            assert_properties(currTest.object, currTest.property, currTest.target, currTest.message);
           });
-          testPacket[testIndex][x].test.done();
-          flashing(testPacket[testIndex][x]);
+          if(currTest.isRefTest == false || currTest.isRefTest == "Last refTest") currTest.test.done();
+          flashing(currTest);
         }
         testIndex++;
-      }, (testPacket[testIndex][0].time * 1000)+(pauseTime*testIndex));
+      }, (testPacket[testIndex][0].time * 1000)+(pauseTime * testIndex));
     }
+    //Create a timeout to finish the tests
+    setTimeout(function() {
+      done();
+    }, (testPacket[testIndex-1][0].time * 1000)+(pauseTime * testIndex)+500);
 
     testIndex = 0;
     //start all the animations running
@@ -161,8 +176,7 @@ function runAutoTest(){
       currTest.test.step(function (){
         assert_properties(currTest.object, currTest.property, currTest.target, currTest.message);
       });
-      currTest.test.done();
-      console.log(currTest);
+      if(currTest.isRefTest == false || currTest.isRefTest == "Last refTest") currTest.test.done();
     }
   }
   if(testIndex < testPacket.length){
@@ -172,7 +186,7 @@ function runAutoTest(){
     //stops bug: where at time zero if x is blue then is told to animate from red to green
     //and a check is performed at time zero for color red it checked when x was still blue
     if(testPacket[testIndex][0].time == 0 ){
-      testPacket[testIndex][0].time += 0.05;
+      testPacket[testIndex][0].time += 0.02;
     } 
     for(x in animObjects){
       animObjects[x]["currentTime"] = testPacket[testIndex][0].time;
@@ -202,18 +216,21 @@ function flashing(test) {
   _newDiv.style.cssText = test.cssStyle.cssText; //copy the objects orginal css style
   _newDiv.style.position = "absolute";
 
+  console.log("cheeese " + _newDiv.style.left);
   var seenTop = false;
   var seenLeft = false;
   for(x in test.property){
     var prop = test.property[x];
     var tar = test.target[x];
     if(test.cssStyle.position == "relative"){
+      console.log("Uau");
       if(prop == "left"){
         seenLeft = true;
         tar = parseInt(tar);
+        console.log(tar);
         tar += parseInt(test.offsets["left"]);
         tar = tar + "px";
-        console.log("in left");
+        console.log(tar);
       } else if(prop == "top"){
         seenTop = true;
         tar = parseInt(tar);
@@ -240,7 +257,7 @@ function flashing(test) {
   setTimeout(function() {
     _newDiv.parentNode.removeChild(_newDiv);
     for(x in animObjects){
-      if(animObjects[x]["currentTime"] < animObjects[x]["duration"]){
+      if(animObjects[x]["currentTime"] < animObjects[x]["animationDuration"]){
         animObjects[x].play();
       }
     }
@@ -269,15 +286,20 @@ function getOffset( el ) {
 //approximatly check if they are correct e.g checks width, top
 //works for colour but other worded/multinumbered properties might not work
 //specify your own epsilons if you want or leave for default
-//For a reference test:
-//Put "refTest" in props[0], time between checks in props[1] var and the base animation in targets
 function assert_properties(object, props, targets, message, epsilons){
   var comp = object.currentStyle || getComputedStyle(object, null);
-  for(var i = 0; i < props.length; i++){
-    if(props[i].indexOf("olor") != -1){ //for anything with the word color in it do the color assert (C is not there because it could be a c or C)
-      assert_color(object, targets[i], message);
-    } else {
-      assert_approx_equals(parseInt(comp[props[i]]), parseInt(targets[i]), 10, message);
+  if(props[0] == "refTest"){
+    var tar = targets.currentStyle || getComputedStyle(targets, null);
+    for(var i = 1; i < props.length; i++){
+      assert_equals(comp[props[i]], tar[props[i]], message);
+    }
+  } else {
+    for(var i = 0; i < props.length; i++){
+      if(props[i].indexOf("olor") != -1){ //for anything with the word color in it do the color assert (C is not there because it could be a c or C)
+        assert_color(object, targets[i], message);
+      } else {
+        assert_approx_equals(parseInt(comp[props[i]]), parseInt(targets[i]), 10, message);
+      }
     }
   }
 }
