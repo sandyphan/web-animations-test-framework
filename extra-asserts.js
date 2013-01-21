@@ -96,12 +96,12 @@ function check(object, property, target, time, message){
   //store the inital css style of the animated object so it can be used for manual flashing
   var css = object.currentStyle || getComputedStyle(object, null);
   var offsets = [];
-  offsets["top"] = getOffset(object).top;
-  offsets["left"] = getOffset(object).left;
+  offsets["top"] = getOffset(object).top - css.top;
+  offsets["left"] = getOffset(object).left - css.left;
   if(property[0] == "refTest"){
     var maxTime = 2000; //TO DO: automatically calculate this
     //generate a test for each time you want to check the objects
-    for(var x = 0; x < 2; x++){
+    for(var x = 0; x < 3; x++){
       testStack.push(new testRecord(test, object, property, target, time*x, "Property "+property+" is not equal to "+target, css, offsets, true));
     }
     testStack.push(new testRecord(test, object, property, target, time*x, "Property "+property+" is not equal to "+target, css, offsets, "Last refTest"));   
@@ -137,7 +137,7 @@ function runTests(){
   } else {
     //Set up a timeout for each test
     for(testIndex = 0; testIndex<testPacket.length; testIndex++){
-      if(testPacket[testIndex][0].time == 0 ) testPacket[testIndex][0].time += 0.05;
+      if(testPacket[testIndex][0].time == 0 ) testPacket[testIndex][0].time += 0.02;
       setTimeout(function() {
         for(x in testPacket[testIndex]){
           var currTest = testPacket[testIndex][x];
@@ -186,7 +186,7 @@ function runAutoTest(){
     //stops bug: where at time zero if x is blue then is told to animate from red to green
     //and a check is performed at time zero for color red it checked when x was still blue
     if(testPacket[testIndex][0].time == 0 ){
-      testPacket[testIndex][0].time += 0.05;
+      testPacket[testIndex][0].time += 0.02;
     } 
     for(x in animObjects){
       animObjects[x]["currentTime"] = testPacket[testIndex][0].time;
@@ -216,17 +216,21 @@ function flashing(test) {
   _newDiv.style.cssText = test.cssStyle.cssText; //copy the objects orginal css style
   _newDiv.style.position = "absolute";
 
+  console.log("cheeese " + _newDiv.style.left);
   var seenTop = false;
   var seenLeft = false;
   for(x in test.property){
     var prop = test.property[x];
     var tar = test.target[x];
     if(test.cssStyle.position == "relative"){
+      console.log("Uau");
       if(prop == "left"){
         seenLeft = true;
         tar = parseInt(tar);
+        console.log(tar);
         tar += parseInt(test.offsets["left"]);
         tar = tar + "px";
+        console.log(tar);
       } else if(prop == "top"){
         seenTop = true;
         tar = parseInt(tar);
@@ -253,9 +257,7 @@ function flashing(test) {
   setTimeout(function() {
     _newDiv.parentNode.removeChild(_newDiv);
     for(x in animObjects){
-      console.log(animObjects[x]["currentTime"] + " " + animObjects[x]["duration"] + " " + animObjects[x]["animationDuration"]);
       if(animObjects[x]["currentTime"] < animObjects[x]["animationDuration"]){
-        console.log("peanut");
         animObjects[x].play();
       }
     }
