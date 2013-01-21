@@ -26,7 +26,7 @@ var testIndex = 0; //Holds which test packet we are up to
 var testPacket = []; //Each index holds all the tests that occur at the same time
 
 var pauseTime = 500; //how long to show each manual check for
-var testTimeout = 10000; //how long it takes an individual test to timeout
+var testTimeout = 20000; //how long it takes an individual test to timeout
 var frameworkTimeout = 20000; //how long it takes for the whole test system to timeout
 
 function testRecord(test, object, property, target, time, message, cssStyle, offsets, isRefTest){
@@ -99,9 +99,12 @@ function check(object, property, target, time, message){
   offsets["top"] = getOffset(object).top - css.top;
   offsets["left"] = getOffset(object).left - css.left;
   if(property[0] == "refTest"){
-    var maxTime = 2000; //TO DO: automatically calculate this
+    var maxTime = 0; //TO DO: automatically calculate this
+    for(x in animObjects){
+      maxTime = animObjects[x].animationDuration > maxTime ? animObjects[x].animationDuration : maxTime;
+    }
     //generate a test for each time you want to check the objects
-    for(var x = 0; x < 3; x++){
+    for(var x = 0; x < maxTime/time; x++){
       testStack.push(new testRecord(test, object, property, target, time*x, "Property "+property+" is not equal to "+target, css, offsets, true));
     }
     testStack.push(new testRecord(test, object, property, target, time*x, "Property "+property+" is not equal to "+target, css, offsets, "Last refTest"));   
