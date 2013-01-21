@@ -13,9 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+ /*TO DO:
+ - incorperate dictionary style varibles for the test so it is easier to call
+ */
 
 var animObjects = []; //to keep track of all animations
-var testStack = [];
+var testStack = []; //holds all tests
+var testRefStack = []; //for iteration based checks
 var runType; //to keep track of what the dropdown list state is
 var state = "Auto"; //current run type of the animation
 var testIndex = 0; //Holds which test packet we are up to
@@ -89,54 +93,40 @@ function check(object, property, target, time, message){
   var offsets = [];
   offsets["top"] = getOffset(object).top;
   offsets["left"] = getOffset(object).left;
-  testStack.push(new testRecord(test, object, property, target, time, "Property "+property+" is not equal to "+target, css, offsets));
+  //if(property == "refTest"){
+  //  testRefStack.push(new testRecord(test, object, property, target, time, "Property "+property+" is not equal to "+target, css, offsets));
+ // } else {
+    testStack.push(new testRecord(test, object, property, target, time, "Property "+property+" is not equal to "+target, css, offsets));
+ // }
 }
 
 //Call this after lining up the tests with check
 //For auto state: It is called each frame render to run the currently loaded test
 //For manual state: It sets up the appropiate timeout for each group of tests that happen at the same time
-function runTests(currTest){
+function runTests(){
+  //process tests
+  //Sort tests by time to set up timeouts properly
+  testStack.sort(testTimeSort);
+  for(var x =0; x<testStack.length; x++){
+    //check for all tests that happen at the same time
+    //And add them to the test packet
+    testPacket[testIndex] = [];
+    testPacket[testIndex].push(testStack[x]);
+    while(x < (testStack.length-1)){
+      if(testStack[x].time == testStack[x+1].time){
+        x++;
+        testPacket[testIndex].push(testStack[x]);
+      } else break;
+    }
+    testIndex++;
+  }
+
   if(state == "Auto"){
-    //if currTest isn't null then do the test for it
-    if(currTest != null){
-      currTest.test.step(function (){
-        assert_properties(currTest.object, currTest.property, currTest.target, currTest.message);
-      });
-      currTest.test.done();
-    }
-    //takes the top test off testStack
-    var nextTest = testStack.pop();
-    if(nextTest != null){
-      //move the entire animation to the right point in time
-
-      //enough to let the first frame render
-      //stops bug: where at time zero if x is blue then is told to animate from red to green
-      //and a check is performed at time zero for color red it checked when x was still blue
-      if(nextTest.time == 0 ) nextTest.time += 0.05;
-      for(x in animObjects){
-        animObjects[x]["currentTime"] = nextTest.time;
-      }
-      window.webkitRequestAnimationFrame(function(){runTests(nextTest);});
-    } else {
-      done();
-    }
+    testIndex = 0;
+    runAutoTest();
   } else {
-    //Sort tests by time to set up timeouts properly
-    testStack.sort(testTimeSort);
-
     //Set up a timeout for each test
-    for(var x =0; x<testStack.length; x++){
-      //check for all tests that happen at the same time
-      //And add them to the test packet
-      testPacket[testIndex] = [];
-      testPacket[testIndex].push(testStack[x]);
-      while(x < (testStack.length-1)){
-        if(testStack[x].time == testStack[x+1].time){
-          x++;
-          testPacket[testIndex].push(testStack[x]);
-        } else break;
-      }
-
+    for(testIndex = 0; testIndex<testPacket.length; testIndex++){
       if(testPacket[testIndex][0].time == 0 ) testPacket[testIndex][0].time += 0.05;
       setTimeout(function() {
         for(x in testPacket[testIndex]){
@@ -148,9 +138,8 @@ function runTests(currTest){
         }
         testIndex++;
       }, (testPacket[testIndex][0].time * 1000)+(pauseTime*testIndex));
-
-      testIndex++;
     }
+
     testIndex = 0;
     //start all the animations running
     for(x in animObjects){
@@ -162,6 +151,37 @@ function runTests(currTest){
 
 function testTimeSort(a,b){
   return(a.time - b.time);
+}
+
+function runAutoTest(){
+  //if currTest isn't null then do the test for it
+  if(testIndex != 0 && testIndex < testPacket.length + 1){
+    for(var x in testPacket[testIndex-1]){
+      var currTest = testPacket[testIndex-1][x];
+      currTest.test.step(function (){
+        assert_properties(currTest.object, currTest.property, currTest.target, currTest.message);
+      });
+      currTest.test.done();
+      console.log(currTest);
+    }
+  }
+  if(testIndex < testPacket.length){
+    //move the entire animation to the right point in time
+
+    //enough to let the first frame render
+    //stops bug: where at time zero if x is blue then is told to animate from red to green
+    //and a check is performed at time zero for color red it checked when x was still blue
+    if(testPacket[testIndex][0].time == 0 ){
+      testPacket[testIndex][0].time += 0.05;
+    } 
+    for(x in animObjects){
+      animObjects[x]["currentTime"] = testPacket[testIndex][0].time;
+    }
+    testIndex++;
+    window.webkitRequestAnimationFrame(function(){runAutoTest();});
+  } else {
+    done();
+  }
 }
 
 function restart(){
