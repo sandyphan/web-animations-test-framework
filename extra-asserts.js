@@ -223,6 +223,7 @@ function runAutoTest(){
 }
 
 function animTimeViewer(){
+  console.log(animObjects);
   var currTime = animObjects[0].currentTime < animObjects[0].animationDuration ? animObjects[0].currentTime : animObjects[0].animationDuration;
   currTime = currTime.toFixed(2);
   var object = document.getElementById("animViewerText");

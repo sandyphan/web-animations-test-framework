@@ -17,6 +17,7 @@
 
 // get default html values
 var htmlVal = document.getElementById('htmlCode').value;
+htmlVal += "\n" + "<div id='b' class='test'></div>";
 var cssVal = document.getElementById('cssCode').value;
 
 // create new style and scripts object elements
@@ -43,24 +44,14 @@ var update = function() {
   // get values from 3 textboxes
   if (contentNotEqual(htmlVal, document.getElementById('htmlCode').value)) {
     htmlVal = document.getElementById('htmlCode').value;
+    htmlVal += "\n" + "<div id='b' class='test'></div>";
     innerDoc.documentElement.innerHTML = htmlVal;
   }
+  console.log("HTML Values:");
+  console.log(innerDoc.documentElement.innerHTML);
 
   var jsVal = document.getElementById('jsCode').value;
-  /*jsVal = jsVal.replace("new Animation", "var animA = testAnimation");
-  jsVal += ("\n" +"var refAnim = new testAnimation(document.querySelector('b'), {left: '300px'}, 2);"
-    + "\n" +"check(animA, ['refTest','left'], refAnim, 1, 'Ref Test');"
-    +"\n" +"runTests();");*/
-  //console.log(jsVal);
-
-  /*htmlVal = (htmlVal + "\n" 
-    + "\n" + "<script src='../../web-animations-js/web-animation.js'></script>"
-    + "\n" + "<script src='../testharness/testharness.js'></script>"
-    + "\n" + "<script src='../testharness/testharnessreport.js'></script>"
-    + "\n" + "<script src='../extra-asserts.js'></script>"
-    + "\n" + "<link rel='stylesheet' href='../testharness/testharness.css'>"
-    + "\n" + "<link rel='stylesheet' type='text/css' href='../animation-test-style.css'>"
-    ); */
+  jsVal += ("\n" +"var refAnim = new Animation(document.querySelector('#b'), {left: '300px'}, 2);");
 
   // change the body and css in value in inframe
   innerDoc.documentElement.innerHTML = htmlVal;
@@ -81,27 +72,25 @@ var update = function() {
     scriptDivs[i] = document.createElement('script');
     scriptDivs[i].setAttribute('src', includeScripts[i]);
     innerDoc.getElementsByTagName('body')[0].appendChild(scriptDivs[i]);
-    console.log(scriptDivs[i]);
   }
   for(var i = 0; i < includeLinks.length; i++) {
     linkDivs[i] = document.createElement('link');
     linkDivs[i].setAttribute('href', includeLinks[i]);
     innerDoc.getElementsByTagName('body')[0].appendChild(linkDivs[i]);
-    console.log(linkDivs[i]);
   }
 
   // change the scripts in iframe  
   var addAnimScript = function() {
-    console.log(scriptDivs.length);
-    console.log(innerDoc.getElementsByTagName('script')[scriptDivs.length]);
     if (innerDoc.getElementsByTagName('script')[scriptDivs.length]) {
       var oldScript = frames['display'].document.getElementsByTagName('script')[scriptDivs.length];
       scriptEle.innerHTML = '\n' + jsVal + '\n';
+      console.log("JS Values:");
       console.log(scriptEle.innerHTML);
       console.log("if");
       innerDoc.getElementsByTagName('body')[0].replaceChild(scriptEle, oldScript);
     } else {
       scriptEle.innerHTML = jsVal;
+      console.log("JS Values:");
       console.log(scriptEle.innerHTML);
       par = innerDoc.getElementsByTagName('body')[0];
       par.appendChild(scriptEle);
