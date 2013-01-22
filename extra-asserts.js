@@ -285,6 +285,9 @@ function flashing(test) {
         tar += parseInt(test.offsets["top"]);
         tar = tar + "px";
       }
+    } else {
+      if(prop == "left") seenLeft = true;
+      else if(prop == "top") seenTop = true;
     }
     //console.log(tar + " " + test.target[x]);
     _newDiv.style[prop] = tar;
