@@ -112,10 +112,10 @@ function check(object, property, target, time, message){
   //store the inital css style of the animated object so it can be used for manual flashing
   var css = object.currentStyle || getComputedStyle(object, null);
   var offsets = [];
-  offsets["top"] = getOffset(object).top - css.top;
-  offsets["left"] = getOffset(object).left - css.left;
+  offsets["top"] = getOffset(object).top - parseInt(css.top);
+  offsets["left"] = getOffset(object).left- parseInt(css.left);
   if(property[0] == "refTest"){
-    var maxTime = 0; //TO DO: automatically calculate this
+    var maxTime = 0; 
     for(x in animObjects){
       maxTime = animObjects[x].animationDuration > maxTime ? animObjects[x].animationDuration : maxTime;
     }
@@ -225,7 +225,7 @@ function animTimeViewer(){
   var comp = object.currentStyle || getComputedStyle(object, null);
   console.log(object.innerHTML);
   object.innerHTML = "Current animation time " + currTime;
-  window.webkitRequestAnimationFrame(function(){animTimeViewer();});
+  //window.webkitRequestAnimationFrame(function(){animTimeViewer();});
 }
 
 function restart(){
@@ -252,10 +252,12 @@ function flashing(test) {
     var prop = test.property[x];
     var tar = test.target[x];
     if(test.cssStyle.position == "relative"){
+      console.log("Bam");
       if(prop == "left"){
         seenLeft = true;
         tar = parseInt(tar);
         tar += parseInt(test.offsets["left"]);
+        console.log("ggg "+tar);
         tar = tar + "px";
       } else if(prop == "top"){
         seenTop = true;
@@ -264,6 +266,7 @@ function flashing(test) {
         tar = tar + "px";
       }
     }
+    console.log(tar + " " + test.target[x]);
     _newDiv.style[prop] = tar;
   }
   
