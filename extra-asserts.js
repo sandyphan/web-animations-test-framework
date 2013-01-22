@@ -79,9 +79,13 @@ function setupTests(timeouts){
   button.setAttribute("type", "button");
   button.setAttribute("onclick", "restart()");
   button.innerHTML = "Restart";
+  var timeOfAnimation = document.createElement('div');
+  timeOfAnimation.id = "animViewerText";
+  timeOfAnimation.innerHTML = "Current animation time: 0.00";
   document.body.appendChild(optionBar);
   document.getElementById("options").appendChild(select);
   document.getElementById("options").appendChild(button);
+  document.getElementById("options").appendChild(timeOfAnimation);
 
   //Generate the log div
   var log = document.createElement('div');
@@ -129,6 +133,8 @@ function check(object, property, target, time, message){
 //For auto state: It is called each frame render to run the currently loaded test
 //For manual state: It sets up the appropiate timeout for each group of tests that happen at the same time
 function runTests(){
+  //Start the animation time running on screen
+  window.webkitRequestAnimationFrame(function(){animTimeViewer();});
   //process tests
   //Sort tests by time to set up timeouts properly
   testStack.sort(testTimeSort);
@@ -213,6 +219,15 @@ function runAutoTest(){
   }
 }
 
+function animTimeViewer(){
+  var currTime = (animObjects[0].currentTime).toFixed(2);
+  var object = document.getElementById("animViewerText");
+  var comp = object.currentStyle || getComputedStyle(object, null);
+  console.log(object.innerHTML);
+  object.innerHTML = "Current animation time " + currTime;
+  window.webkitRequestAnimationFrame(function(){animTimeViewer();});
+}
+
 function restart(){
   state = runType.options[runType.selectedIndex].value; //Only gets updated on init and Restart button push
   var url = window.location.href.split("?");
@@ -231,21 +246,17 @@ function flashing(test) {
   _newDiv.style.cssText = test.cssStyle.cssText; //copy the objects orginal css style
   _newDiv.style.position = "absolute";
 
-  console.log("cheeese " + _newDiv.style.left);
   var seenTop = false;
   var seenLeft = false;
   for(x in test.property){
     var prop = test.property[x];
     var tar = test.target[x];
     if(test.cssStyle.position == "relative"){
-      console.log("Uau");
       if(prop == "left"){
         seenLeft = true;
         tar = parseInt(tar);
-        console.log(tar);
         tar += parseInt(test.offsets["left"]);
         tar = tar + "px";
-        console.log(tar);
       } else if(prop == "top"){
         seenTop = true;
         tar = parseInt(tar);
