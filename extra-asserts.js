@@ -228,7 +228,7 @@ function runAutoTest(){
 }
 
 function animTimeViewer(){
-  var currTime = animObjects[0].currentTime < animObjects[0].animationDuration ? animObjects[0].currentTime : animObjects[0].animationDuration;
+  var currTime = document.animationTimeline.children[0].iterationTime; 
   currTime = currTime.toFixed(2);
   var object = document.getElementById("animViewerText");
   var comp = object.currentStyle || getComputedStyle(object, null);
@@ -272,11 +272,12 @@ function flashing(test) {
     var tar = test.target[x];
     if(test.cssStyle.position == "relative"){
       console.log("Bam");
+      console.log(test);
       if(prop == "left"){
         seenLeft = true;
         tar = parseInt(tar);
         tar += parseInt(test.offsets["left"]);
-        console.log("ggg "+tar);
+        //console.log("ggg "+tar);
         tar = tar + "px";
       } else if(prop == "top"){
         seenTop = true;
@@ -285,7 +286,7 @@ function flashing(test) {
         tar = tar + "px";
       }
     }
-    console.log(tar + " " + test.target[x]);
+    //console.log(tar + " " + test.target[x]);
     _newDiv.style[prop] = tar;
   }
   
@@ -349,7 +350,7 @@ function assert_properties(object, props, targets, message, epsilons){
   if(props[0] == "refTest"){
     var tar = targets.currentStyle || getComputedStyle(targets, null);
     for(var i = 1; i < props.length; i++){
-      assert_equals(comp[props[i]], tar[props[i]], message);
+      assert_approx_equals(parseInt(comp[props[i]]), parseInt(tar[props[i]]), 3, message);
     }
   } else {
     for(var i = 0; i < props.length; i++){
