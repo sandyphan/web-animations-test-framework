@@ -100,7 +100,10 @@ function setupTests(timeouts){
   
   //Initalse state and setup
   if(state == "Manual") runType.selectedIndex = 1;
-  else runType.selectedIndex = 0;
+  else {
+    state = "Auto";
+    runType.selectedIndex = 0;
+  }
   setup({ explicit_done: true, timeout: frameworkTimeout});
 }
 
@@ -220,12 +223,12 @@ function runAutoTest(){
 }
 
 function animTimeViewer(){
-  var currTime = (animObjects[0].currentTime).toFixed(2);
+  var currTime = animObjects[0].currentTime < animObjects[0].animationDuration ? animObjects[0].currentTime : animObjects[0].animationDuration;
+  currTime = currTime.toFixed(2);
   var object = document.getElementById("animViewerText");
   var comp = object.currentStyle || getComputedStyle(object, null);
-  console.log(object.innerHTML);
   object.innerHTML = "Current animation time " + currTime;
-  //window.webkitRequestAnimationFrame(function(){animTimeViewer();});
+  window.webkitRequestAnimationFrame(function(){animTimeViewer();});
 }
 
 function restart(){
