@@ -15,10 +15,12 @@
  */
  /*TO DO:
  - incorperate object notation (JSON) varibles for the test so it is easier to call
- - Add being able to change the timeouts via setupTests
+ - Change the pause method for flashing so it doesn't rely on par groups. This requires the 
+    ability to either globally pause or check if a animation is currently playing 
  */
 
 var animObjects = []; //to keep track of all animations
+var parentAnimation; //The parGroup all animations need to be added to
 var testStack = []; //holds all tests
 var testRefStack = []; //for iteration based checks
 var runType; //to keep track of what the dropdown list state is
@@ -27,7 +29,7 @@ var testIndex = 0; //Holds which test packet we are up to
 var testPacket = []; //Each index holds all the tests that occur at the same time
 
 var pauseTime = 500; //how long to show each manual check for
-var testTimeout = 1000; //how long it takes an individual test to timeout
+var testTimeout = 10000; //how long it takes an individual test to timeout
 var frameworkTimeout = 20000; //how long it takes for the whole test system to timeout
 
 function testRecord(test, object, property, target, time, message, cssStyle, offsets, isRefTest){
@@ -43,9 +45,8 @@ function testRecord(test, object, property, target, time, message, cssStyle, off
 }
 
 //a wrapper to add each animation to an array
-function testAnimation(a, b, c){
-  var x = new Animation(a, b, c);
-  x.pause();
+function testAnimation(a, b, c, d){
+  var x = new Animation(a, b, c, d);
   animObjects.push(x);
   return x;
 }
@@ -136,6 +137,15 @@ function check(object, property, target, time, message){
 //For auto state: It is called each frame render to run the currently loaded test
 //For manual state: It sets up the appropiate timeout for each group of tests that happen at the same time
 function runTests(){
+  //Put all the animations into a par group to get around global pause issue/bug
+  console.log(document.animationTimeline.children);
+  var childList = [];
+  for (var i = 0; i < document.animationTimeline.children.length; i++) {
+    childList.push(document.animationTimeline.children[i]);
+  }
+  parentAnimation = new ParGroup(childList);
+  console.log(document.animationTimeline.children);
+
   //Start the animation time running on screen
   window.webkitRequestAnimationFrame(function(){animTimeViewer();});
   //process tests
@@ -180,11 +190,6 @@ function runTests(){
     }, (testPacket[testIndex-1][0].time * 1000)+(pauseTime * testIndex)+500);
 
     testIndex = 0;
-    //start all the animations running
-    for(x in animObjects){
-      animObjects[x]["currentTime"] = 0;
-      animObjects[x].play();
-    }
   }
 }
 
@@ -240,9 +245,20 @@ function restart(){
 // create divs at appropriate locations and flash the divs for manual testing
 function flashing(test) {
   //pause all animations
-  for(x in animObjects){
-    animObjects[x].pause();
-  }
+  // for(x in animObjects){
+  //   //console.log(animObjects[x] +" "+ animObjects[x].paused)
+  //   if(animObjects[x].paused && !animPlay[x]){
+  //     //no need to repause the animation
+  //     animPlay[x] = false;//mark it shouldn't be played
+  //     console.log("ooobar");
+  //   } else {
+  //     animObjects[x].pause();
+  //     animPlay[x] = true;
+  //     console.log("baban");
+  //   }
+  // }
+  // console.log("fish" + animPlay);
+  parentAnimation.pause();
 
   var _newDiv = document.createElement('div');
   document.getElementById("test").appendChild(_newDiv);
@@ -288,11 +304,21 @@ function flashing(test) {
 
   setTimeout(function() {
     _newDiv.parentNode.removeChild(_newDiv);
-    for(x in animObjects){
+    // console.log("chubby fish");
+    // console.log(document.animationTimeline.children[0].iterationTime);
+    // console.log(document.animationTimeline.children[0].animationDuration);
+    
+    if(document.animationTimeline.children[0].iterationTime 
+        < document.animationTimeline.children[0].animationDuration) parentAnimation.play();
+    /*for(x in animObjects){
+      console.log(animObjects[x] +" "+ animPlay);
       if(animObjects[x]["currentTime"] < animObjects[x]["animationDuration"]){
-        animObjects[x].play();
+        if(animPlay[x]){
+          animObjects[x].play();
+          animPlay[x] = false;
+        } 
       }
-    }
+    }*/
   }, pauseTime);
 }
 
