@@ -18,7 +18,7 @@ limitations under the License.
 <!DOCTYPE html>
 <html>
   <head>
-    <link rel="author" title="Sandy Phan", href="mailto:sandyphan@google.com">
+    <link rel="author" title="Sandy Phan, Sarah Heimlich", href="mailto:sandyphan@google.com, sarahheimlich@google.com">
     <title>Web Animations Tutorial</title>
     <meta name="flags" content="dom">
     <meta name="tutorial" content="Web Animations tutorials">
@@ -68,7 +68,7 @@ limitations under the License.
 
         <div id="tryIt">
           <div class="heading">TRY IT YOURSELF
-             <input onclick="update()" id="update" type="submit" value="Update"></input>
+             <button onclick="update()" id="update">Update</button>
           </div>
           <div class="code">
             <div id="label">HTML Code</div>
@@ -108,11 +108,11 @@ limitations under the License.
         <br />
 
 <!--         <div id="hideLabel" onclick="toggleSolution()">Show Solution</div>
-        <div id="toggleText"><code>new Animation(document.querySelector("#a"), {left: "300px"}, 2);</code></div>
+        <div id="toggleText"><code>new Animation(document.querySelector("#a"), {left: "300px"}, 2);</code></div> -->
 
         <div id="tryIt">
           <div class="heading">TRY IT YOURSELF
-            <input onclick="update()" id="update" type="submit" value="Update">
+            <button onclick="update()" id="update">Update</button>
           </div>
           <div class="code">
             <div id="label">HTML Code</div>
@@ -141,7 +141,7 @@ limitations under the License.
           </div>
           
           <iframe id="display"></iframe>
-        </div> -->
+        </div>
 
         <p class="description">You might wonder why does the rectangle moves diagonally when you have 2 new Animation() commands. That is because you have made 2 animation objects at the same time and let them ran at the same time, if you want the movement in sequence, then you will have to apply a 'startDelay' to the timing as follow:</p>
         <code>new Animation(document.querySelector("#a"), {left: "300px"}, 2.0);</code><br />

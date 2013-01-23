@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2013 Google Inc. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -43,48 +43,75 @@ var update = function() {
   // get values from 3 textboxes
   if (contentNotEqual(htmlVal, document.getElementById('htmlCode').value)) {
     htmlVal = document.getElementById('htmlCode').value;
-    frames['display'].document.documentElement.innerHTML = htmlVal;
+    innerDoc.documentElement.innerHTML = htmlVal;
   }
 
   var jsVal = document.getElementById('jsCode').value;
- // jsVal = jsVal.replace("Animation", "testAnimation");
-  console.log(jsVal);
+  /*jsVal = jsVal.replace("new Animation", "var animA = testAnimation");
+  jsVal += ("\n" +"var refAnim = new testAnimation(document.querySelector('b'), {left: '300px'}, 2);"
+    + "\n" +"check(animA, ['refTest','left'], refAnim, 1, 'Ref Test');"
+    +"\n" +"runTests();");*/
+  //console.log(jsVal);
 
-  htmlVal = (htmlVal + "\n" 
+  /*htmlVal = (htmlVal + "\n" 
     + "\n" + "<script src='../../web-animations-js/web-animation.js'></script>"
     + "\n" + "<script src='../testharness/testharness.js'></script>"
     + "\n" + "<script src='../testharness/testharnessreport.js'></script>"
     + "\n" + "<script src='../extra-asserts.js'></script>"
     + "\n" + "<link rel='stylesheet' href='../testharness/testharness.css'>"
     + "\n" + "<link rel='stylesheet' type='text/css' href='../animation-test-style.css'>"
-    + "\n" + "<div id='b' class='test'></test>"); 
+    ); */
 
   // change the body and css in value in inframe
-  frames['display'].document.documentElement.innerHTML = htmlVal;
-  
+  innerDoc.documentElement.innerHTML = htmlVal;
   var par;
   
+  var includeScripts = new Array();
+  includeScripts[0] =  "../../web-animations-js/web-animation.js";
+  includeScripts[1] = "../testharness/testharness.js";
+  includeScripts[2] = "../testharness/testharnessreport.js";
+  includeScripts[3] = "../extra-asserts.js";
+  var includeLinks = new Array();
+  includeLinks[0] = "../testharness/testharness.css";
+  includeLinks[1] = "../animation-test-style.css";
 
-  // change the scripts in iframe
-  var includes = document.createElement('script');
-  includes.onload = function() {
-    if (frames['display'].document.getElementsByTagName('script')[1]) {
-      var oldScript = frames['display'].document.getElementsByTagName('script')[1];
+  var scriptDivs = new Array();
+  var linkDivs = new Array();
+  for (var i = 0; i < includeScripts.length; i++) {
+    scriptDivs[i] = document.createElement('script');
+    scriptDivs[i].setAttribute('src', includeScripts[i]);
+    innerDoc.getElementsByTagName('body')[0].appendChild(scriptDivs[i]);
+    console.log(scriptDivs[i]);
+  }
+  for(var i = 0; i < includeLinks.length; i++) {
+    linkDivs[i] = document.createElement('link');
+    linkDivs[i].setAttribute('href', includeLinks[i]);
+    innerDoc.getElementsByTagName('body')[0].appendChild(linkDivs[i]);
+    console.log(linkDivs[i]);
+  }
+
+  // change the scripts in iframe  
+  var addAnimScript = function() {
+    console.log(scriptDivs.length);
+    console.log(innerDoc.getElementsByTagName('script')[scriptDivs.length]);
+    if (innerDoc.getElementsByTagName('script')[scriptDivs.length]) {
+      var oldScript = frames['display'].document.getElementsByTagName('script')[scriptDivs.length];
       scriptEle.innerHTML = '\n' + jsVal + '\n';
-      frames['display'].document.getElementsByTagName('body')[0].replaceChild(scriptEle, oldScript);
+      console.log(scriptEle.innerHTML);
+      console.log("if");
+      innerDoc.getElementsByTagName('body')[0].replaceChild(scriptEle, oldScript);
     } else {
       scriptEle.innerHTML = jsVal;
-      par = frames['display'].document.getElementsByTagName('body')[0];
+      console.log(scriptEle.innerHTML);
+      par = innerDoc.getElementsByTagName('body')[0];
       par.appendChild(scriptEle);
+      console.log("else");
     }
   }
-  frames['display'].document.getElementsByTagName('body')[0].appendChild(includes);
+  window.onload = addAnimScript();
 
   cssVal = document.getElementById('cssCode').value;
   frames['display'].document.getElementsByTagName('style')[0].innerHTML = cssVal;
-
-  
-  console.log(innerDoc.getElementById("a"));
 }
 
 // make the solution box toggleable
