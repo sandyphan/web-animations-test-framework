@@ -20,7 +20,6 @@ limitations under the License.
 <meta name="flags" content="dom">
 
 <style>
-
 .anim {
   width: 100px;
   height: 25px;
@@ -30,21 +29,17 @@ limitations under the License.
   left: 0px;
 }
 
+.testBox {
+  height: 200px;
+}
 
 </style>
 
-<p>This is another repetition test with short durations and repetitions as well as fewer time intervals</p>
-<p>This test should have 3 blocks of element moving from left to right repetively. The number of iteration is written in the box</p>
-<p>The test should return true for blocks that repeat more than 1 time and flase for blocks that repeat less than 1 time</p>
-
-<div id="test">
+<div id="test" class="testBox">
   <div class="anim" id="a">1</div>
   <div class="anim" id="b">2</div>
   <div class="anim" id="b">3</div>
 </div>
-
-<div id="log"></div>
-
 
 <script src="../../web-animations-js/web-animation.js"></script>
 <script src="../testharness/testharness.js"></script>
@@ -54,84 +49,32 @@ limitations under the License.
 <link rel='stylesheet' type="text/css" href="../animation-test-style.css">
 
 <script>	
-
-/*
- * All animation script starts here
- */
-
+setupTests();
 var elems = document.querySelectorAll(".anim");
 var anim = [];
 var props = [];
 
-
 for (var i = 0; i < elems.length; i++) {
   var element = elems[i];
-  props[i] = getComputedStyle(element, null);
-  anim[i] = new Animation(element, {left: ["0px", "200px"]}, 1, new ParGroup([], {iterationCount: element.textContent}));
+  new Animation(element, {left: ["0px", "200px"]}, 1, new ParGroup([], {iterationCount: element.textContent}));
 }
 
-/*
- * All test scripts starts here
- * 
- * Logic of the test scripts:
- *      calculate the percentage of the animation time compare
- *      to the animation duration for one iteration
- *      calculate the percentage of movement compare to 
- *      the total movement required
- *      then compare both percentage if they are approximately equal
- *      the animation will then pass the test
- */
-
-// declare variables
-var timePercent = 0;
-var distPercent = 0;
-
-setup({timeout: 10000});
-
-var repeated = [false, false, false];
-
-var test_repeat = function(n, distance, animTime, iterCount) {
-  var timeOutDur = (animTime * 1000) * iterCount + 5;
-  var intervalTime = ((animTime * 1000) / 5) - 2;
-  var checkPercent = setInterval(function() {
-    getPercentRepeat(n, distance, animTime, iterCount);
-  }, intervalTime);
-  
-  setTimeout(function() {
-    clearInterval(checkPercent);
-  }, timeOutDur);
+for (var i = 0; i < elems.length; i++) {
+  check(elems[i], ["left"], ["0px"], 0, "Start pos check: Object "+i);
 }
 
-var getPercentRepeat = function(n, distance, animTime, iterCount) {
-  var p = getComputedStyle(elems[n], null);
-  var currTime = document.animationTimeline.animationTime;
-  while (currTime > animTime + 0.05) {
-    currTime = currTime - animTime;
-  }
-  
-  timePercent = Math.round((currTime / animTime) * 1000)/1000;
-  distPercent = Math.round((parseInt(p.left) / distance) * 1000)/1000;
-  assert_approx_equals(timePercent, distPercent, 0.3, "Check that the time percentage is equal to the distance percentage");
-  if (iterCount > 1) {
-    repeated[n] = true;
-  }
+var buffer = 0.05;
+check(elems[0], ["left"], ["200px"], 1+buffer, "repetition pos check: Object "+0);
+check(elems[1], ["left"], ["0px"], 1+buffer, "repetition pos check: Object "+1);
+check(elems[2], ["left"], ["0px"], 1+buffer, "repetition pos check: Object "+2);
+
+check(elems[0], ["left"], ["200px"], 2+buffer, "repetition 2 pos check: Object "+0);
+check(elems[1], ["left"], ["200px"], 2+buffer, "repetition 2 pos check: Object "+1);
+check(elems[2], ["left"], ["0px"], 2+buffer, "repetition 2 pos check: Object "+2);
+
+for (var i = 0; i < elems.length; i++) {
+  check(elems[i], ["left"], ["200px"], 3+buffer, "End pos check: Object "+i);
 }
 
-test_repeat(0, 200, anim[0].duration, 1);
-test_repeat(1, 200, anim[1].duration, 2);
-test_repeat(2, 200, anim[2].duration, 3);
-
-var testRep = async_test("Test the blocks are repeated");
-
-setTimeout(function() {
-  testRep.step(function() {
-    assert_false(repeated[0], "Block 1 is not repeated");
-    assert_true(repeated[1], "Block 2 is repeated twice");
-    assert_true(repeated[2], "Block 3 is repeated 3 times");
-  });
-  testRep.done();
-  setLog();
-}, 3005);
-
-
+runTests();
 </script>
