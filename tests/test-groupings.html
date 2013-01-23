@@ -77,7 +77,11 @@ new testAnimation(bottomObject, {top: ["100px", "500px"]}, {duration: 1}, down);
 leftDown.play();
 check(topObject, ["left"], ["300px"], 0.5, "The elements have moved left");
 check(topObject, ["top"], ["300px"], 1.5, "The elements have moved down");
+<<<<<<< HEAD
 check(topObject, ["refTest","left", "top"], bottomObject, 0.05, "Objects move together");
+=======
+check(topObject, ["refTest","left"], bottomObject, 0.1, "Objects move together");
+>>>>>>> de2036062fec2f4cd71d3d3f90c1ad235f746fa9
 
 runTests();
 </script>
