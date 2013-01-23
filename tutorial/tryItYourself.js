@@ -25,8 +25,24 @@ var jsVal
 // js scripts
 var displayDefault = function() {
   htmlVal = document.getElementById('htmlCode').value;
-  htmlVal += "\n" + "<div id='b' class='test'></div>";
+  htmlVal = "<div id='test' class='testBox'>"
+  + "\n" + htmlVal
+  + "\n" + "<div id='b' class='ref'></div>"
+  + "\n" + "</div>";
   cssVal = document.getElementById('cssCode').value;
+  cssVal += "\n" + ".ref {"
+  + "\n" + "background-color: red;"
+  + "\n" + "opacity:0;"
+  + "\n" + "border-radius: 10px;"
+  + "\n" + "width: 100px;"
+  + "\n" + "height: 50px;"
+  + "\n" + "top: 0px;"
+  + "\n" + "left: 0px;"
+  + "\n" + "position: absolute;"
+  + "\n" +"}"
+  + "\n" + ".testBox {"
+  + "\n" + "height: 50px;"
+  + "\n" + "}";
 
   frames['display'].document.documentElement.getElementsByTagName("body")[0].innerHTML = htmlVal;
   console.log(frames['display'].document);
@@ -37,19 +53,17 @@ var displayDefault = function() {
 // extract texts from the 3 text areas,
 var update = function() {  
 
-  htmlVal = document.getElementById('htmlCode').value;
-  htmlVal += "\n" + "<div id='b' class='test'></div>";
-  cssVal = document.getElementById('cssCode').value;
+  displayDefault();
   jsVal = document.getElementById('jsCode').value;
+  jsVal = "setupTests({testTimeout: 20000});" + jsVal;
+  jsVal = jsVal.replace("new Animation", "var anim = new testAnimation");
+  jsVal += "\n" + "var ref = new testAnimation(document.querySelector('.ref'), {left: '300px'}, 2);"
+  //+ "\n" + "check(document.querySelector('#a'), ['left'],['0px'], 0, 'Start position check');"
+  //+ "\n" + "check(document.querySelector('#a'), ['refTest','left'], document.querySelector('.ref'), 1, 'Ref Test');"
+  + "\n" + "runTests();";
 
   iframeDoc = frames['display'].document;
-  iframeDoc.documentElement.getElementsByTagName("body")[0].innerHTML = htmlVal;
-  console.log(iframeDoc);
-  iframeDoc.getElementsByTagName('style')[0].innerHTML = cssVal;
-  console.log(document.getElementsByTagName('script'));
-  
   var scriptEle = document.createElement('script');
-  //scriptEle = jsVal;
 
   var addAnimScript = function() {
     var scriptDivs = iframeDoc.getElementsByTagName('script');
