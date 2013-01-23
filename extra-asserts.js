@@ -356,7 +356,7 @@ function flashing(test) {
     // console.log(document.animationTimeline.children[0].animationDuration);
     
     if(document.animationTimeline.children[0].iterationTime 
-        < document.animationTimeline.children[0].animationDuration - 0.1) parentAnimation.play();
+        < document.animationTimeline.children[0].animationDuration - 0.01) parentAnimation.play();
     /*for(x in animObjects){
       console.log(animObjects[x] +" "+ animPlay);
       if(animObjects[x]["currentTime"] < animObjects[x]["animationDuration"]){

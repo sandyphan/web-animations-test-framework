@@ -29,12 +29,16 @@ Written by Steph McArthur
 
 #expectation {
   position: absolute;
-  left: 200px;
+  left: 608px;
   width: 200px;
-  height: 200px;
+  height: 100px;
   background: red;
 }
-body { margin: 0px; }
+
+.testBox {
+  height: 200px;
+}
+
 </style>
 
 <head>
@@ -42,24 +46,18 @@ body { margin: 0px; }
   <link rel="author" title="Steph McArthur", href="mailto:stephm@google.com">
   <link rel="help" href="https://dvcs.w3.org/hg/FXTF/raw-file/tip/web-anim/index.html#timing-in-discrete-steps">
   <meta name="flags" content="dom">
-  <meta name="assert" content="Verify the objects move in the correct number of discreet steps"
+  <meta name="assert" content="Verify the objects move in the correct number of discreet steps">
 </head>
 
-<body>
-  <p>At the end, no red should be visible.</p>
-</body>
+<div id="expectation"> </div>
 
-<div id=expectation> </div>
-
-<div id="test">
-  <div class="anim">steps(3, start)</div>
-  <div class="anim">steps(20, middle)</div>
-  <div class="anim">steps(7, end)</div>
-  <div class="anim">steps(70, end)</div>
-  <div class="anim">steps(47, start)</div>
-  <div class="anim">steps(4, start)</div>
-  <div class="anim">steps(63, middle)</div>
+<div id="test" class="testBox">
   <div class="anim">steps(1, start)</div>
+  <div class="anim">steps(2, start)</div>
+  <div class="anim">steps(3, start)</div>
+  <div class="anim">steps(2, middle)</div>
+  <div class="anim">steps(2, end)</div>
+  
 </div>
 
 <script src="../../web-animations-js/web-animation.js"></script>
@@ -70,58 +68,41 @@ body { margin: 0px; }
 <link rel='stylesheet' type="text/css" href="../animation-test-style.css">
 
 <script>
+setupTests();
+
 var elems = document.querySelectorAll(".anim");
 var anims = [];
 for (var i = 0; i < elems.length; i++) {
   var element = elems[i];
-  anims[i] = new Animation(element, {left: "200px"}, {startDelay: 1, duration: 2, timingFunction: element.textContent});
+  anims[i] = new Animation(element, {left: "600px"}, {startDelay: 1, duration: 2, timingFunction: element.textContent});
 }
+var buffer = 0.05;
+check(elems[0], ["left"], ["600px"], 1+buffer, "Div 1: 1 sec");
 
-var endTest = async_test("Testing final locations");
-setTimeout(function (){
-  endTest.step(function(){
-    var eels = document.querySelectorAll(".test");
-    for(var i = 0; i < eels.length; i++){
-      var params = document.defaultView.getComputedStyle(eels[i], null);
-      assert_equals(params.left, "200px", "Cube " + eels[i].textContent +" didn't finish at the right location");
-    }
-  });
-  endTest.done();
-  setLog();
-}, 3500);
+check(elems[1], ["left"], ["300px"], 1+buffer, "Div 2: 1 sec");
+check(elems[1], ["left"], ["300px"], 1.2+buffer, "Div 2: 1.2 sec");
+check(elems[1], ["left"], ["600px"], 2+buffer, "Div 2: 2 sec");
 
-var stepCount = async_test("Checking the animation has the right number of steps");
-var numAnim = (document.querySelectorAll(".test")).length;
-var steps = [];
-var prevLeft = [];
-for(var i = 0; i < numAnim; i++){
-  steps[i] = 0;
-  prevLeft[i] = 0;
-}
-var counter = setInterval(checkForStep, 10);
+check(elems[2], ["left"], ["200px"], 1+buffer, "Div 3: 1 sec");
+check(elems[2], ["left"], ["200px"], 1.2+buffer, "Div 3: 1.2 sec");
+check(elems[2], ["left"], ["400px"], 1.66+buffer, "Div 3: 1.66 sec");
+check(elems[2], ["left"], ["400px"], 1.9+buffer, "Div 3: 1.9 sec");
+check(elems[2], ["left"], ["600px"], 2.4+buffer, "Div 3: 2.4 sec");
 
-function checkForStep (){
-  var eels = document.querySelectorAll(".test");
-  for(var i = 0; i < eels.length; i++){
-    var params = document.defaultView.getComputedStyle(eels[i], null);
-    if(params.left != prevLeft[i]) steps[i]++;
-    prevLeft[i] = params.left;
-  }
-}
+check(elems[3], ["left"], ["0px"], 1+buffer, "Div 4: 1 sec");
+check(elems[3], ["left"], ["0px"], 1.2+buffer, "Div 4: 1.2 sec");
+check(elems[3], ["left"], ["300px"], 1.5+buffer, "Div 4: 1.5 sec");
+check(elems[3], ["left"], ["300px"], 1.6+buffer, "Div 4: 1.6 sec");
+check(elems[3], ["left"], ["600px"], 2.6+buffer, "Div 4: 2.6 sec");
 
-setTimeout(function(){
-  stepCount.step(function(){
-    var eels = document.querySelectorAll(".test");
-    for(var i = 0; i < eels.length; i++){
-      var params = document.defaultView.getComputedStyle(eels[i], null);
-      var numSteps = eels[i].textContent;
-      numSteps = numSteps.replace(/[^0-9]/g, " ");
-      assert_equals(steps[i] -1, parseInt(numSteps),  eels[i].textContent +" didn't have the right steps");
-    }
-  });
-  stepCount.done();
-}, 3500);
+check(elems[4], ["left"], ["0px"], 1.9+buffer, "Div 5: 1.9 sec");
+check(elems[4], ["left"], ["300px"], 2+buffer, "Div 5: 2 sec");
+check(elems[4], ["left"], ["300px"], 2.9+buffer, "Div 5: 2.9 sec");
+check(elems[4], ["left"], ["600px"], 3.1+buffer, "Div 5: 3.1 sec");
+
+
+runTests();
 </script>
 
-<div id="log"></div>
+
 
