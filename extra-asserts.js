@@ -313,7 +313,7 @@ function flashing(test) {
   }
 
   //Set up the border
-  if(test.property[0] == "refTest") _newDiv.style.borderColor = 'blue';
+  if(test.property[0] == "refTest") _newDiv.style.borderColor = 'black';
   else _newDiv.style.borderColor = 'black';
   _newDiv.style.borderWidth = 'thick';
   _newDiv.style.borderStyle = 'solid';
