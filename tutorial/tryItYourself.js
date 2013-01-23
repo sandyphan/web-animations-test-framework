@@ -47,11 +47,8 @@ var update = function() {
     htmlVal += "\n" + "<div id='b' class='test'></div>";
     innerDoc.documentElement.innerHTML = htmlVal;
   }
-  console.log("HTML Values:");
-  console.log(innerDoc.documentElement.innerHTML);
 
   var jsVal = document.getElementById('jsCode').value;
-  jsVal += ("\n" +"var refAnim = new Animation(document.querySelector('#b'), {left: '300px'}, 2);");
 
   // change the body and css in value in inframe
   innerDoc.documentElement.innerHTML = htmlVal;
@@ -71,6 +68,7 @@ var update = function() {
   for (var i = 0; i < includeScripts.length; i++) {
     scriptDivs[i] = document.createElement('script');
     scriptDivs[i].setAttribute('src', includeScripts[i]);
+    scriptDivs[i].setAttribute('defer', 'defer');
     innerDoc.getElementsByTagName('body')[0].appendChild(scriptDivs[i]);
   }
   for(var i = 0; i < includeLinks.length; i++) {
@@ -79,28 +77,30 @@ var update = function() {
     innerDoc.getElementsByTagName('body')[0].appendChild(linkDivs[i]);
   }
 
+  jsVal += ("\n" +"links = document.getElementsByTagName('script');" 
+    + "\n" + "console.log(links[0]);"
+    //+ "\n" + "var anim = function() {new Animation(document.querySelector('#b'), {left: '300px'}, 2);}"
+   // + "\n" + "window.load();"
+    + "\n" + "new Animation(document.querySelector('#b'), {left: '300px'}, 2);");
+
   // change the scripts in iframe  
   var addAnimScript = function() {
     if (innerDoc.getElementsByTagName('script')[scriptDivs.length]) {
       var oldScript = frames['display'].document.getElementsByTagName('script')[scriptDivs.length];
       scriptEle.innerHTML = '\n' + jsVal + '\n';
-      console.log("JS Values:");
-      console.log(scriptEle.innerHTML);
-      console.log("if");
       innerDoc.getElementsByTagName('body')[0].replaceChild(scriptEle, oldScript);
     } else {
       scriptEle.innerHTML = jsVal;
-      console.log("JS Values:");
-      console.log(scriptEle.innerHTML);
       par = innerDoc.getElementsByTagName('body')[0];
       par.appendChild(scriptEle);
-      console.log("else");
     }
   }
-  window.onload = addAnimScript();
+  iframe.contentWindow.onload = addAnimScript();
 
   cssVal = document.getElementById('cssCode').value;
   frames['display'].document.getElementsByTagName('style')[0].innerHTML = cssVal;
+  console.log("file:");
+  console.log(innerDoc);
 }
 
 // make the solution box toggleable
