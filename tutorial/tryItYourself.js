@@ -25,8 +25,19 @@ var jsVal
 // js scripts
 var displayDefault = function() {
   htmlVal = document.getElementById('htmlCode').value;
-  htmlVal += "\n" + "<div id='b' class='test'></div>";
+  htmlVal += "\n" + "<div id='b' class='ref'></div>";
   cssVal = document.getElementById('cssCode').value;
+  cssVal = (cssVal + "\n" + ".ref {"
+  + "\n" + "background-color: red;"
+  + "\n" + "opacity:0;"
+  + "\n" + "border-radius: 10px;"
+  + "\n" + "width: 100px;"
+  + "\n" + "height: 50px;"
+  + "\n" + "top: 0px;"
+  + "\n" + "left: 0px;"
+  + "\n" + "position: absolute;"
+  + "\n" +"}");
+  console.log(cssVal);
 
   frames['display'].document.documentElement.getElementsByTagName("body")[0].innerHTML = htmlVal;
   console.log(frames['display'].document);
@@ -38,7 +49,7 @@ var displayDefault = function() {
 var update = function() {  
 
   htmlVal = document.getElementById('htmlCode').value;
-  htmlVal += "\n" + "<div id='b' class='test'></div>";
+  htmlVal += "\n" + "<div id='b' class='ref'></div>";
   cssVal = document.getElementById('cssCode').value;
   jsVal = document.getElementById('jsCode').value;
 
