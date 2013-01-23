@@ -22,6 +22,7 @@
 var animObjects = []; //to keep track of all animations
 var parentAnimation; //The parGroup all animations need to be added to
 var testStack = []; //holds all tests
+var refTestStack = [];//to run ref tests in manual mode
 var testRefStack = []; //for iteration based checks
 var runType; //to keep track of what the dropdown list state is
 var state = "Auto"; //current run type of the animation
@@ -110,6 +111,7 @@ function setupTests(timeouts){
 
 //Adds each test to a list to be processed when runTests is called
 function check(object, property, target, time, message){
+  console.log("chheeeeee");
   if(testStack.length == 0){
     //Put all the animations into a par group to get around global pause issue/bug
     console.log(document.animationTimeline.children);
@@ -126,20 +128,19 @@ function check(object, property, target, time, message){
   //store the inital css style of the animated object so it can be used for manual flashing
   var css = object.currentStyle || getComputedStyle(object, null);
   var offsets = [];
-  // console.log("kkakakaka");
-  // console.log(css.top + " " + css.left);
-  // console.log(getOffset(object).top + " " + getOffset(object).left);
   offsets["top"] = getOffset(object).top - parseInt(css.top);
   offsets["left"] = getOffset(object).left- parseInt(css.left);
-  //console.log(offsets);
   if(property[0] == "refTest"){
     var maxTime = document.animationTimeline.children[0].animationDuration;
-    console.log(maxTime + " dddd");
     //generate a test for each time you want to check the objects
     for(var x = 0; x < maxTime/time; x++){
-      testStack.push(new testRecord(test, object, property, target, time*x, "Property "+property+" is not equal to "+target, css, offsets, true));
+      var temp = new testRecord(test, object, property, target, time*x, "Property "+property+" is not equal to "+target, css, offsets, true);
+      if(state == "Auto") testStack.push(temp);
+      else refTestStack.push(temp);
     }
-    testStack.push(new testRecord(test, object, property, target, time*x, "Property "+property+" is not equal to "+target, css, offsets, "Last refTest"));   
+    var temp = new testRecord(test, object, property, target, time*x, "Property "+property+" is not equal to "+target, css, offsets, "Last refTest");
+    if(state == "Auto") testStack.push(temp);
+    else refTestStack.push(temp);  
   } else {
     testStack.push(new testRecord(test, object, property, target, time, "Property "+property+" is not equal to "+target, css, offsets, false));
   }
@@ -149,11 +150,13 @@ function check(object, property, target, time, message){
 //For auto state: It is called each frame render to run the currently loaded test
 //For manual state: It sets up the appropiate timeout for each group of tests that happen at the same time
 function runTests(){
+  console.log(refTestStack);
   //Start the animation time running on screen
   window.webkitRequestAnimationFrame(function(){animTimeViewer();});
   //process tests
   //Sort tests by time to set up timeouts properly
   testStack.sort(testTimeSort);
+  refTestStack.sort(testTimeSort);
   for(var x =0; x<testStack.length; x++){
     //check for all tests that happen at the same time
     //And add them to the test packet
@@ -191,7 +194,8 @@ function runTests(){
     setTimeout(function() {
       done();
     }, (testPacket[testIndex-1][0].time * 1000)+(pauseTime * testIndex)+500);
-
+    //Start running the refTests
+    refTestRunner();
     testIndex = 0;
   }
 }
@@ -239,6 +243,32 @@ function animTimeViewer(){
   var comp = object.currentStyle || getComputedStyle(object, null);
   object.innerHTML = "Current animation time " + currTime;
   window.webkitRequestAnimationFrame(function(){animTimeViewer();});
+}
+
+//Running setTimeout for ref tests which the iteration time too small cause the other tests
+//to lag, causing them to fail. This method should test as often as auto (no more or no less)
+function refTestRunner(index){
+  if(index == null) index = 0;
+  //as soon as the current frame time is over a ref test then pop it off and run the test
+  var doNextTest = false;
+  if(refTestStack.length > 0) doNextTest = true;
+  while(doNextTest && index < refTestStack.length){
+    var currTest = refTestStack[index];
+    if(currTest.time <= document.animationTimeline.children[0].iterationTime){
+      console.log(currTest);
+      doNextTest = true;
+      console.log(currTest.object);
+      console.log(currTest.target);
+      currTest.test.step(function (){
+        assert_properties(currTest.object, currTest.property, currTest.target, currTest.message);
+      });
+      if(currTest.isRefTest == "Last refTest") currTest.test.done();
+      index++;
+    } else {
+      doNextTest = false;
+    }
+  }
+  if(index < refTestStack.length) window.webkitRequestAnimationFrame(function(){refTestRunner(index);});
 }
 
 function restart(){
@@ -326,7 +356,7 @@ function flashing(test) {
     // console.log(document.animationTimeline.children[0].animationDuration);
     
     if(document.animationTimeline.children[0].iterationTime 
-        < document.animationTimeline.children[0].animationDuration) parentAnimation.play();
+        < document.animationTimeline.children[0].animationDuration - 0.01) parentAnimation.play();
     /*for(x in animObjects){
       console.log(animObjects[x] +" "+ animPlay);
       if(animObjects[x]["currentTime"] < animObjects[x]["animationDuration"]){
