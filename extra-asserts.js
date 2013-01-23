@@ -15,10 +15,12 @@
  */
  /*TO DO:
  - incorperate object notation (JSON) varibles for the test so it is easier to call
- - Add being able to change the timeouts via setupTests
+ - Change the pause method for flashing so it doesn't rely on par groups. This requires the 
+    ability to either globally pause or check if a animation is currently playing 
  */
 
 var animObjects = []; //to keep track of all animations
+var parentAnimation; //The parGroup all animations need to be added to
 var testStack = []; //holds all tests
 var testRefStack = []; //for iteration based checks
 var runType; //to keep track of what the dropdown list state is
@@ -27,7 +29,7 @@ var testIndex = 0; //Holds which test packet we are up to
 var testPacket = []; //Each index holds all the tests that occur at the same time
 
 var pauseTime = 500; //how long to show each manual check for
-var testTimeout = 1000; //how long it takes an individual test to timeout
+var testTimeout = 10000; //how long it takes an individual test to timeout
 var frameworkTimeout = 20000; //how long it takes for the whole test system to timeout
 
 function testRecord(test, object, property, target, time, message, cssStyle, offsets, isRefTest){
@@ -43,9 +45,8 @@ function testRecord(test, object, property, target, time, message, cssStyle, off
 }
 
 //a wrapper to add each animation to an array
-function testAnimation(a, b, c){
-  var x = new Animation(a, b, c);
-  x.pause();
+function testAnimation(a, b, c, d){
+  var x = new Animation(a, b, c, d);
   animObjects.push(x);
   return x;
 }
@@ -109,19 +110,31 @@ function setupTests(timeouts){
 
 //Adds each test to a list to be processed when runTests is called
 function check(object, property, target, time, message){
+  if(testStack.length == 0){
+    //Put all the animations into a par group to get around global pause issue/bug
+    console.log(document.animationTimeline.children);
+    var childList = [];
+    for (var i = 0; i < document.animationTimeline.children.length; i++) {
+      childList.push(document.animationTimeline.children[i]);
+    }
+    parentAnimation = new ParGroup(childList);
+    console.log(document.animationTimeline.children);
+  }
   //Create new async test
   var test = async_test(message);
   test.timeout_length = testTimeout;
   //store the inital css style of the animated object so it can be used for manual flashing
   var css = object.currentStyle || getComputedStyle(object, null);
   var offsets = [];
+  // console.log("kkakakaka");
+  // console.log(css.top + " " + css.left);
+  // console.log(getOffset(object).top + " " + getOffset(object).left);
   offsets["top"] = getOffset(object).top - parseInt(css.top);
   offsets["left"] = getOffset(object).left- parseInt(css.left);
+  //console.log(offsets);
   if(property[0] == "refTest"){
-    var maxTime = 0; 
-    for(x in animObjects){
-      maxTime = animObjects[x].animationDuration > maxTime ? animObjects[x].animationDuration : maxTime;
-    }
+    var maxTime = document.animationTimeline.children[0].animationDuration;
+    console.log(maxTime + " dddd");
     //generate a test for each time you want to check the objects
     for(var x = 0; x < maxTime/time; x++){
       testStack.push(new testRecord(test, object, property, target, time*x, "Property "+property+" is not equal to "+target, css, offsets, true));
@@ -180,11 +193,6 @@ function runTests(){
     }, (testPacket[testIndex-1][0].time * 1000)+(pauseTime * testIndex)+500);
 
     testIndex = 0;
-    //start all the animations running
-    for(x in animObjects){
-      animObjects[x]["currentTime"] = 0;
-      animObjects[x].play();
-    }
   }
 }
 
@@ -212,19 +220,20 @@ function runAutoTest(){
     if(testPacket[testIndex][0].time == 0 ){
       testPacket[testIndex][0].time += 0.02;
     } 
-    for(x in animObjects){
-      animObjects[x]["currentTime"] = testPacket[testIndex][0].time;
-    }
+    // for(x in animObjects){
+    //   //animObjects[x]["currentTime"] = testPacket[testIndex][0].time;
+    // }
+    document.animationTimeline.children[0].currentTime = testPacket[testIndex][0].time;
     testIndex++;
     window.webkitRequestAnimationFrame(function(){runAutoTest();});
   } else {
+    parentAnimation.pause();
     done();
   }
 }
 
 function animTimeViewer(){
-  console.log(animObjects);
-  var currTime = animObjects[0].currentTime < animObjects[0].animationDuration ? animObjects[0].currentTime : animObjects[0].animationDuration;
+  var currTime = document.animationTimeline.children[0].iterationTime; 
   currTime = currTime.toFixed(2);
   var object = document.getElementById("animViewerText");
   var comp = object.currentStyle || getComputedStyle(object, null);
@@ -241,9 +250,20 @@ function restart(){
 // create divs at appropriate locations and flash the divs for manual testing
 function flashing(test) {
   //pause all animations
-  for(x in animObjects){
-    animObjects[x].pause();
-  }
+  // for(x in animObjects){
+  //   //console.log(animObjects[x] +" "+ animObjects[x].paused)
+  //   if(animObjects[x].paused && !animPlay[x]){
+  //     //no need to repause the animation
+  //     animPlay[x] = false;//mark it shouldn't be played
+  //     console.log("ooobar");
+  //   } else {
+  //     animObjects[x].pause();
+  //     animPlay[x] = true;
+  //     console.log("baban");
+  //   }
+  // }
+  // console.log("fish" + animPlay);
+  parentAnimation.pause();
 
   var _newDiv = document.createElement('div');
   document.getElementById("test").appendChild(_newDiv);
@@ -252,16 +272,24 @@ function flashing(test) {
 
   var seenTop = false;
   var seenLeft = false;
-  for(x in test.property){
+  for(var x= 0; x < test.property.length; x++){
+    
+    if(test.property[0] == "refTest"){
+      x++;
+      var comp = test.target.currentStyle || getComputedStyle(test.target, null);
+      var tar = comp[test.property[x]];
+    } else {
+      var tar = test.target[x];
+    }
     var prop = test.property[x];
-    var tar = test.target[x];
     if(test.cssStyle.position == "relative"){
       console.log("Bam");
+      console.log(test);
       if(prop == "left"){
         seenLeft = true;
         tar = parseInt(tar);
         tar += parseInt(test.offsets["left"]);
-        console.log("ggg "+tar);
+        //console.log("ggg "+tar);
         tar = tar + "px";
       } else if(prop == "top"){
         seenTop = true;
@@ -269,6 +297,9 @@ function flashing(test) {
         tar += parseInt(test.offsets["top"]);
         tar = tar + "px";
       }
+    } else {
+      if(prop == "left") seenLeft = true;
+      else if(prop == "top") seenTop = true;
     }
     console.log(tar + " " + test.target[x]);
     _newDiv.style[prop] = tar;
@@ -282,18 +313,29 @@ function flashing(test) {
   }
 
   //Set up the border
-  _newDiv.style.borderColor = 'black';
+  if(test.property[0] == "refTest") _newDiv.style.borderColor = 'black';
+  else _newDiv.style.borderColor = 'black';
   _newDiv.style.borderWidth = 'thick';
   _newDiv.style.borderStyle = 'solid';
   _newDiv.style.opacity = 1;
 
   setTimeout(function() {
     _newDiv.parentNode.removeChild(_newDiv);
-    for(x in animObjects){
+    // console.log("chubby fish");
+    // console.log(document.animationTimeline.children[0].iterationTime);
+    // console.log(document.animationTimeline.children[0].animationDuration);
+    
+    if(document.animationTimeline.children[0].iterationTime 
+        < document.animationTimeline.children[0].animationDuration) parentAnimation.play();
+    /*for(x in animObjects){
+      console.log(animObjects[x] +" "+ animPlay);
       if(animObjects[x]["currentTime"] < animObjects[x]["animationDuration"]){
-        animObjects[x].play();
+        if(animPlay[x]){
+          animObjects[x].play();
+          animPlay[x] = false;
+        } 
       }
-    }
+    }*/
   }, pauseTime);
 }
 
@@ -324,7 +366,7 @@ function assert_properties(object, props, targets, message, epsilons){
   if(props[0] == "refTest"){
     var tar = targets.currentStyle || getComputedStyle(targets, null);
     for(var i = 1; i < props.length; i++){
-      assert_equals(comp[props[i]], tar[props[i]], message);
+      assert_approx_equals(parseInt(comp[props[i]]), parseInt(tar[props[i]]), 3, message);
     }
   } else {
     for(var i = 0; i < props.length; i++){
