@@ -110,23 +110,31 @@ function setupTests(timeouts){
 
 //Adds each test to a list to be processed when runTests is called
 function check(object, property, target, time, message){
+  if(testStack.length == 0){
+    //Put all the animations into a par group to get around global pause issue/bug
+    console.log(document.animationTimeline.children);
+    var childList = [];
+    for (var i = 0; i < document.animationTimeline.children.length; i++) {
+      childList.push(document.animationTimeline.children[i]);
+    }
+    parentAnimation = new ParGroup(childList);
+    console.log(document.animationTimeline.children);
+  }
   //Create new async test
   var test = async_test(message);
   test.timeout_length = testTimeout;
   //store the inital css style of the animated object so it can be used for manual flashing
   var css = object.currentStyle || getComputedStyle(object, null);
   var offsets = [];
-  console.log("kkakakaka");
-  console.log(css.top + " " + css.left);
-  console.log(getOffset(object).top + " " + getOffset(object).left);
+  // console.log("kkakakaka");
+  // console.log(css.top + " " + css.left);
+  // console.log(getOffset(object).top + " " + getOffset(object).left);
   offsets["top"] = getOffset(object).top - parseInt(css.top);
   offsets["left"] = getOffset(object).left- parseInt(css.left);
-  console.log(offsets);
+  //console.log(offsets);
   if(property[0] == "refTest"){
-    var maxTime = 0; 
-    for(x in animObjects){
-      maxTime = animObjects[x].animationDuration > maxTime ? animObjects[x].animationDuration : maxTime;
-    }
+    var maxTime = document.animationTimeline.children[0].animationDuration;
+    console.log(maxTime + " dddd");
     //generate a test for each time you want to check the objects
     for(var x = 0; x < maxTime/time; x++){
       testStack.push(new testRecord(test, object, property, target, time*x, "Property "+property+" is not equal to "+target, css, offsets, true));
@@ -141,15 +149,6 @@ function check(object, property, target, time, message){
 //For auto state: It is called each frame render to run the currently loaded test
 //For manual state: It sets up the appropiate timeout for each group of tests that happen at the same time
 function runTests(){
-  //Put all the animations into a par group to get around global pause issue/bug
-  console.log(document.animationTimeline.children);
-  var childList = [];
-  for (var i = 0; i < document.animationTimeline.children.length; i++) {
-    childList.push(document.animationTimeline.children[i]);
-  }
-  parentAnimation = new ParGroup(childList);
-  console.log(document.animationTimeline.children);
-
   //Start the animation time running on screen
   window.webkitRequestAnimationFrame(function(){animTimeViewer();});
   //process tests
@@ -228,6 +227,7 @@ function runAutoTest(){
     testIndex++;
     window.webkitRequestAnimationFrame(function(){runAutoTest();});
   } else {
+    parentAnimation.pause();
     done();
   }
 }
@@ -272,9 +272,16 @@ function flashing(test) {
 
   var seenTop = false;
   var seenLeft = false;
-  for(x in test.property){
+  for(var x= 0; x < test.property.length; x++){
+    
+    if(test.property[0] == "refTest"){
+      x++;
+      var comp = test.target.currentStyle || getComputedStyle(test.target, null);
+      var tar = comp[test.property[x]];
+    } else {
+      var tar = test.target[x];
+    }
     var prop = test.property[x];
-    var tar = test.target[x];
     if(test.cssStyle.position == "relative"){
       console.log("Bam");
       console.log(test);
