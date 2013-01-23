@@ -67,7 +67,7 @@ Written By Sarah Heimlich
 <link rel='stylesheet' type="text/css" href="../animation-test-style.css">
 
 <script>
-setupTests({testTimeout: 10000});
+setupTests({testTimeout: 20000});
 
 var topObjects = document.querySelectorAll(".top");
 var bottomObjects = document.querySelectorAll(".bottom");
@@ -78,7 +78,7 @@ for (var i = 0; i < topObjects.length; i++) {
 }
 
 for (var i = 0; i < topObjects.length; i++) {
-  check(topObjects[i], ["refTest","left"], bottomObjects[i], 1, "Ref Test "+ i);
+  check(topObjects[i], ["refTest","left"], bottomObjects[i], 0.9, "Ref Test "+ i);
   check(topObjects[i], ["left"],["100px"], 0, "Start position check "+ i);
   check(topObjects[i], ["left"],["600px"], 2, "End position check "+ i);
 }

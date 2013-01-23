@@ -116,8 +116,12 @@ function check(object, property, target, time, message){
   //store the inital css style of the animated object so it can be used for manual flashing
   var css = object.currentStyle || getComputedStyle(object, null);
   var offsets = [];
+  console.log("kkakakaka");
+  console.log(css.top + " " + css.left);
+  console.log(getOffset(object).top + " " + getOffset(object).left);
   offsets["top"] = getOffset(object).top - parseInt(css.top);
   offsets["left"] = getOffset(object).left- parseInt(css.left);
+  console.log(offsets);
   if(property[0] == "refTest"){
     var maxTime = 0; 
     for(x in animObjects){
@@ -217,9 +221,10 @@ function runAutoTest(){
     if(testPacket[testIndex][0].time == 0 ){
       testPacket[testIndex][0].time += 0.02;
     } 
-    for(x in animObjects){
-      animObjects[x]["currentTime"] = testPacket[testIndex][0].time;
-    }
+    // for(x in animObjects){
+    //   //animObjects[x]["currentTime"] = testPacket[testIndex][0].time;
+    // }
+    document.animationTimeline.children[0].currentTime = testPacket[testIndex][0].time;
     testIndex++;
     window.webkitRequestAnimationFrame(function(){runAutoTest();});
   } else {
@@ -289,7 +294,7 @@ function flashing(test) {
       if(prop == "left") seenLeft = true;
       else if(prop == "top") seenTop = true;
     }
-    //console.log(tar + " " + test.target[x]);
+    console.log(tar + " " + test.target[x]);
     _newDiv.style[prop] = tar;
   }
   
@@ -301,7 +306,8 @@ function flashing(test) {
   }
 
   //Set up the border
-  _newDiv.style.borderColor = 'black';
+  if(test.property[0] == "refTest") _newDiv.style.borderColor = 'blue';
+  else _newDiv.style.borderColor = 'black';
   _newDiv.style.borderWidth = 'thick';
   _newDiv.style.borderStyle = 'solid';
   _newDiv.style.opacity = 1;
