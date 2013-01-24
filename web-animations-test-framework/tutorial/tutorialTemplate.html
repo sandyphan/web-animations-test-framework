@@ -68,32 +68,7 @@ limitations under the License.
           <li>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</li>
         </ol>
 
-        <div id="tryIt">
-          <div class="heading">TRY IT YOURSELF
-             <button onclick="update()" id="update">Update</button>
-          </div>
-          <div class="code">
-            <div id="label">HTML Code</div>
-            <textarea id="htmlCode" class="code">
-<div id="a" class="test"></div>
-</textarea>
-            <div id="label">CSS Style</div>
-            <textarea id="cssCode" class="code">
-.test {
-  background-color: red;
-  border-radius: 10px;
-  width: 100px;
-  height: 50px;
-  top: 0px;
-  left: 0px;
-  position: absolute;
-}</textarea>
-            <div id="label">Javascript</div>
-            <textarea id="jsCode" class="code"></textarea>
-          </div>
-          
-          <iframe id="display" src='iframe-contents.html'><p>Your browser does not support iframes</p></iframe>  
-        </div> 
+        <button onclick="showEditor()">Try It Yourself</button>
 
         <div></div>
 
@@ -142,6 +117,33 @@ limitations under the License.
 
       </div>  <!-- content ending div -->
     </div> <!-- main ending div -->
+
+    <div id="tryIt">
+      <div class="heading">TRY IT YOURSELF
+         <button onclick="update()" id="update">Update</button>
+      </div>
+      <div class="code">
+        <div id="label">HTML Code</div>
+        <textarea id="htmlCode">
+<div id="a" class="test"></div>
+</textarea>
+        <div id="label">CSS Style</div>
+        <textarea id="cssCode">
+.test {
+background-color: red;
+border-radius: 10px;
+width: 100px;
+height: 50px;
+top: 0px;
+left: 0px;
+position: absolute;
+}</textarea>
+        <div id="label">Javascript</div>
+        <textarea id="jsCode"></textarea>
+      </div>
+      
+      <iframe id="display" src='iframe-contents.html'><p>Your browser does not support iframes</p></iframe>  
+    </div> 
     <script type="text/javascript" src="tryItYourself.js"></script>
   </body>
 </html>
