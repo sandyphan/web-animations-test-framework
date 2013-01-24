@@ -30,8 +30,8 @@ var testIndex = 0; //Holds which test packet we are up to
 var testPacket = []; //Each index holds all the tests that occur at the same time
 
 var pauseTime = 500; //how long to show each manual check for
-var testTimeout = 10000; //how long it takes an individual test to timeout
-var frameworkTimeout = 20000; //how long it takes for the whole test system to timeout
+var testTimeout = 1000; //how long it takes an individual test to timeout
+var frameworkTimeout = 2000; //how long it takes for the whole test system to timeout
 
 function testRecord(test, object, property, target, time, message, cssStyle, offsets, isRefTest){
   this.test = test;
@@ -106,22 +106,14 @@ function setupTests(timeouts){
     state = "Auto";
     runType.selectedIndex = 0;
   }
+  state = "Manual";
   setup({ explicit_done: true, timeout: frameworkTimeout});
 }
 
 //Adds each test to a list to be processed when runTests is called
 function check(object, property, target, time, message){
   console.log("chheeeeee");
-  if(testStack.length == 0){
-    //Put all the animations into a par group to get around global pause issue/bug
-    console.log(document.animationTimeline.children);
-    var childList = [];
-    for (var i = 0; i < document.animationTimeline.children.length; i++) {
-      childList.push(document.animationTimeline.children[i]);
-    }
-    parentAnimation = new ParGroup(childList);
-    console.log(document.animationTimeline.children);
-  }
+  if(testStack.length == 0 && refTestStack.length == 0) reparent();
   //Create new async test
   var test = async_test(message);
   test.timeout_length = testTimeout;
@@ -146,11 +138,23 @@ function check(object, property, target, time, message){
   }
 }
 
+function reparent(){
+  //Put all the animations into a par group to get around global pause issue/bug
+  console.log(document.animationTimeline.children);
+  var childList = [];
+  for (var i = 0; i < document.animationTimeline.children.length; i++) {
+    childList.push(document.animationTimeline.children[i]);
+  }
+  //parentAnimation = new ParGroup(document.animationTimeline.children);
+  parentAnimation = new ParGroup(childList);
+  console.log(document.animationTimeline.children);
+}
+
 //Call this after lining up the tests with check
 //For auto state: It is called each frame render to run the currently loaded test
 //For manual state: It sets up the appropiate timeout for each group of tests that happen at the same time
 function runTests(){
-  console.log(refTestStack);
+  if(testStack.length == 0 && refTestStack.length == 0) reparent();
   //Start the animation time running on screen
   window.webkitRequestAnimationFrame(function(){animTimeViewer();});
   //process tests
@@ -238,7 +242,8 @@ function runAutoTest(){
 
 function animTimeViewer(){
   var currTime = document.animationTimeline.children[0].iterationTime; 
-  currTime = currTime.toFixed(2);
+  //console.log(document.animationTimeline.children[0]);
+  //currTime = currTime.toFixed(2);
   var object = document.getElementById("animViewerText");
   var comp = object.currentStyle || getComputedStyle(object, null);
   object.innerHTML = "Current animation time " + currTime;
