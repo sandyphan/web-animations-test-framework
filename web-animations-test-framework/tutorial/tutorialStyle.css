@@ -85,8 +85,7 @@
 .description {
   font: 1em sans-serif, "Comic Sans MS", cursive;
   margin: 20px;
-/*  float: left;*/
-/*  clear: both;*/
+  clear: both;
 }
 #title {
   font: bold 2em Verdana;
@@ -146,13 +145,13 @@ div {
   background-color: #EEE;
 }
 #hideLabel {
-  width: 15%;
+  width: 10%;
   height: 20px;
   float: right;
   background-color: #999999;
   padding: 5px;
   margin: 10px;
-  font: 1.1em "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+  font: 0.8em "Lucida Sans Unicode", "Lucida Grande", sans-serif;
   color: black;
   text-align: center;
   border-radius: 10px;
@@ -162,7 +161,7 @@ ul, li {
   margin: 0;
   line-height: 28px;
 }
-.topMenu, #sideMenu {
+.topMenu, #sideMenu, .subTutorial{
   list-style-type: none;
   padding: 20px;
   display: inline;
@@ -200,4 +199,7 @@ ul, li {
   height: 800px;
   width: 110%;
   border: 0px;
+}
+.subTutorial {
+  display: none;
 }
