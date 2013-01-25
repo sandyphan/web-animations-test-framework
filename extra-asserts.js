@@ -383,26 +383,25 @@ function assert_properties(object, props, targets, message, epsilons){
   var type = object.nodeName;
   if(type == "DIV"){
     var comp = object.currentStyle || getComputedStyle(object, null);
-    if(props[0] == "refTest"){
-      var tar = targets.currentStyle || getComputedStyle(targets, null);
-      for(var i = 1; i < props.length; i++){
-        if(props[i] == "style"){
-          assert_webkit_style(object, targets[i], message);
-        } else {
-          assert_approx_equals(parseInt(comp[props[i]]), parseInt(tar[props[i]]), 3, message);
-        }       
-      }
-    } else {
-      for(var i = 0; i < props.length; i++){
-		//for anything with the word color in it do the color assert (C is not there because it could be a c or C)
-        if(props[i].indexOf("olor") != -1){ 
-          assert_color(object, targets[i], message);
-        } else if(props[i] == "style"){
-          assert_webkit_style(object, targets[x], message);
-        } else {
-          assert_approx_equals(parseInt(comp[props[i]]), parseInt(targets[i]), 10, message);
-        }
-      }
+    var i = 0;
+    var isRefTest = (props[0] == "refTest");
+    if(isRefTest) {
+	  var tar = targets.currentStyle || getComputedStyle(targets, null);
+	  i = 1;
+    } 
+	for(; i < props.length; i++){
+	  //for anything with the word color in it do the color assert (C is not there because it could be a c or C)
+	  if(props[i].indexOf("olor") != -1){ 
+		assert_color(object, targets[i], message);
+	  } else if(props[i] == "style"){
+		if(isRefTest); //TODO
+		else ; //TODO
+		assert_webkit_style(object, targets[x], message);
+	  } else {
+	    if(isRefTest) var t = tar[props[i]];
+	    else var t = targets[i];
+	    assert_approx_equals(parseInt(comp[props[i]]), parseInt(t), 10, message);
+	  }
     }
   } else {
     console.log("it's a svg image");
