@@ -20,9 +20,7 @@ limitations under the License.
 .anim {
   fill: lightsteelblue;
 }
-.expectation {
-  fill: red;
-}
+
 .testBox {
   height: 600px;
 }
@@ -35,7 +33,6 @@ limitations under the License.
 
 <div id="test" class="testBox">
 	<svg>
-		<rect class="expectation" x="400px" y="200px" width="50px" height="100px"></rect>
 		<rect class="anim" x="100px" y="10px" width="100px" height="100px"></rect>
 	</svg>
 </div>
@@ -54,6 +51,7 @@ var rect = document.querySelector(".anim")
 new testAnimation(rect, {x: "400px", y: ["300px", "200px"], width: ["100px", "20px", "50px"]}, 1);
 
 check(rect, ["x", "y", "width"], ["250px", "250px", "20px"], 0.5, "SVG check");
+check(rect, ["x", "y", "width"], ["400px", "200px", "50px"], 1, "SVG check 2");
 
 runTests();
 </script>
