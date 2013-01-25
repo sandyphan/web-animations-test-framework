@@ -295,7 +295,7 @@ function flashing(test) {
   console.log(flash);
 
   if(type == "DIV") document.getElementById("test").appendChild(flash);
-  else document.getElementById("eeeek").appendChild(flash);
+  else document.getElementsByTagName("svg")[0].appendChild(flash);
 
   if(type == "DIV"){
     flash.style.cssText = test.cssStyle.cssText; //copy the objects orginal css style

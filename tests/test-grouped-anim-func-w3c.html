@@ -51,7 +51,9 @@ limitations under the License.
 setupTests();
 var rect = document.querySelector(".anim")
 
-var a = new testAnimation(rect, {x: "400px", y: ["300px", "200px"], width: ["100px", "20px", "50px"]}, 1);
+new testAnimation(rect, {x: "400px", y: ["300px", "200px"], width: ["100px", "20px", "50px"]}, 1);
+
+check(rect, ["x", "y", "width"], ["250px", "250px", "20px"], 0.5, "SVG check");
 
 runTests();
 </script>
