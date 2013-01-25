@@ -106,13 +106,12 @@ function setupTests(timeouts){
     state = "Auto";
     runType.selectedIndex = 0;
   }
-  state = "Manual";
   setup({ explicit_done: true, timeout: frameworkTimeout});
 }
 
 //Adds each test to a list to be processed when runTests is called
 function check(object, property, target, time, message){
-  console.log("chheeeeee");
+  //console.log("chheeeeee");
   if(testStack.length == 0 && refTestStack.length == 0) reparent();
   //Create new async test
   var test = async_test(message);
@@ -140,14 +139,14 @@ function check(object, property, target, time, message){
 
 function reparent(){
   //Put all the animations into a par group to get around global pause issue/bug
-  console.log(document.animationTimeline.children);
+  //console.log(document.animationTimeline.children);
   var childList = [];
   for (var i = 0; i < document.animationTimeline.children.length; i++) {
     childList.push(document.animationTimeline.children[i]);
   }
   //parentAnimation = new ParGroup(document.animationTimeline.children);
   parentAnimation = new ParGroup(childList);
-  console.log(document.animationTimeline.children);
+  //console.log(document.animationTimeline.children);
 }
 
 //Call this after lining up the tests with check
@@ -260,10 +259,10 @@ function refTestRunner(index){
   while(doNextTest && index < refTestStack.length){
     var currTest = refTestStack[index];
     if(currTest.time <= document.animationTimeline.children[0].iterationTime){
-      console.log(currTest);
+      //console.log(currTest);
       doNextTest = true;
-      console.log(currTest.object);
-      console.log(currTest.target);
+      //console.log(currTest.object);
+      //console.log(currTest.target);
       currTest.test.step(function (){
         assert_properties(currTest.object, currTest.property, currTest.target, currTest.message);
       });
@@ -284,31 +283,33 @@ function restart(){
 
 // create divs at appropriate locations and flash the divs for manual testing
 function flashing(test) {
-  //pause all animations
-  // for(x in animObjects){
-  //   //console.log(animObjects[x] +" "+ animObjects[x].paused)
-  //   if(animObjects[x].paused && !animPlay[x]){
-  //     //no need to repause the animation
-  //     animPlay[x] = false;//mark it shouldn't be played
-  //     console.log("ooobar");
-  //   } else {
-  //     animObjects[x].pause();
-  //     animPlay[x] = true;
-  //     console.log("baban");
-  //   }
-  // }
-  // console.log("fish" + animPlay);
   parentAnimation.pause();
+  var type = test.object.nodeName;
 
-  var _newDiv = document.createElement('div');
-  document.getElementById("test").appendChild(_newDiv);
-  _newDiv.style.cssText = test.cssStyle.cssText; //copy the objects orginal css style
-  _newDiv.style.position = "absolute";
+  //Create a new object of the same type as the thing being tested
+  if(type == "DIV") var flash = document.createElement('div');
+  else {
+    var flash = document.createElementNS("http://www.w3.org/2000/svg", type);
+  }
+   
+  console.log(flash);
 
+  if(type == "DIV") document.getElementById("test").appendChild(flash);
+  else document.getElementById("eeeek").appendChild(flash);
+
+  if(type == "DIV"){
+    flash.style.cssText = test.cssStyle.cssText; //copy the objects orginal css style
+    flash.style.position = "absolute";
+  } else {
+    console.log("banana");
+    for(var x = 0; x < test.object.attributes.length; x++){
+      flash.setAttribute(test.object.attributes[x].name, test.object.attributes[x].value);
+    }
+  }
+  
   var seenTop = false;
   var seenLeft = false;
-  for(var x= 0; x < test.property.length; x++){
-    
+  for(var x= 0; x < test.property.length; x++){ 
     if(test.property[0] == "refTest"){
       x++;
       var comp = test.target.currentStyle || getComputedStyle(test.target, null);
@@ -317,60 +318,55 @@ function flashing(test) {
       var tar = test.target[x];
     }
     var prop = test.property[x];
-    if(test.cssStyle.position == "relative"){
-      console.log("Bam");
-      console.log(test);
-      if(prop == "left"){
-        seenLeft = true;
-        tar = parseInt(tar);
-        tar += parseInt(test.offsets["left"]);
-        //console.log("ggg "+tar);
-        tar = tar + "px";
-      } else if(prop == "top"){
-        seenTop = true;
-        tar = parseInt(tar);
-        tar += parseInt(test.offsets["top"]);
-        tar = tar + "px";
+
+    if(type == "DIV"){
+      if(test.cssStyle.position == "relative"){
+        if(prop == "left"){
+          seenLeft = true;
+          tar = parseInt(tar);
+          tar += parseInt(test.offsets["left"]);
+          tar = tar + "px";
+        } else if(prop == "top"){
+          seenTop = true;
+          tar = parseInt(tar);
+          tar += parseInt(test.offsets["top"]);
+          tar = tar + "px";
+        }
+      } else {
+        if(prop == "left") seenLeft = true;
+        else if(prop == "top") seenTop = true;
       }
+      flash.style[prop] = tar;
     } else {
-      if(prop == "left") seenLeft = true;
-      else if(prop == "top") seenTop = true;
+        flash.setAttribute(prop, tar);
     }
-    console.log(tar + " " + test.target[x]);
-    _newDiv.style[prop] = tar;
   }
   
-  if(!seenTop){
-    _newDiv.style.top = getOffset(test.object).top+"px";
+  if(type == "DIV"){
+    if(!seenTop){
+      flash.style.top = getOffset(test.object).top+"px";
+    }
+    if(!seenLeft){
+      flash.style.left = getOffset(test.object).left+"px";
+    }
   }
-  if(!seenLeft){
-    _newDiv.style.left = getOffset(test.object).left+"px";
-  }
-
+  
   //Set up the border
-  if(test.property[0] == "refTest") _newDiv.style.borderColor = 'black';
-  else _newDiv.style.borderColor = 'black';
-  _newDiv.style.borderWidth = 'thick';
-  _newDiv.style.borderStyle = 'solid';
-  _newDiv.style.opacity = 1;
-
+  if(type == "DIV"){
+    if(test.property[0] == "refTest") flash.style.borderColor = 'black';
+    else flash.style.borderColor = 'black';
+    flash.style.borderWidth = 'thick';
+    flash.style.borderStyle = 'solid';
+    flash.style.opacity = 1;
+  } else {
+    flash.setAttribute("stroke", "black");
+    flash.setAttribute("stroke-width", "5px");
+  }
+  
   setTimeout(function() {
-    _newDiv.parentNode.removeChild(_newDiv);
-    // console.log("chubby fish");
-    // console.log(document.animationTimeline.children[0].iterationTime);
-    // console.log(document.animationTimeline.children[0].animationDuration);
-    
+    flash.parentNode.removeChild(flash);
     if(document.animationTimeline.children[0].iterationTime 
         < document.animationTimeline.children[0].animationDuration - 0.01) parentAnimation.play();
-    /*for(x in animObjects){
-      console.log(animObjects[x] +" "+ animPlay);
-      if(animObjects[x]["currentTime"] < animObjects[x]["animationDuration"]){
-        if(animPlay[x]){
-          animObjects[x].play();
-          animPlay[x] = false;
-        } 
-      }
-    }*/
   }, pauseTime);
 }
 
@@ -397,19 +393,27 @@ function getOffset( el ) {
 //works for colour but other worded/multinumbered properties might not work
 //specify your own epsilons if you want or leave for default
 function assert_properties(object, props, targets, message, epsilons){
-  var comp = object.currentStyle || getComputedStyle(object, null);
-  if(props[0] == "refTest"){
-    var tar = targets.currentStyle || getComputedStyle(targets, null);
-    for(var i = 1; i < props.length; i++){
-      assert_approx_equals(parseInt(comp[props[i]]), parseInt(tar[props[i]]), 3, message);
+  var type = object.nodeName;
+  if(type == "DIV"){
+    var comp = object.currentStyle || getComputedStyle(object, null);
+    if(props[0] == "refTest"){
+      var tar = targets.currentStyle || getComputedStyle(targets, null);
+      for(var i = 1; i < props.length; i++){
+        assert_approx_equals(parseInt(comp[props[i]]), parseInt(tar[props[i]]), 3, message);
+      }
+    } else {
+      for(var i = 0; i < props.length; i++){
+        if(props[i].indexOf("olor") != -1){ //for anything with the word color in it do the color assert (C is not there because it could be a c or C)
+          assert_color(object, targets[i], message);
+        } else {
+          assert_approx_equals(parseInt(comp[props[i]]), parseInt(targets[i]), 10, message);
+        }
+      }
     }
   } else {
-    for(var i = 0; i < props.length; i++){
-      if(props[i].indexOf("olor") != -1){ //for anything with the word color in it do the color assert (C is not there because it could be a c or C)
-        assert_color(object, targets[i], message);
-      } else {
-        assert_approx_equals(parseInt(comp[props[i]]), parseInt(targets[i]), 10, message);
-      }
+    console.log("it's a svg image");
+    for(var x in props){
+      assert_approx_equals(parseInt(object.attributes[props[x]].value), parseInt(targets[x]), 10, message);
     }
   }
 }
