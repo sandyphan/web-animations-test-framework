@@ -125,9 +125,6 @@ a {
 a:visited {
   color: black;
 }
-.topMenu a:hover {
-  background-color: #E6E6E6;
-}
 .separator {
   height: 50px;
 }
@@ -141,12 +138,14 @@ a:visited {
 }
 .sideMenu a:hover {
   background-color: #E6E6E6;
+  color: #222;
 }
 .sideMenu a {
   float: left;
   width: 80%;
   background-color: #737373;
   padding: 20px;
+  color: #CCC;
   border: 1px solid black;
 }
 .sideMenu li {
@@ -194,17 +193,27 @@ ul, li {
   margin: 0;
   line-height: 28px;
 }
-.topMenu, .subTutorial{
+.topMenu{
   list-style-type: none;
-  padding: 20px;
   display: inline;
-  width: 10%;
-  font: 1.1em "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+}
+.topMenu a {
+  top: 0px;
+  float: left;
+  width: 5%;
+  padding: 20px;
+  background-color: #222;
   color: #EEE;
-  background: #222;
+  margin-right: 5px;
   text-align: center;
   border: 1px solid black;
-  position: relative;
+  font: 1.1em "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+}
+.topMenu a:hover {
+  background-color: #E6E6E6;
+  color: black;
+  border: 2px solid black;
+  border-shadow: 2px solid #DDD;
 }
 .line-separator {
   height: 2px;
