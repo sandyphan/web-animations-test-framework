@@ -12,29 +12,44 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-
 -->
 
 <!DOCTYPE html>
 <style>
 .anim {
-  fill: lightsteelblue;
+	left: 0px;
+	width: 100px;
+	height: 100px;
+	background-color: #FAA;
+	position: absolute;
 }
 
 .testBox {
-  height: 600px;
+  height: 650px;
 }
-</style>
-<head>
-  <title>Test Grouped Animations</title>
-  <link rel="author" title="Steph McArthur", href="mailto:stephm@google.com">
-  <meta name="flags" content="dom">
-</head>
 
+#a {
+	top: 50px
+}
+
+#b {
+	top: 150px;
+}
+
+#c {
+	top: 250px;
+}
+
+#d {
+	top: 350px;
+}
+
+</style>
 <div id="test" class="testBox">
-	<svg>
-		<rect class="anim" x="100px" y="10px" width="100px" height="100px"></rect>
-	</svg>
+	<div id="a" class="anim"></div> 
+	<div id="b" class="anim"></div> 
+	<div id="c" class="anim"></div> 
+	<div id="d" class="anim"></div>
 </div>
 
 <script src="../../web-animations-js/web-animation.js"></script>
@@ -46,12 +61,15 @@ limitations under the License.
 
 <script>
 setupTests();
-var rect = document.querySelector(".anim")
 
-new testAnimation(rect, {x: "400px", y: ["300px", "200px"], width: ["100px", "20px", "50px"]}, 1);
+var divs = document.querySelectorAll(".anim");
+new testAnimation(divs[0], {"-webkit-transform": ["translate(0px, 0px)", "translate(200px, 0px)"]}, 2);
+new testAnimation(divs[1], {"-webkit-transform": ["rotate(0deg)", "rotate(90deg)"]}, 2);
+new testAnimation(divs[2], {"-webkit-transform": ["translate(0px, 0px) rotate(0deg)", "translate(200px, 0px) rotate(90deg)"]}, 2);
+new testAnimation(divs[3], {"-webkit-transform": ["rotate(0deg) translate(0px, 0px)", "rotate(90deg) translate(200px, 0px)"]}, 2);
 
-check(rect, ["x", "y", "width"], ["250px", "250px", "20px"], 0.5, "SVG check");
-check(rect, ["x", "y", "width"], ["400px", "200px", "50px"], 1, "SVG check 2");
+check(divs[0], ["style"], ["-webkit-transform: translate(0px, 0px)"], 0, "Div 0 start");
+check(divs[0], ["style"], ["-webkit-transform: translate(200px, 0px)"], 2, "Div 0 end");
 
 runTests();
 </script>
