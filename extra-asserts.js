@@ -292,7 +292,7 @@ function flashing(test) {
     var flash = document.createElementNS("http://www.w3.org/2000/svg", type);
   }
    
-  console.log(flash);
+  //console.log(flash);
 
   if(type == "DIV") document.getElementById("test").appendChild(flash);
   else document.getElementsByTagName("svg")[0].appendChild(flash);
@@ -392,6 +392,7 @@ function getOffset( el ) {
 //approximatly check if they are correct e.g checks width, top
 //works for colour but other worded/multinumbered properties might not work
 //specify your own epsilons if you want or leave for default
+//TODO: make this cleaner
 function assert_properties(object, props, targets, message, epsilons){
   var type = object.nodeName;
   if(type == "DIV"){
@@ -399,12 +400,18 @@ function assert_properties(object, props, targets, message, epsilons){
     if(props[0] == "refTest"){
       var tar = targets.currentStyle || getComputedStyle(targets, null);
       for(var i = 1; i < props.length; i++){
-        assert_approx_equals(parseInt(comp[props[i]]), parseInt(tar[props[i]]), 3, message);
+        if(props[i] == "style"){
+          assert_webkit_style(object, targets[i], message);
+        } else {
+          assert_approx_equals(parseInt(comp[props[i]]), parseInt(tar[props[i]]), 3, message);
+        }       
       }
     } else {
       for(var i = 0; i < props.length; i++){
         if(props[i].indexOf("olor") != -1){ //for anything with the word color in it do the color assert (C is not there because it could be a c or C)
           assert_color(object, targets[i], message);
+        } else if(props[i] == "style"){
+          assert_webkit_style(object, targets[x], message);
         } else {
           assert_approx_equals(parseInt(comp[props[i]]), parseInt(targets[i]), 10, message);
         }
@@ -455,9 +462,20 @@ function convertToRgb(englishColor) {
 
 //deals with webkit-transforms
 function assert_webkit_style(object, target, message){
-  var currStyle = object.attributes["style"].value;
   console.log("watch now");
-
+  if(object.nodeName == "DIV"){
+    var comp = object.currentStyle || getComputedStyle(object, null);
+    // var currStyle = comp.getPropertyValue('transform')
+    // || comp.getPropertyValue('-moz-transform')
+    // || comp.getPropertyValue('-webkit-transform')
+    // || comp.getPropertyValue('-ms-transform')
+    // || comp.getPropertyValue('-o-transform');
+    var currStyle = comp['-webkit-transform'];
+    console.log("kkkkkkkkk");
+    console.log(currStyle);
+  } 
+  else var currStyle = object.attributes["style"].value;
+  
   //currStyle = currStyle.replace(";","");
   currStyle = currStyle.split(":")[1]; //get rid of the begining webkit bit
   currStyle = currStyle.split(/[()]+/);
