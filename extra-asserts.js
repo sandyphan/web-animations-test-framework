@@ -30,8 +30,8 @@ var testIndex = 0; //Holds which test packet we are up to
 var testPacket = []; //Each index holds all the tests that occur at the same time
 
 var pauseTime = 500; //how long to show each manual check for
-var testTimeout = 1000; //how long it takes an individual test to timeout
-var frameworkTimeout = 2000; //how long it takes for the whole test system to timeout
+var testTimeout = 10000; //how long it takes an individual test to timeout
+var frameworkTimeout = 20000; //how long it takes for the whole test system to timeout
 
 function testRecord(test, object, property, target, time, message, cssStyle, offsets, isRefTest){
   this.test = test;
@@ -412,8 +412,13 @@ function assert_properties(object, props, targets, message, epsilons){
     }
   } else {
     console.log("it's a svg image");
+    console.log(object);
     for(var x in props){
-      assert_approx_equals(parseInt(object.attributes[props[x]].value), parseInt(targets[x]), 10, message);
+      if(props[x] == "style"){
+        assert_webkit_style(object, targets[x], message);
+      } else {
+        assert_approx_equals(parseInt(object.attributes[props[x]].value), parseInt(targets[x]), 10, message);
+      }
     }
   }
 }
@@ -446,4 +451,33 @@ function convertToRgb(englishColor) {
     var rgbValues = color.split(",");
     tempDiv.remove(); 
     return rgbValues;
+}
+
+//deals with webkit-transforms
+function assert_webkit_style(object, target, message){
+  var currStyle = object.attributes["style"].value;
+  console.log("watch now");
+
+  //currStyle = currStyle.replace(";","");
+  currStyle = currStyle.split(":")[1]; //get rid of the begining webkit bit
+  currStyle = currStyle.split(/[()]+/);
+
+
+  target = target.split(":")[1];
+  target = target.split(/[()]+/);
+
+  console.log(currStyle);
+  console.log(target);
+
+  var x = 0;
+  while(x < currStyle.length-1){
+    assert_equals(currStyle[x], target[x], message);
+    x++;
+    var c = currStyle[x].split(",");
+    var t = target[x].split(",");
+    for(var i in c){
+      assert_approx_equals(parseInt(c[i]), parseInt(t[i]), 10, message);
+    }
+    x++;
+  }
 }
