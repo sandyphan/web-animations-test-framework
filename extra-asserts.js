@@ -18,6 +18,8 @@
  - Change the pause method for flashing so it doesn't rely on par groups. This requires the 
     ability to either globally pause or check if a animation is currently playing
  - Make sure this is compatible with all browsers
+ * Features to Add
+ *  - Templates
  */
 
 var animObjects = []; //to keep track of all animations
@@ -378,20 +380,18 @@ function getOffset( el ) {
 //approximatly check if they are correct e.g checks width, top
 //works for colour but other worded/multinumbered properties might not work
 //specify your own epsilons if you want or leave for default
-//TODO: make this cleaner
 function assert_properties(object, props, targets, message, epsilons){
   var type = object.nodeName;
   var isSVG = (type != "DIV");
-  if(isSVG){
-	console.log("it's a svg image");
-  }
   var comp = object.currentStyle || getComputedStyle(object, null);
   var i = 0;
   var isRefTest = (props[0] == "refTest");
   if(isRefTest) {
     var tar = targets.currentStyle || getComputedStyle(targets, null);
     i = 1;
-  } 
+  }
+  if(isSVG) console.log("it's a svg image");
+  
   for(; i < props.length; i++){
   //for anything with the word color in it do the color assert (C is not there because it could be a c or C)
 	if(props[i].indexOf("olor") != -1){ 

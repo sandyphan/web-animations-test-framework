@@ -43,8 +43,8 @@ limitations under the License.
 #d {
 	top: 350px;
 }
-
 </style>
+
 <div id="test" class="testBox">
 	<div id="a" class="anim"></div> 
 	<div id="b" class="anim"></div> 
@@ -70,6 +70,8 @@ new testAnimation(divs[3], {"-webkit-transform": ["rotate(0deg) translate(0px, 0
 
 check(divs[0], ["style"], ["-webkit-transform: translate(0px, 0px)"], 0, "Div 0 start");
 check(divs[0], ["style"], ["-webkit-transform: translate(200px, 0px)"], 2, "Div 0 end");
+check(divs[1], ["style"], ["-webkit-transform: rotate(0deg)"], 0, "Div 1 start");
+check(divs[1], ["style"], ["-webkit-transform: rotate(90deg)"], 2, "Div 1 end");
 
 runTests();
 </script>
