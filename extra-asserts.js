@@ -477,19 +477,18 @@ function assert_transform(object, target, message){
     //console.log("ppppppppppppppppp");
     tempDiv.remove();
 
-    currStyle = currStyle.replace("matrix(","");
-    currStyle = currStyle.replace(")","");
+    currStyle = currStyle.replace(/[^0-9.,]/g, "");
     currStyle = currStyle.split(",");
 
-    target = target.replace("matrix(","");
-    target = target.replace(")","");
+    target = target.replace(/[^0-9.,]/g, "");
     target = target.split(",");
 
-    //console.log(currStyle);
-    //console.log(target);
+    console.log(currStyle);
+    console.log(target);
 
     for(var x in currStyle){
-      assert_approx_equals(parseInt(currStyle[x]), parseInt(target[x]), 3, message);
+      if(x < 3) assert_approx_equals(Number(currStyle[x]), Number(target[x]), 0.1, message);
+      else assert_approx_equals(Number(currStyle[x]), Number(target[x]), 3, message);
     }
 
   } else {
