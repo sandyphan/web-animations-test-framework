@@ -13,10 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- /*TO DO:
+ /*TODO:
  - incorperate object notation (JSON) varibles for the test so it is easier to call
  - Change the pause method for flashing so it doesn't rely on par groups. This requires the 
-    ability to either globally pause or check if a animation is currently playing 
+    ability to either globally pause or check if a animation is currently playing
+ - Make sure this is compatible with all browsers
+ * Features to Add
+ *  - Templates
  */
 
 var animObjects = []; //to keep track of all animations
@@ -112,7 +115,10 @@ function setupTests(timeouts){
 
 //Adds each test to a list to be processed when runTests is called
 function check(object, property, target, time, message){
+<<<<<<< HEAD
   console.log("chheeeeee");
+=======
+>>>>>>> upstream/master
   if(testStack.length == 0 && refTestStack.length == 0) reparent();
   //Create new async test
   var test = async_test(message);
@@ -140,14 +146,19 @@ function check(object, property, target, time, message){
 
 function reparent(){
   //Put all the animations into a par group to get around global pause issue/bug
+<<<<<<< HEAD
   console.log(document.animationTimeline.children);
+=======
+>>>>>>> upstream/master
   var childList = [];
   for (var i = 0; i < document.animationTimeline.children.length; i++) {
     childList.push(document.animationTimeline.children[i]);
   }
-  //parentAnimation = new ParGroup(document.animationTimeline.children);
   parentAnimation = new ParGroup(childList);
+<<<<<<< HEAD
   console.log(document.animationTimeline.children);
+=======
+>>>>>>> upstream/master
 }
 
 //Call this after lining up the tests with check
@@ -220,17 +231,12 @@ function runAutoTest(){
     }
   }
   if(testIndex < testPacket.length){
-    //move the entire animation to the right point in time
-
     //enough to let the first frame render
     //stops bug: where at time zero if x is blue then is told to animate from red to green
     //and a check is performed at time zero for color red it checked when x was still blue
-    if(testPacket[testIndex][0].time == 0 ){
-      testPacket[testIndex][0].time += 0.02;
-    } 
-    // for(x in animObjects){
-    //   //animObjects[x]["currentTime"] = testPacket[testIndex][0].time;
-    // }
+    if(testPacket[testIndex][0].time == 0 ) testPacket[testIndex][0].time += 0.02;
+
+    //move the entire animation to the right point in time
     document.animationTimeline.children[0].currentTime = testPacket[testIndex][0].time;
     testIndex++;
     window.webkitRequestAnimationFrame(function(){runAutoTest();});
@@ -242,8 +248,7 @@ function runAutoTest(){
 
 function animTimeViewer(){
   var currTime = document.animationTimeline.children[0].iterationTime; 
-  //console.log(document.animationTimeline.children[0]);
-  //currTime = currTime.toFixed(2);
+  currTime = currTime.toFixed(2);
   var object = document.getElementById("animViewerText");
   var comp = object.currentStyle || getComputedStyle(object, null);
   object.innerHTML = "Current animation time " + currTime;
@@ -254,16 +259,20 @@ function animTimeViewer(){
 //to lag, causing them to fail. This method should test as often as auto (no more or no less)
 function refTestRunner(index){
   if(index == null) index = 0;
-  //as soon as the current frame time is over a ref test then pop it off and run the test
+  //as soon as the current frame time is over a ref test time then pop it off and run the test
   var doNextTest = false;
   if(refTestStack.length > 0) doNextTest = true;
   while(doNextTest && index < refTestStack.length){
     var currTest = refTestStack[index];
     if(currTest.time <= document.animationTimeline.children[0].iterationTime){
+<<<<<<< HEAD
       console.log(currTest);
       doNextTest = true;
       console.log(currTest.object);
       console.log(currTest.target);
+=======
+      doNextTest = true;
+>>>>>>> upstream/master
       currTest.test.step(function (){
         assert_properties(currTest.object, currTest.property, currTest.target, currTest.message);
       });
@@ -282,7 +291,7 @@ function restart(){
   window.location.href = url[0] + "?" + state;
 }
 
-// create divs at appropriate locations and flash the divs for manual testing
+// create elements at appropriate locations and flash the elements for manual testing
 function flashing(test) {
   //pause all animations
   // for(x in animObjects){
@@ -300,10 +309,21 @@ function flashing(test) {
   // console.log("fish" + animPlay);
   parentAnimation.pause();
 
+<<<<<<< HEAD
   var _newDiv = document.createElement('div');
   document.getElementById("test").appendChild(_newDiv);
   _newDiv.style.cssText = test.cssStyle.cssText; //copy the objects orginal css style
   _newDiv.style.position = "absolute";
+=======
+  //Create a new object of the same type as the thing being tested
+  if(type == "DIV") var flash = document.createElement('div');
+  else {
+    var flash = document.createElementNS("http://www.w3.org/2000/svg", type);
+  }
+   
+  if(type == "DIV") document.getElementById("test").appendChild(flash);
+  else document.getElementsByTagName("svg")[0].appendChild(flash);
+>>>>>>> upstream/master
 
   var seenTop = false;
   var seenLeft = false;
@@ -397,6 +417,7 @@ function getOffset( el ) {
 //works for colour but other worded/multinumbered properties might not work
 //specify your own epsilons if you want or leave for default
 function assert_properties(object, props, targets, message, epsilons){
+<<<<<<< HEAD
   var comp = object.currentStyle || getComputedStyle(object, null);
   if(props[0] == "refTest"){
     var tar = targets.currentStyle || getComputedStyle(targets, null);
@@ -411,7 +432,35 @@ function assert_properties(object, props, targets, message, epsilons){
         assert_approx_equals(parseInt(comp[props[i]]), parseInt(targets[i]), 10, message);
       }
     }
+=======
+  var type = object.nodeName;
+  var isSVG = (type != "DIV");
+  var comp = object.currentStyle || getComputedStyle(object, null);
+  var i = 0;
+  var isRefTest = (props[0] == "refTest");
+  if(isRefTest) {
+    var tar = targets.currentStyle || getComputedStyle(targets, null);
+    i = 1;
+>>>>>>> upstream/master
   }
+  if(isSVG) console.log("it's a svg image");
+  
+  for(; i < props.length; i++){
+  //for anything with the word color in it do the color assert (C is not there because it could be a c or C)
+	if(props[i].indexOf("olor") != -1){ 
+	  assert_color(object, targets[i], message);
+	} else if(props[i] == "style"){
+	  if(isRefTest); //TODO
+	  else ; //TODO
+	  assert_webkit_style(object, targets[i], message);
+	} else {
+	  var t = targets[i];
+	  var c = comp[props[i]];
+	  if(isRefTest) t = tar[props[i]];
+	  else if(isSVG) c = object.attributes[props[i]].value;
+	  assert_approx_equals(parseInt(c), parseInt(t), 10, message);
+	}
+  } 
 }
 
 //Pass in either the css colour name to expectedColor OR 
@@ -442,4 +491,48 @@ function convertToRgb(englishColor) {
     var rgbValues = color.split(",");
     tempDiv.remove(); 
     return rgbValues;
+<<<<<<< HEAD
 }
+=======
+}
+
+//deals with webkit-transforms
+function assert_webkit_style(object, target, message){
+  console.log("watch now");
+  if(object.nodeName == "DIV"){
+    var comp = object.currentStyle || getComputedStyle(object, null);
+    // var currStyle = comp.getPropertyValue('transform')
+    // || comp.getPropertyValue('-moz-transform')
+    // || comp.getPropertyValue('-webkit-transform')
+    // || comp.getPropertyValue('-ms-transform')
+    // || comp.getPropertyValue('-o-transform');
+    var currStyle = comp['-webkit-transform'];
+    console.log("kkkkkkkkk");
+    console.log(currStyle);
+  } 
+  else var currStyle = object.attributes["style"].value;
+  
+  //currStyle = currStyle.replace(";","");
+  currStyle = currStyle.split(":")[1]; //get rid of the begining webkit bit
+  currStyle = currStyle.split(/[()]+/);
+
+
+  target = target.split(":")[1];
+  target = target.split(/[()]+/);
+
+  console.log(currStyle);
+  console.log(target);
+
+  var x = 0;
+  while(x < currStyle.length-1){
+    assert_equals(currStyle[x], target[x], message);
+    x++;
+    var c = currStyle[x].split(",");
+    var t = target[x].split(",");
+    for(var i in c){
+      assert_approx_equals(parseInt(c[i]), parseInt(t[i]), 10, message);
+    }
+    x++;
+  }
+}
+>>>>>>> upstream/master
