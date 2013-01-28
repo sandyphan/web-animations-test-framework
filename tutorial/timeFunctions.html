@@ -29,84 +29,60 @@ limitations under the License.
     <ul class="topMenu">
       <li><a href="homePage.html">Home</a></li>
       <li><a href="#">Tutorials</a></li>
+      <li><a href="#">References</a></li>
       <li><a href="about.html">About</a></li>
     </ul>
     <div id="main">
 
-      <div id="title">Adding Timing Functions</div>
+      <div id="title">Web Animation Tutorial</div>
       
       <div class="line-separator"></div>
 
       <div class="content">
-        <p class="description">About the Title. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+        <p class="description">Web animations is to have a flash or GIF animation intergrated onto the web page. Normal web animations still require the use of plugins such as Java Applets, Shockwave, Adobe Flash. In this tutorial, we will be showing you how to create animations using javascript without the need of installing plugins.</p>
 
         <br />
 
-        <div class="heading subTitle">Subtitle, the topic for the tutorial</div>
+        <div class="heading subTitle">Timing Functions</div>
 
-        <p class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+        <p class="description">Timing functions allow time scaling which adds effects such as easing and stepping to animations. To create a basic animation with timing functions, please follow the following interface:</p>
 
-        <code class="codeSamples">some code sample here</code>
-
-        <p class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-
-        <p class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-
-        <div class="heading exercises">Some Exercise</div>
-
-        <p class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-
-        <code class="codeSamples">some code here for exercise</code>
-
-        <div id="hideLabel" onclick="toggleSolution()">Show Solution</div>
-        <div id="toggleText" class="codeSamples"><code>some solution</code></div>
-
-        <ol class="description">
-          <li>Some explaination to the solution</li>
-          <li>Lorem ipsum dolor sit amet, consectetur adipisicing elit</li>
-          <li>sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</li>
-          <li>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</li>
-        </ol>
-
-        <div id="tryIt">
-          <div class="heading">TRY IT YOURSELF
-             <button onclick="update()" id="update">Update</button>
-          </div>
-          <div class="code">
-            <div id="label">HTML Code</div>
-            <textarea id="htmlCode" class="code">
-<div id="a" class="test"></div>
-</textarea>
-            <div id="label">CSS Style</div>
-            <textarea id="cssCode" class="code">
-.test {
-  background-color: red;
-  border-radius: 10px;
-  width: 100px;
-  height: 50px;
-  top: 0px;
-  left: 0px;
-  position: absolute;
-}</textarea>
-            <div id="label">Javascript</div>
-            <textarea id="jsCode" class="code"></textarea>
-          </div>
-          
-          <iframe id="display" src='iframe-contents.html'><p>Your browser does not support iframes</p></iframe>  
-        </div> 
-
-        <div class="separator"></div>
-
-        <div class="heading exercises">Some other exercise</div>
-        <p class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+        <code class="codeSamples">new Animation(element, {effects}, {timingFunction: new TimingFunction("ease"), duration: #});</code>
         <br />
+        <code class="codeSamples">new Animation(element, {effects}, {timingFuction: new StepingTimingFunction(1, 'start'), duration: #});</code>
 
-        <p class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+        <p class="description">Easing effects allow animations to have slow start and endings which makes the animations appear to be more smooth. There are 5 easing effects:</p>
+        <ul class="description">
+          <li><b>linear:</b> animation runs at normal speed with no timing scaling.</li>
+          <li><b>ease:</b> slow start for a quarter of the animation time and reduce speed of animation at quarter of the animation time.</li>
+          <li><b>ease-in:</b> slow start for 2 fifths of the animation time then runs at normal speed.</li>
+          <li><b>ease-out:</b> run at normal speed then ends slowly for the last 2 fifths of total duration of the animation.</li>
+          <li><b>ease-in-out:</b> slow start for 2 fifths of the animation time then runs at normal speed for a short time, then ends slowly for the last 2 fifths of the total duration of the animation.</li>
+        </ul>
+
+        <p class="description">Stepping functions scale the timed item's timing so that the timed item occurs in a series of discete steps. There are 3 stepping effects:</p>
+        <ul class="description">
+          <li><b>start:</b> the change in value occurs at the beginning of the interval.</li>
+          <li><b>middle:</b> the change in value occurs at the midpoint of the interval.</li>
+          <li><b>end:</b> the change in value occurs at the end of the interval.</li>
+        </ul>
 
         <div class="separator"></div>
 
       </div>  <!-- content ending div -->
+      <div class="line-separator"></div>
     </div> <!-- main ending div -->
+
+    <ul class="sideMenu">
+      <li id="menuLabel">Create Basic Animation</li>
+      <li><a href="timeFunctions.html">Basic Info</a></li>
+      <li><a href="#">Exercise 1 - Not yet available</a></li>
+      <li><a href="#">Exercise 2 - Not yet available</a></li>
+      <li><a href="#">Exercise 3 - Not yet available</a></li>
+      <li><a href="#">Exercise 4 - Not yet available</a></li>
+      <li><a href="#">Exercise 5 - Not yet available</a></li>
+      <li><a href="#">Exercise 6 - Not yet available</a></li>
+    </ul>
     <script type="text/javascript" src="tryItYourself.js"></script>
   </body>
 </html>
