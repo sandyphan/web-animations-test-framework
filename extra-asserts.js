@@ -452,7 +452,7 @@ function assert_properties(object, props, targets, message, epsilons){
 	} else if(props[i] == "style"){
 	  if(isRefTest); //TODO
 	  else ; //TODO
-	  assert_webkit_style(object, targets[i], message);
+	  assert_transform(object, targets[i], message);
 	} else {
 	  var t = targets[i];
 	  var c = comp[props[i]];
@@ -497,42 +497,75 @@ function convertToRgb(englishColor) {
 }
 
 //deals with webkit-transforms
-function assert_webkit_style(object, target, message){
+function assert_transform(object, target, message){
   console.log("watch now");
   if(object.nodeName == "DIV"){
     var comp = object.currentStyle || getComputedStyle(object, null);
-    // var currStyle = comp.getPropertyValue('transform')
-    // || comp.getPropertyValue('-moz-transform')
-    // || comp.getPropertyValue('-webkit-transform')
-    // || comp.getPropertyValue('-ms-transform')
-    // || comp.getPropertyValue('-o-transform');
-    var currStyle = comp['-webkit-transform'];
+    var currStyle = comp.getPropertyValue('transform')
+     || comp.getPropertyValue('-moz-transform')
+     || comp.getPropertyValue('-webkit-transform')
+     || comp.getPropertyValue('-ms-transform')
+     || comp.getPropertyValue('-o-transform');
     console.log("kkkkkkkkk");
     console.log(currStyle);
-  } 
-  else var currStyle = object.attributes["style"].value;
-  
-  //currStyle = currStyle.replace(";","");
-  currStyle = currStyle.split(":")[1]; //get rid of the begining webkit bit
-  currStyle = currStyle.split(/[()]+/);
 
+    //now convert the target into matrix style format
+    console.log(target);
+    var tempDiv = document.createElement("div");
+    document.querySelector("#log").appendChild(tempDiv); 
+    tempDiv.style.webkitTransform = target;
+    console.log(tempDiv.style);
 
-  target = target.split(":")[1];
-  target = target.split(/[()]+/);
+    var p = tempDiv.currentStyle || getComputedStyle(tempDiv, null);
+    var target = p.getPropertyValue('transform')
+     || p.getPropertyValue('-moz-transform')
+     || p.getPropertyValue('-webkit-transform')
+     || p.getPropertyValue('-ms-transform')
+     || p.getPropertyValue('-o-transform');
 
-  console.log(currStyle);
-  console.log(target);
+    console.log("qqqqqqqqqqqqqqqqq");
+    console.log(target);
+    console.log("ppppppppppppppppp");
+    tempDiv.remove();
 
-  var x = 0;
-  while(x < currStyle.length-1){
-    assert_equals(currStyle[x], target[x], message);
-    x++;
-    var c = currStyle[x].split(",");
-    var t = target[x].split(",");
-    for(var i in c){
-      assert_approx_equals(parseInt(c[i]), parseInt(t[i]), 10, message);
+    currStyle = currStyle.replace("matrix(","");
+    currStyle = currStyle.replace(")","");
+    currStyle = currStyle.split(",");
+
+    target = target.replace("matrix(","");
+    target = target.replace(")","");
+    target = target.split(",");
+
+    console.log(currStyle);
+    console.log(target);
+
+    for(var x in currStyle){
+      assert_approx_equals(parseInt(currStyle[x]), parseInt(target[x]), 3, message);
     }
-    x++;
+
+  } else {
+    var currStyle = object.attributes["style"].value;
+    //currStyle = currStyle.replace(";","");
+    currStyle = currStyle.split(":")[1]; //get rid of the begining webkit bit
+    currStyle = currStyle.split(/[()]+/);
+
+    target = target.split(":")[1];
+    target = target.split(/[()]+/);
+
+    console.log(currStyle);
+    console.log(target);
+
+    var x = 0;
+    while(x < currStyle.length-1){
+      assert_equals(currStyle[x], target[x], message);
+      x++;
+      var c = currStyle[x].split(",");
+      var t = target[x].split(",");
+      for(var i in c){
+        assert_approx_equals(parseInt(c[i]), parseInt(t[i]), 10, message);
+      }
+      x++;
+    }
   }
 }
 >>>>>>> upstream/master
