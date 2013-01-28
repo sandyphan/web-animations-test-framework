@@ -18,6 +18,7 @@
  - Change the pause method for flashing so it doesn't rely on par groups. This requires the 
     ability to either globally pause or check if a animation is currently playing
  - Make sure this is compatible with all browsers
+ - Convert manual tests to work like reftests instead of using setTimeout
  * Features to Add
  *  - Templates
  */
@@ -298,13 +299,13 @@ function flashing(test) {
   var seenTop = false;
   var seenLeft = false;
   for(var x= 0; x < test.property.length; x++){ 
-    if(test.property[0] == "refTest"){
-      x++;
-      var comp = test.target.currentStyle || getComputedStyle(test.target, null);
-      var tar = comp[test.property[x]];
-    } else {
+    // if(test.property[0] == "refTest"){
+    //   x++;
+    //   var comp = test.target.currentStyle || getComputedStyle(test.target, null);
+    //   var tar = comp[test.property[x]];
+    // } else {
       var tar = test.target[x];
-    }
+    // }
     var prop = test.property[x];
 
     if(type == "DIV"){
@@ -324,6 +325,9 @@ function flashing(test) {
         if(prop == "left") seenLeft = true;
         else if(prop == "top") seenTop = true;
       }
+      console.log("T1");
+      console.log(tar);
+      if(prop == "style") prop = "-webkit-transform";
       flash.style[prop] = tar;
     } else {
         flash.setAttribute(prop, tar);
@@ -440,9 +444,10 @@ function convertToRgb(englishColor) {
     return rgbValues;
 }
 
-//deals with webkit-transforms
+//deals with transforms
+//TODO: clean this mess up
 function assert_transform(object, target, message){
-  console.log("watch now");
+  //console.log("watch now");
   if(object.nodeName == "DIV"){
     var comp = object.currentStyle || getComputedStyle(object, null);
     var currStyle = comp.getPropertyValue('transform')
@@ -450,15 +455,15 @@ function assert_transform(object, target, message){
      || comp.getPropertyValue('-webkit-transform')
      || comp.getPropertyValue('-ms-transform')
      || comp.getPropertyValue('-o-transform');
-    console.log("kkkkkkkkk");
-    console.log(currStyle);
+    //console.log("kkkkkkkkk");
+    //console.log(currStyle);
 
     //now convert the target into matrix style format
-    console.log(target);
+    //console.log(target);
     var tempDiv = document.createElement("div");
     document.querySelector("#log").appendChild(tempDiv); 
     tempDiv.style.webkitTransform = target;
-    console.log(tempDiv.style);
+    //console.log(tempDiv.style);
 
     var p = tempDiv.currentStyle || getComputedStyle(tempDiv, null);
     var target = p.getPropertyValue('transform')
@@ -467,9 +472,9 @@ function assert_transform(object, target, message){
      || p.getPropertyValue('-ms-transform')
      || p.getPropertyValue('-o-transform');
 
-    console.log("qqqqqqqqqqqqqqqqq");
-    console.log(target);
-    console.log("ppppppppppppppppp");
+    //console.log("qqqqqqqqqqqqqqqqq");
+    //console.log(target);
+    //console.log("ppppppppppppppppp");
     tempDiv.remove();
 
     currStyle = currStyle.replace("matrix(","");
@@ -480,8 +485,8 @@ function assert_transform(object, target, message){
     target = target.replace(")","");
     target = target.split(",");
 
-    console.log(currStyle);
-    console.log(target);
+    //console.log(currStyle);
+    //console.log(target);
 
     for(var x in currStyle){
       assert_approx_equals(parseInt(currStyle[x]), parseInt(target[x]), 3, message);
@@ -496,8 +501,8 @@ function assert_transform(object, target, message){
     target = target.split(":")[1];
     target = target.split(/[()]+/);
 
-    console.log(currStyle);
-    console.log(target);
+    //console.log(currStyle);
+    //console.log(target);
 
     var x = 0;
     while(x < currStyle.length-1){
