@@ -32,8 +32,8 @@ var testIndex = 0; //Holds which test packet we are up to
 var testPacket = []; //Each index holds all the tests that occur at the same time
 
 var pauseTime = 500; //how long to show each manual check for
-var testTimeout = 1000; //how long it takes an individual test to timeout
-var frameworkTimeout = 2000; //how long it takes for the whole test system to timeout
+var testTimeout = 10000; //how long it takes an individual test to timeout
+var frameworkTimeout = 20000; //how long it takes for the whole test system to timeout
 
 function testRecord(test, object, targets, time, message, cssStyle, offsets, isRefTest){
   this.test = test;
@@ -107,7 +107,6 @@ function setupTests(timeouts){
     state = "Auto";
     runType.selectedIndex = 0;
   }
-  state = "Manual";
   setup({ explicit_done: true, timeout: frameworkTimeout});
 }
 
@@ -159,7 +158,7 @@ function reparent(){
 
 //Call this after lining up the tests with check
 function runTests(){
-  if(testStack.length == 0 && refTestStack.length == 0) reparent();
+  if(testStack.length == 0) reparent();
   animTimeViewer();
   sortTests();
   if(state == "Manual") testRunner();
@@ -250,20 +249,6 @@ function restart(){
 
 // create elements at appropriate locations and flash the elements for manual testing
 function flashing(test) {
-  //pause all animations
-  // for(x in animObjects){
-  //   //console.log(animObjects[x] +" "+ animObjects[x].paused)
-  //   if(animObjects[x].paused && !animPlay[x]){
-  //     //no need to repause the animation
-  //     animPlay[x] = false;//mark it shouldn't be played
-  //     console.log("ooobar");
-  //   } else {
-  //     animObjects[x].pause();
-  //     animPlay[x] = true;
-  //     console.log("baban");
-  //   }
-  // }
-  // console.log("fish" + animPlay);
   parentAnimation.pause();
 
   //Create a new object of the same type as the thing being tested
@@ -288,13 +273,11 @@ function flashing(test) {
     var tar = test.target[x];
     var prop = test.property[x];
     if(test.cssStyle.position == "relative"){
-      console.log("Bam");
       console.log(test);
       if(prop == "left"){
         seenLeft = true;
         tar = parseInt(tar);
         tar += parseInt(test.offsets["left"]);
-        //console.log("ggg "+tar);
         tar = tar + "px";
       } else if(prop == "top"){
         seenTop = true;
@@ -328,21 +311,8 @@ function flashing(test) {
 
   setTimeout(function() {
     _newDiv.parentNode.removeChild(_newDiv);
-    // console.log("chubby fish");
-    // console.log(document.animationTimeline.children[0].iterationTime);
-    // console.log(document.animationTimeline.children[0].animationDuration);
-    
     if(document.animationTimeline.children[0].iterationTime 
         < document.animationTimeline.children[0].animationDuration - 0.01) parentAnimation.play();
-    /*for(x in animObjects){
-      console.log(animObjects[x] +" "+ animPlay);
-      if(animObjects[x]["currentTime"] < animObjects[x]["animationDuration"]){
-        if(animPlay[x]){
-          animObjects[x].play();
-          animPlay[x] = false;
-        } 
-      }
-    }*/
   }, pauseTime);
 }
 
@@ -357,10 +327,13 @@ function flashing(test) {
 function assert_properties(object, targets, message, epsilons){
   console.log("watch now");
   console.log(targets);
-  
+  console.log(tempOb); 
   //make fake object
   var tempOb = document.createElement(object.nodeName);
-  document.querySelector("#log").appendChild(tempOb); 
+  var parent = object.parentNode;
+  console.log(parent);
+  parent.appendChild(tempOb);
+  console.log(tempOb); 
 
   //apply properties to it
   for(var propName in targets){
@@ -368,22 +341,34 @@ function assert_properties(object, targets, message, epsilons){
     console.log(targets[propName]);
     tempOb.style[propName] = targets[propName];
   }
+  console.log(tempOb); 
   
-  var p = document.defaultView.getComputedStyle(tempOb, null);
-  var color = p.backgroundColor;
-  color = color.replace(/[^0-9,]/g, "");
-  var rgbValues = color.split(",");
-
   //read back properties and compare to objects current properties
+  var compS = object.currentStyle || getComputedStyle(object, null);
+  var tempS = tempOb.currentStyle || getComputedStyle(tempOb, null);
   for(var propName in targets){
-    console.log(propName);
-    console.log(targets[propName]);
-    tempOb.style[propName] = targets[propName];
+    console.log(tempS[propName]);
+    console.log(compS[propName]);
+
+    var t = tempS[propName];
+    t = t.replace(/[^0-9,]/g, "");
+    t = t.split(",");
+    console.log(t);
+
+    var c = compS[propName];
+    c = c.replace(/[^0-9,]/g, "");
+    c = c.split(",");
+    console.log(c);
+    for(var x in t){
+      assert_approx_equals(Number(c[x]), Number(t[x]), 3, message + " " + x);
+    }
   }
+
   //clean up
   tempOb.remove();
-  
-  assert_true(true);
+  console.log("watch nope");
+
+  //assert_true(true);
   // var type = object.nodeName;
   // var isSVG = (type != "DIV");
   // var comp = object.currentStyle || getComputedStyle(object, null);
@@ -500,4 +485,4 @@ function assert_transform(object, target, message){
     }
   }
 }
->>>>>>> upstream/master
+
