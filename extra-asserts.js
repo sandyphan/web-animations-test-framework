@@ -279,9 +279,7 @@ function flashing(test) {
 
   //Create a new object of the same type as the thing being tested
   if(type == "DIV") var flash = document.createElement('div');
-  else {
-    var flash = document.createElementNS("http://www.w3.org/2000/svg", type);
-  }
+  else var flash = document.createElementNS("http://www.w3.org/2000/svg", type);
    
   if(type == "DIV") document.getElementById("test").appendChild(flash);
   else document.getElementsByTagName("svg")[0].appendChild(flash);
@@ -290,7 +288,6 @@ function flashing(test) {
     flash.style.cssText = test.cssStyle.cssText; //copy the objects orginal css style
     flash.style.position = "absolute";
   } else {
-    console.log("banana");
     for(var x = 0; x < test.object.attributes.length; x++){
       flash.setAttribute(test.object.attributes[x].name, test.object.attributes[x].value);
     }
@@ -462,7 +459,7 @@ function assert_transform(object, target, message){
     //console.log(target);
     var tempDiv = document.createElement("div");
     document.querySelector("#log").appendChild(tempDiv); 
-    tempDiv.style.webkitTransform = target;
+    tempDiv.style["webkitTransform"] = target;
     //console.log(tempDiv.style);
 
     var p = tempDiv.currentStyle || getComputedStyle(tempDiv, null);
