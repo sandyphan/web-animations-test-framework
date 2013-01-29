@@ -32,8 +32,8 @@ var testIndex = 0; //Holds which test packet we are up to
 var testPacket = []; //Each index holds all the tests that occur at the same time
 
 var pauseTime = 500; //how long to show each manual check for
-var testTimeout = 10000; //how long it takes an individual test to timeout
-var frameworkTimeout = 20000; //how long it takes for the whole test system to timeout
+var testTimeout = 1000; //how long it takes an individual test to timeout
+var frameworkTimeout = 2000; //how long it takes for the whole test system to timeout
 
 function testRecord(test, object, targets, time, message, cssStyle, offsets, isRefTest){
   this.test = test;
@@ -107,6 +107,7 @@ function setupTests(timeouts){
     state = "Auto";
     runType.selectedIndex = 0;
   }
+  state = "Manual";
   setup({ explicit_done: true, timeout: frameworkTimeout});
 }
 
@@ -249,8 +250,21 @@ function restart(){
 
 // create elements at appropriate locations and flash the elements for manual testing
 function flashing(test) {
+  //pause all animations
+  // for(x in animObjects){
+  //   //console.log(animObjects[x] +" "+ animObjects[x].paused)
+  //   if(animObjects[x].paused && !animPlay[x]){
+  //     //no need to repause the animation
+  //     animPlay[x] = false;//mark it shouldn't be played
+  //     console.log("ooobar");
+  //   } else {
+  //     animObjects[x].pause();
+  //     animPlay[x] = true;
+  //     console.log("baban");
+  //   }
+  // }
+  // console.log("fish" + animPlay);
   parentAnimation.pause();
-  var type = test.object.nodeName;
 
   //Create a new object of the same type as the thing being tested
   if(type == "DIV") var flash = document.createElement('div');
@@ -273,56 +287,62 @@ function flashing(test) {
   for(var x= 0; x < test.property.length; x++){ 
     var tar = test.target[x];
     var prop = test.property[x];
-
-    if(type == "DIV"){
-      if(test.cssStyle.position == "relative"){
-        if(prop == "left"){
-          seenLeft = true;
-          tar = parseInt(tar);
-          tar += parseInt(test.offsets["left"]);
-          tar = tar + "px";
-        } else if(prop == "top"){
-          seenTop = true;
-          tar = parseInt(tar);
-          tar += parseInt(test.offsets["top"]);
-          tar = tar + "px";
-        }
-      } else {
-        if(prop == "left") seenLeft = true;
-        else if(prop == "top") seenTop = true;
+    if(test.cssStyle.position == "relative"){
+      console.log("Bam");
+      console.log(test);
+      if(prop == "left"){
+        seenLeft = true;
+        tar = parseInt(tar);
+        tar += parseInt(test.offsets["left"]);
+        //console.log("ggg "+tar);
+        tar = tar + "px";
+      } else if(prop == "top"){
+        seenTop = true;
+        tar = parseInt(tar);
+        tar += parseInt(test.offsets["top"]);
+        tar = tar + "px";
       }
       if(prop == "style") prop = "-webkit-transform";
       flash.style[prop] = tar;
     } else {
-        flash.setAttribute(prop, tar);
+      if(prop == "left") seenLeft = true;
+      else if(prop == "top") seenTop = true;
     }
+    console.log(tar + " " + test.target[x]);
+    _newDiv.style[prop] = tar;
   }
   
-  if(type == "DIV"){
-    if(!seenTop){
-      flash.style.top = getOffset(test.object).top+"px";
-    }
-    if(!seenLeft){
-      flash.style.left = getOffset(test.object).left+"px";
-    }
+  if(!seenTop){
+    _newDiv.style.top = getOffset(test.object).top+"px";
   }
-  
+  if(!seenLeft){
+    _newDiv.style.left = getOffset(test.object).left+"px";
+  }
+
   //Set up the border
-  if(type == "DIV"){
-    if(test.property[0] == "refTest") flash.style.borderColor = 'black';
-    else flash.style.borderColor = 'black';
-    flash.style.borderWidth = 'thick';
-    flash.style.borderStyle = 'solid';
-    flash.style.opacity = 1;
-  } else {
-    flash.setAttribute("stroke", "black");
-    flash.setAttribute("stroke-width", "5px");
-  }
-  
+  if(test.property[0] == "refTest") _newDiv.style.borderColor = 'black';
+  else _newDiv.style.borderColor = 'black';
+  _newDiv.style.borderWidth = 'thick';
+  _newDiv.style.borderStyle = 'solid';
+  _newDiv.style.opacity = 1;
+
   setTimeout(function() {
-    flash.parentNode.removeChild(flash);
+    _newDiv.parentNode.removeChild(_newDiv);
+    // console.log("chubby fish");
+    // console.log(document.animationTimeline.children[0].iterationTime);
+    // console.log(document.animationTimeline.children[0].animationDuration);
+    
     if(document.animationTimeline.children[0].iterationTime 
         < document.animationTimeline.children[0].animationDuration - 0.01) parentAnimation.play();
+    /*for(x in animObjects){
+      console.log(animObjects[x] +" "+ animPlay);
+      if(animObjects[x]["currentTime"] < animObjects[x]["animationDuration"]){
+        if(animPlay[x]){
+          animObjects[x].play();
+          animPlay[x] = false;
+        } 
+      }
+    }*/
   }, pauseTime);
 }
 
@@ -338,7 +358,6 @@ function assert_properties(object, targets, message, epsilons){
   console.log("watch now");
   console.log(targets);
   
-
   //make fake object
   var tempOb = document.createElement(object.nodeName);
   document.querySelector("#log").appendChild(tempOb); 
@@ -481,3 +500,4 @@ function assert_transform(object, target, message){
     }
   }
 }
+>>>>>>> upstream/master
