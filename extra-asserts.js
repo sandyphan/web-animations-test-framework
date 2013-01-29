@@ -335,12 +335,34 @@ function flashing(test) {
 //works for colour but other worded/multinumbered properties might not work
 //specify your own epsilons if you want or leave for default
 function assert_properties(object, targets, message, epsilons){
+  console.log("watch now");
   console.log(targets);
+  
+
+  //make fake object
+  var tempOb = document.createElement(object.nodeName);
+  document.querySelector("#log").appendChild(tempOb); 
+
+  //apply properties to it
   for(var propName in targets){
     console.log(propName);
     console.log(targets[propName]);
+    tempOb.style[propName] = targets[propName];
   }
-  console.log("peanuts");
+  
+  var p = document.defaultView.getComputedStyle(tempOb, null);
+  var color = p.backgroundColor;
+  color = color.replace(/[^0-9,]/g, "");
+  var rgbValues = color.split(",");
+
+  //read back properties and compare to objects current properties
+  for(var propName in targets){
+    console.log(propName);
+    console.log(targets[propName]);
+    tempOb.style[propName] = targets[propName];
+  }
+  //clean up
+  tempOb.remove();
   
   assert_true(true);
   // var type = object.nodeName;
