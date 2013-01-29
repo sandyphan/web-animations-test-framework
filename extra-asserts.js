@@ -18,7 +18,6 @@
  - Change the pause method for flashing so it doesn't rely on par groups. This requires the 
     ability to either globally pause or check if a animation is currently playing
  - Make sure this is compatible with all browsers
- - Convert manual tests to work like reftests instead of using setTimeout
  * Features to Add
  *  - Templates
  */
@@ -26,8 +25,6 @@
 var animObjects = []; //to keep track of all animations
 var parentAnimation; //The parGroup all animations need to be added to
 var testStack = []; //holds all tests
-var refTestStack = [];//to run ref tests in manual mode
-var testRefStack = []; //for iteration based checks
 var runType; //to keep track of what the dropdown list state is
 var state = "Auto"; //current run type of the animation
 var testIndex = 0; //Holds which test packet we are up to
@@ -117,10 +114,14 @@ function setupTests(timeouts){
 //Adds each test to a list to be processed when runTests is called
 function check(object, property, target, time, message){
 <<<<<<< HEAD
+<<<<<<< HEAD
   console.log("chheeeeee");
 =======
 >>>>>>> upstream/master
   if(testStack.length == 0 && refTestStack.length == 0) reparent();
+=======
+  if(testStack.length == 0) reparent();
+>>>>>>> upstream/master
   //Create new async test
   var test = async_test(message);
   test.timeout_length = testTimeout;
@@ -134,21 +135,34 @@ function check(object, property, target, time, message){
     //generate a test for each time you want to check the objects
     for(var x = 0; x < maxTime/time; x++){
       var temp = new testRecord(test, object, property, target, time*x, "Property "+property+" is not equal to "+target, css, offsets, true);
-      if(state == "Auto") testStack.push(temp);
-      else refTestStack.push(temp);
+      testStack.push(temp);
     }
     var temp = new testRecord(test, object, property, target, time*x, "Property "+property+" is not equal to "+target, css, offsets, "Last refTest");
-    if(state == "Auto") testStack.push(temp);
-    else refTestStack.push(temp);  
-  } else {
-    testStack.push(new testRecord(test, object, property, target, time, "Property "+property+" is not equal to "+target, css, offsets, false));
-  }
+    testStack.push(temp);
+  } else testStack.push(new testRecord(test, object, property, target, time, "Property "+property+" is not equal to "+target, css, offsets, false));
 }
 
+//Helper function which gets the current absolute position of an object
+//Shamelessly stolen from http://stackoverflow.com/questions/442404/dynamically-retrieve-the-position-x-y-of-an-html-element
+function getOffset( el ) {
+    var _x = 0;
+    var _y = 0;
+    while( el && !isNaN( el.offsetLeft ) && !isNaN( el.offsetTop ) ) {
+        _x += el.offsetLeft - el.scrollLeft;
+        _y += el.offsetTop - el.scrollTop;
+        el = el.offsetParent;
+    }
+    return { top: _y, left: _x };
+}
+
+//Put all the animations into a par group to get around global pause issue/bug
 function reparent(){
+<<<<<<< HEAD
   //Put all the animations into a par group to get around global pause issue/bug
 <<<<<<< HEAD
   console.log(document.animationTimeline.children);
+=======
+>>>>>>> upstream/master
 =======
 >>>>>>> upstream/master
   var childList = [];
@@ -163,16 +177,27 @@ function reparent(){
 }
 
 //Call this after lining up the tests with check
-//For auto state: It is called each frame render to run the currently loaded test
-//For manual state: It sets up the appropiate timeout for each group of tests that happen at the same time
 function runTests(){
   if(testStack.length == 0 && refTestStack.length == 0) reparent();
-  //Start the animation time running on screen
+  animTimeViewer();
+  sortTests();
+  if(state == "Manual") testRunner();
+  else autoTestRunner();
+}
+
+function animTimeViewer(){
+  var currTime = document.animationTimeline.children[0].iterationTime; 
+  if(currTime != null) currTime = currTime.toFixed(2);
+  else currTime = 0.00;
+  var object = document.getElementById("animViewerText");
+  var comp = object.currentStyle || getComputedStyle(object, null);
+  object.innerHTML = "Current animation time " + currTime;
   window.webkitRequestAnimationFrame(function(){animTimeViewer();});
-  //process tests
+}
+
+function sortTests(){
   //Sort tests by time to set up timeouts properly
   testStack.sort(testTimeSort);
-  refTestStack.sort(testTimeSort);
   for(var x =0; x<testStack.length; x++){
     //check for all tests that happen at the same time
     //And add them to the test packet
@@ -186,42 +211,35 @@ function runTests(){
     }
     testIndex++;
   }
+  testIndex = 0;
+}
 
-  if(state == "Auto"){
-    testIndex = 0;
-    runAutoTest();
-  } else {
-    //Set up a timeout for each test
-    for(testIndex = 0; testIndex<testPacket.length; testIndex++){
-      if(testPacket[testIndex][0].time == 0 ) testPacket[testIndex][0].time += 0.02;
-      setTimeout(function() {
-        for(x in testPacket[testIndex]){
-          var currTest = testPacket[testIndex][x];
-          currTest.test.step(function() {
-            assert_properties(currTest.object, currTest.property, currTest.target, currTest.message);
-          });
-          if(currTest.isRefTest == false || currTest.isRefTest == "Last refTest") currTest.test.done();
-          flashing(currTest);
-        }
-        testIndex++;
-      }, (testPacket[testIndex][0].time * 1000)+(pauseTime * testIndex));
+function testTimeSort(a,b) {return(a.time - b.time)};
+
+function testRunner(index){
+  if(index == null) index = 0;
+  var doNextTest = false;
+  if(testStack.length > 0) doNextTest = true;
+  while(doNextTest && index < testStack.length){
+    var currTest = testStack[index];
+    if(currTest.time > document.animationTimeline.children[0].animationDuration) currTest.time = document.animationTimeline.children[0].animationDuration;
+    if(currTest.time <= document.animationTimeline.children[0].iterationTime){
+      doNextTest = true;
+      currTest.test.step(function (){
+        assert_properties(currTest.object, currTest.property, currTest.target, currTest.message);
+      });
+      if(currTest.isRefTest == "Last refTest" || currTest.isRefTest == false) currTest.test.done();
+      if(currTest.isRefTest == false) flashing(currTest);
+      index++;
+    } else {
+      doNextTest = false;
     }
-    //Create a timeout to finish the tests
-    setTimeout(function() {
-      done();
-    }, (testPacket[testIndex-1][0].time * 1000)+(pauseTime * testIndex)+500);
-    //Start running the refTests
-    refTestRunner();
-    testIndex = 0;
   }
+  if(index < testStack.length) window.webkitRequestAnimationFrame(function(){testRunner(index);});
+  else done();
 }
 
-function testTimeSort(a,b){
-  return(a.time - b.time);
-}
-
-function runAutoTest(){
-  //if currTest isn't null then do the test for it
+function autoTestRunner(){
   if(testIndex != 0 && testIndex < testPacket.length + 1){
     for(var x in testPacket[testIndex-1]){
       var currTest = testPacket[testIndex-1][x];
@@ -232,21 +250,18 @@ function runAutoTest(){
     }
   }
   if(testIndex < testPacket.length){
-    //enough to let the first frame render
-    //stops bug: where at time zero if x is blue then is told to animate from red to green
-    //and a check is performed at time zero for color red it checked when x was still blue
-    if(testPacket[testIndex][0].time == 0 ) testPacket[testIndex][0].time += 0.02;
-
-    //move the entire animation to the right point in time
+    //enough to let the first anim frame render
+    if(testPacket[testIndex][0].time == 0) testPacket[testIndex][0].time += 0.02;
     document.animationTimeline.children[0].currentTime = testPacket[testIndex][0].time;
     testIndex++;
-    window.webkitRequestAnimationFrame(function(){runAutoTest();});
+    window.webkitRequestAnimationFrame(function(){autoTestRunner();});
   } else {
     parentAnimation.pause();
     done();
   }
 }
 
+<<<<<<< HEAD
 function animTimeViewer(){
   var currTime = document.animationTimeline.children[0].iterationTime; 
   currTime = currTime.toFixed(2);
@@ -286,6 +301,8 @@ function refTestRunner(index){
   if(index < refTestStack.length) window.webkitRequestAnimationFrame(function(){refTestRunner(index);});
 }
 
+=======
+>>>>>>> upstream/master
 function restart(){
   state = runType.options[runType.selectedIndex].value; //Only gets updated on init and Restart button push
   var url = window.location.href.split("?");
@@ -347,6 +364,7 @@ function flashing(test) {
   var seenTop = false;
   var seenLeft = false;
   for(var x= 0; x < test.property.length; x++){ 
+<<<<<<< HEAD
     // if(test.property[0] == "refTest"){
     //   x++;
     //   var comp = test.target.currentStyle || getComputedStyle(test.target, null);
@@ -355,6 +373,9 @@ function flashing(test) {
 >>>>>>> upstream/master
       var tar = test.target[x];
     // }
+=======
+    var tar = test.target[x];
+>>>>>>> upstream/master
     var prop = test.property[x];
     if(test.cssStyle.position == "relative"){
       console.log("Bam");
@@ -372,9 +393,12 @@ function flashing(test) {
         tar = tar + "px";
       }
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
       console.log("T1");
       console.log(tar);
+=======
+>>>>>>> upstream/master
       if(prop == "style") prop = "-webkit-transform";
       flash.style[prop] = tar;
 >>>>>>> upstream/master
@@ -420,20 +444,6 @@ function flashing(test) {
   }, pauseTime);
 }
 
-//Helper function which gets the current absolute position of an object
-//Shamelessly stolen from http://stackoverflow.com/questions/442404/dynamically-retrieve-the-position-x-y-of-an-html-element
-function getOffset( el ) {
-    var _x = 0;
-    var _y = 0;
-    while( el && !isNaN( el.offsetLeft ) && !isNaN( el.offsetTop ) ) {
-        _x += el.offsetLeft - el.scrollLeft;
-        _y += el.offsetTop - el.scrollTop;
-        el = el.offsetParent;
-    }
-    return { top: _y, left: _x };
-}
-
-
 /////////////////////////////////////////////////////////////////////////
 //  All asserts below here                                             //
 /////////////////////////////////////////////////////////////////////////
@@ -469,7 +479,6 @@ function assert_properties(object, props, targets, message, epsilons){
     i = 1;
 >>>>>>> upstream/master
   }
-  if(isSVG) console.log("it's a svg image");
   
   for(; i < props.length; i++){
   //for anything with the word color in it do the color assert (C is not there because it could be a c or C)
@@ -525,7 +534,6 @@ function convertToRgb(englishColor) {
 //deals with transforms
 //TODO: clean this mess up
 function assert_transform(object, target, message){
-  //console.log("watch now");
   if(object.nodeName == "DIV"){
     var comp = object.currentStyle || getComputedStyle(object, null);
     var currStyle = comp.getPropertyValue('transform')
@@ -533,15 +541,11 @@ function assert_transform(object, target, message){
      || comp.getPropertyValue('-webkit-transform')
      || comp.getPropertyValue('-ms-transform')
      || comp.getPropertyValue('-o-transform');
-    //console.log("kkkkkkkkk");
-    //console.log(currStyle);
 
     //now convert the target into matrix style format
-    //console.log(target);
     var tempDiv = document.createElement("div");
     document.querySelector("#log").appendChild(tempDiv); 
     tempDiv.style["webkitTransform"] = target;
-    //console.log(tempDiv.style);
 
     var p = tempDiv.currentStyle || getComputedStyle(tempDiv, null);
     var target = p.getPropertyValue('transform')
@@ -550,9 +554,6 @@ function assert_transform(object, target, message){
      || p.getPropertyValue('-ms-transform')
      || p.getPropertyValue('-o-transform');
 
-    //console.log("qqqqqqqqqqqqqqqqq");
-    //console.log(target);
-    //console.log("ppppppppppppppppp");
     tempDiv.remove();
 
     currStyle = currStyle.replace(/[^0-9.,]/g, "");
@@ -560,9 +561,6 @@ function assert_transform(object, target, message){
 
     target = target.replace(/[^0-9.,]/g, "");
     target = target.split(",");
-
-    console.log(currStyle);
-    console.log(target);
 
     for(var x in currStyle){
       if(x < 3) assert_approx_equals(Number(currStyle[x]), Number(target[x]), 0.1, message);
@@ -577,9 +575,6 @@ function assert_transform(object, target, message){
 
     target = target.split(":")[1];
     target = target.split(/[()]+/);
-
-    //console.log(currStyle);
-    //console.log(target);
 
     var x = 0;
     while(x < currStyle.length-1){
