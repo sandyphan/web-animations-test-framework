@@ -1,50 +1,46 @@
-<!-- 
-Copyright 2013 Google Inc. All Rights Reserved.
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-
-Written By Sarah Heimlich
--->
-<!DOCTYPE html>
-
-
-<style>
-  .test {
+<a href='http://jquery.com/'>jQuery</a>
+<script src='http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js'></script>
+<script src='../../web-animations-js/web-animation.js'></script>
+<script id='wait' type='text/javascript' src='../extra-asserts.js'></script>
+<script type='text/javascript' src='../testharness/testharness.js'></script>
+<script type='text/javascript' src='../testharness/testharnessreport.js'></script>
+<link href='../testharness/testharness.css'>
+<link href='../animation-test-style.css'><style> 
+.test {
   background-color: red;
   border-radius: 10px;
   width: 100px;
   height: 50px;
-  top: 10px;
-  left: 10px;
+  top: 0px;
+  left: 0px;
   position: absolute;
-  }
-</style>
-
+}
+.ref {
+background-color: green;
+border-radius: 10px;
+width: 100px;
+height: 50px;
+top: 0px;
+left: 0px;
+position: absolute;
+}
+.testBox {
+height: 50px;
+}</style>
+<div id='test' class='testBox'>
 <div id="a" class="test"></div>
-  
 
+<div id='b' class='ref'></div>
+</div><script> 
 
-
-<script src="../../web-animations-js/web-animation.js"></script>
-<script src="../testharness/testharness.js"></script>
-<script src='../testharness/testharnessreport.js'></script>
-<script src='../extra-asserts.js'></script>
-<link rel='stylesheet' href='../testharness/testharness.css'>
-<link rel='stylesheet' type="text/css" href="../animation-test-style.css">
-
-<script>
-
-  new testAnimation(document.querySelector("#a"), {left: "300px"}, 2);
-  console.log("hi");
-
+ console.log(document.getElementById('wait'));
+ $( document ).ready(function() {
+  console.log('hi');
+  setupTests({testTimeout: 20000});
+  var ref = new Animation(document.querySelector('.ref'), {left: '300px'}, 2);
+  check(document.querySelector('#a'), ['left'],['0px'], 0, 'Start position check');
+  runTests();
+ });
+ console.log('hi2');
 </script>
