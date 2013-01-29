@@ -18,6 +18,7 @@
  - Change the pause method for flashing so it doesn't rely on par groups. This requires the 
     ability to either globally pause or check if a animation is currently playing
  - Make sure this is compatible with all browsers
+ - handle refTests + JSON better
  * Features to Add
  *  - Templates
  */
@@ -34,11 +35,10 @@ var pauseTime = 500; //how long to show each manual check for
 var testTimeout = 10000; //how long it takes an individual test to timeout
 var frameworkTimeout = 20000; //how long it takes for the whole test system to timeout
 
-function testRecord(test, object, property, target, time, message, cssStyle, offsets, isRefTest){
+function testRecord(test, object, targets, time, message, cssStyle, offsets, isRefTest){
   this.test = test;
   this.object = object;
-  this.property = property;
-  this.target = target;
+  this.targets = targets;
   this.time = time;
   this.message = message;
   this.cssStyle = cssStyle;
@@ -111,7 +111,7 @@ function setupTests(timeouts){
 }
 
 //Adds each test to a list to be processed when runTests is called
-function check(object, property, target, time, message){
+function check(object, targets, time, message){
   if(testStack.length == 0) reparent();
   //Create new async test
   var test = async_test(message);
@@ -121,16 +121,17 @@ function check(object, property, target, time, message){
   var offsets = [];
   offsets["top"] = getOffset(object).top - parseInt(css.top);
   offsets["left"] = getOffset(object).left- parseInt(css.left);
-  if(property[0] == "refTest"){
+  console.log(targets.refTest);
+  if(targets.refTest == true){
     var maxTime = document.animationTimeline.children[0].animationDuration;
     //generate a test for each time you want to check the objects
     for(var x = 0; x < maxTime/time; x++){
-      var temp = new testRecord(test, object, property, target, time*x, "Property "+property+" is not equal to "+target, css, offsets, true);
+      var temp = new testRecord(test, object, targets, time*x, "Property "+targets+" is not satisfied", css, offsets, true);
       testStack.push(temp);
     }
-    var temp = new testRecord(test, object, property, target, time*x, "Property "+property+" is not equal to "+target, css, offsets, "Last refTest");
+    var temp = new testRecord(test, object, targets, time*x, "Property "+targets+" is not satisfied", css, offsets, "Last refTest");
     testStack.push(temp);
-  } else testStack.push(new testRecord(test, object, property, target, time, "Property "+property+" is not equal to "+target, css, offsets, false));
+  } else testStack.push(new testRecord(test, object, targets, time, "Property "+targets+" is not satisfied", css, offsets, false));
 }
 
 //Helper function which gets the current absolute position of an object
@@ -205,10 +206,10 @@ function testRunner(index){
     if(currTest.time <= document.animationTimeline.children[0].iterationTime){
       doNextTest = true;
       currTest.test.step(function (){
-        assert_properties(currTest.object, currTest.property, currTest.target, currTest.message);
+        assert_properties(currTest.object, currTest.targets, currTest.message);
       });
       if(currTest.isRefTest == "Last refTest" || currTest.isRefTest == false) currTest.test.done();
-      if(currTest.isRefTest == false) flashing(currTest);
+      //if(currTest.isRefTest == false) flashing(currTest);
       index++;
     } else {
       doNextTest = false;
@@ -223,7 +224,7 @@ function autoTestRunner(){
     for(var x in testPacket[testIndex-1]){
       var currTest = testPacket[testIndex-1][x];
       currTest.test.step(function (){
-        assert_properties(currTest.object, currTest.property, currTest.target, currTest.message);
+        assert_properties(currTest.object, currTest.targets, currTest.message);
       });
       if(currTest.isRefTest == false || currTest.isRefTest == "Last refTest") currTest.test.done();
     }
@@ -333,33 +334,41 @@ function flashing(test) {
 //approximatly check if they are correct e.g checks width, top
 //works for colour but other worded/multinumbered properties might not work
 //specify your own epsilons if you want or leave for default
-function assert_properties(object, props, targets, message, epsilons){
-  var type = object.nodeName;
-  var isSVG = (type != "DIV");
-  var comp = object.currentStyle || getComputedStyle(object, null);
-  var i = 0;
-  var isRefTest = (props[0] == "refTest");
-  if(isRefTest) {
-    var tar = targets.currentStyle || getComputedStyle(targets, null);
-    i = 1;
+function assert_properties(object, targets, message, epsilons){
+  console.log(targets);
+  for(var propName in targets){
+    console.log(propName);
+    console.log(targets[propName]);
   }
+  console.log("peanuts");
   
-  for(; i < props.length; i++){
-  //for anything with the word color in it do the color assert (C is not there because it could be a c or C)
-	if(props[i].indexOf("olor") != -1){ 
-	  assert_color(object, targets[i], message);
-	} else if(props[i] == "style"){
-	  if(isRefTest); //TODO
-	  else ; //TODO
-	  assert_transform(object, targets[i], message);
-	} else {
-	  var t = targets[i];
-	  var c = comp[props[i]];
-	  if(isRefTest) t = tar[props[i]];
-	  else if(isSVG) c = object.attributes[props[i]].value;
-	  assert_approx_equals(parseInt(c), parseInt(t), 10, message);
-	}
-  } 
+  assert_true(true);
+  // var type = object.nodeName;
+  // var isSVG = (type != "DIV");
+  // var comp = object.currentStyle || getComputedStyle(object, null);
+  // var i = 0;
+  // var isRefTest = (props[0] == "refTest");
+  // if(isRefTest) {
+  //   var tar = targets.currentStyle || getComputedStyle(targets, null);
+  //   i = 1;
+  // }
+  
+  // for(; i < props.length; i++){
+  //   //for anything with the word color in it do the color assert (C is not there because it could be a c or C)
+  // 	if(props[i].indexOf("olor") != -1){ 
+  // 	  assert_color(object, targets[i], message);
+  // 	} else if(props[i] == "style"){
+  // 	  if(isRefTest); //TODO
+  // 	  else ; //TODO
+  // 	  assert_transform(object, targets[i], message);
+  // 	} else {
+  // 	  var t = targets[i];
+  // 	  var c = comp[props[i]];
+  // 	  if(isRefTest) t = tar[props[i]];
+  // 	  else if(isSVG) c = object.attributes[props[i]].value;
+  // 	  assert_approx_equals(parseInt(c), parseInt(t), 10, message);
+  // 	}
+  // } 
 }
 
 //Pass in either the css colour name to expectedColor OR 
