@@ -20,7 +20,7 @@ limitations under the License.
 <html>
   <head>
     <link rel="author" title="Sandy Phan, Sarah Heimlich", href="mailto:sandyphan@google.com, sarahheimlich@google.com">
-    <title>Timing Dictionary Exercise 1</title>
+    <title>Timing Functions Exercise 3</title>
     <meta name="flags" content="dom">
     <meta name="tutorial" content="Web Animations tutorials">
     <link rel="stylesheet" type="text/css" href="tutorialStyle.css">
@@ -42,18 +42,25 @@ limitations under the License.
 
       <div class="content">
 
-      	<div class="heading subTitle">Timing Dictionary</div>
+      	<div class="heading subTitle">Timing Functions</div>
 
-        <div class="heading exercises">Exercise 1 - Start in the middle</div>
+        <div class="heading exercises">Exercise 3 - More Easing (Challenge)</div>
 
-        <p class="description">Now you know how to create basic animations. We can now try to add some more timing properties into the animation</p>
+        <p class="description">Easing with presets string are easy, but a bit boring. What if you want to set your own timing so that it go fast and slow at certain point of time according to your likings? Well, to something I did not mention at the beginning of this section, is, for timing functions, you can set your own values by inputing values in the range [0,1]. Note that the number does not have to be in order.</p>
 
-        <p class="description">Let's now make animation move 300px from left and 400px from top (i.e. moving diagonally), and it will move for 5 seconds and will start after a 2 seconds into the animation.</p>
+        <p class="description">You could have done something like this:</p>
 
-        <p class="description">Hint: use startTime</p>
+        <code class="codeSamples">new Animation(document.querySelector("#a"), {top: "400px"}, {duration: 5, timingFunction: new TimingFunction([0, 0,2, 0.8, 1])});</code>
+
+        <p class="description">OR</p>
+
+        <code class="codeSamples">new Animation(document.querySelector("#a"), {top: "400px"}, {duration: 5, timingFunction: new TimingFunction([0, 1, 0.1, 1])});</code>
+
+        <p class="description">You can try the above codes in the editor below to see what they do. Though for this exercise, make an animation that runs very slowly at the beginning then ends really fast. The animation should move for 5 seconds 300px from left. In this exercise the lowest value above 0 would be 0.1 and highest would be 1.</p>
+
 
         <div id="hideLabel" onclick="toggleSolution()">Show Solution</div>
-        <div id="toggleText" class="codeSamples"><code>new Animation(document.querySelector("#a"), {left: "300px", top: "400px"}, {startTime: 2, duration: 5});</code></div>
+        <div id="toggleText" class="codeSamples"><code>new Animation(document.querySelector("#a"), {left: "300px"}, {duration: 5, timingFunction: new TimingFunction([1, 0.1, 1, 1])});</code></div>
 
         <div id="tryIt">
           <div class="heading">TRY IT YOURSELF
@@ -91,14 +98,11 @@ position: absolute;
     </div> <!-- main ending div -->
 
     <ul class="sideMenu">
-      <li id="menuLabel">Timing Dictionary</li>
-      <li><a href="timingDict.html">Basic Info</a></li>
-      <li><a href="timeDictExercise1.html">Exercise 1</a></li>
-      <li><a href="timeDictExercise2.html">Exercise 2</a></li>
-      <li><a href="timeDictExercise3.html">Exercise 3 - Not yet available</a></li>
-      <li><a href="timeDictExercise4.html">Exercise 4</a></li>
-      <li><a href="timeDictExercise5.html">Exercise 5 - Not yet available</a></li>
-      <li><a href="timeDictExercise6.html">Exercise 6</a></li>
+      <li id="menuLabel">Timing Functions</li>
+      <li><a href="timeFunctions.html">Basic Info</a></li>
+      <li><a href="timeFuncExercise1.html">Exercise 1</a></li>
+      <li><a href="timeFuncExercise2.html">Exercise 2</a></li>
+      <li><a href="timeFuncExercise3.html">Exercise 3</a></li>
     </ul>
 
     <script type="text/javascript" src="tryItYourself.js"></script>
