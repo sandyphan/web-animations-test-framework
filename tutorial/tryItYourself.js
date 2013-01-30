@@ -18,7 +18,9 @@
 // get default html values
 var htmlVal;
 var cssVal;
-var jsVal
+var jsVal;
+var pass = new Array();
+var i = 0;
 
 // elements such as animation divs and its associated style
 // is appended into the body of iframe as well as any associating
@@ -33,6 +35,9 @@ var displayDefault = function() {
 // executed when button called update is clicked
 // extract texts from the 3 text areas,
 var update = function() { 
+  pass = [];
+  i = 0;
+  document.getElementById('display').className = 'fail';
   displayDefault();
   iframeDoc = frames['display'].document;
   var scriptEle = document.createElement('script');
@@ -51,7 +56,11 @@ var update = function() {
     }
   }
   window.onload = addAnimScript();
-  console.log(iframeDoc);
+  var pass = assertLocation(iframeDoc.getElementById('a'), "left", "0px", 0, "Your block starts in the right location");
+  assertLocation(iframeDoc.getElementById('a'), "left", "300px", 2000, "Your block ends in the right location");
+  var styleDivs = iframeDoc.getElementsByTagName('script');
+  console.log(iframeDoc.getElementById('a'));
+  endTests(2000);
   
   // innerDoc the solution box toggleable*/
   var toggleSolution = function() {
@@ -74,4 +83,27 @@ var contentNotEqual = function(oldText, newText) {
     return true;
   }
   return false;
+}
+
+function assertLocation (object, property, location, time, message) {
+  setTimeout(function(){
+    css = object.currentStyle || getComputedStyle(object, null);
+    console.log((Math.abs(parseInt(css.left) - parseInt(location)) <= 10));
+    pass[i] = (Math.abs(parseInt(css.left) - parseInt(location)) <= 10);
+    i++;
+    }, time)
+}
+
+function endTests(time) {
+  setTimeout(function() {
+    for(var j = 0; j < pass.length; j++) {
+      if (!pass[j]) {
+        console.log("fail");
+        return;
+      }
+    }
+    console.log("PASS");
+    var object = document.getElementById('display');
+    object.className = "pass"
+  }, time+50)
 }
