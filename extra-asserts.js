@@ -209,7 +209,7 @@ function testRunner(index){
         assert_properties(currTest.object, currTest.targets, currTest.message);
       });
       if(currTest.isRefTest == "Last refTest" || currTest.isRefTest == false) currTest.test.done();
-      //if(currTest.isRefTest == false) flashing(currTest);
+      if(currTest.isRefTest == false) flashing(currTest);
       index++;
     } else {
       doNextTest = false;
@@ -250,13 +250,15 @@ function restart(){
 // create elements at appropriate locations and flash the elements for manual testing
 function flashing(test) {
   parentAnimation.pause();
+  var type = test.object.nodeName;
 
   //Create a new object of the same type as the thing being tested
   if(type == "DIV") var flash = document.createElement('div');
   else var flash = document.createElementNS("http://www.w3.org/2000/svg", type);
    
-  if(type == "DIV") document.getElementById("test").appendChild(flash);
-  else document.getElementsByTagName("svg")[0].appendChild(flash);
+  // if(type == "DIV") document.getElementById("test").appendChild(flash);
+  // else document.getElementsByTagName("svg")[0].appendChild(flash);
+  test.object.parentNode.appendChild(flash);
 
   if(type == "DIV"){
     flash.style.cssText = test.cssStyle.cssText; //copy the objects orginal css style
@@ -265,52 +267,61 @@ function flashing(test) {
     for(var x = 0; x < test.object.attributes.length; x++){
       flash.setAttribute(test.object.attributes[x].name, test.object.attributes[x].value);
     }
+    flash.style.position = "absolute";
   }
   
   var seenTop = false;
   var seenLeft = false;
-  for(var x= 0; x < test.property.length; x++){ 
-    var tar = test.target[x];
-    var prop = test.property[x];
-    if(test.cssStyle.position == "relative"){
-      console.log(test);
-      if(prop == "left"){
-        seenLeft = true;
-        tar = parseInt(tar);
-        tar += parseInt(test.offsets["left"]);
-        tar = tar + "px";
-      } else if(prop == "top"){
-        seenTop = true;
-        tar = parseInt(tar);
-        tar += parseInt(test.offsets["top"]);
-        tar = tar + "px";
+  for(var propName in test.targets){
+    var tar = test.targets[propName];
+    var prop = propName
+    //
+      if(test.cssStyle.position == "relative"){
+        if(prop == "left"){
+          seenLeft = true;
+          tar = parseInt(tar);
+          tar += parseInt(test.offsets["left"]);
+          tar = tar + "px";
+        } else if(prop == "top"){
+          seenTop = true;
+          tar = parseInt(tar);
+          tar += parseInt(test.offsets["top"]);
+          tar = tar + "px";
+        }
+      } else {
+        if(prop == "left") seenLeft = true;
+        else if(prop == "top") seenTop = true;
       }
-      if(prop == "style") prop = "-webkit-transform";
+    if(type == "DIV"){
       flash.style[prop] = tar;
     } else {
-      if(prop == "left") seenLeft = true;
-      else if(prop == "top") seenTop = true;
+        flash.setAttribute(prop, tar);
+        console.log("pop");
     }
-    console.log(tar + " " + test.target[x]);
-    _newDiv.style[prop] = tar;
   }
   
-  if(!seenTop){
-    _newDiv.style.top = getOffset(test.object).top+"px";
+  if(type == "DIV"){
+    if(!seenTop){
+      flash.style.top = getOffset(test.object).top+"px";
+    }
+    if(!seenLeft){
+      flash.style.left = getOffset(test.object).left+"px";
+    }
   }
-  if(!seenLeft){
-    _newDiv.style.left = getOffset(test.object).left+"px";
-  }
-
+  
   //Set up the border
-  if(test.property[0] == "refTest") _newDiv.style.borderColor = 'black';
-  else _newDiv.style.borderColor = 'black';
-  _newDiv.style.borderWidth = 'thick';
-  _newDiv.style.borderStyle = 'solid';
-  _newDiv.style.opacity = 1;
-
+  if(type == "DIV"){
+    flash.style.borderColor = 'black';
+    flash.style.borderWidth = 'thick';
+    flash.style.borderStyle = 'solid';
+    flash.style.opacity = 1;
+  } else {
+    flash.setAttribute("stroke", "black");
+    flash.setAttribute("stroke-width", "5px");
+  }
+  
   setTimeout(function() {
-    _newDiv.parentNode.removeChild(_newDiv);
+    flash.parentNode.removeChild(flash);
     if(document.animationTimeline.children[0].iterationTime 
         < document.animationTimeline.children[0].animationDuration - 0.01) parentAnimation.play();
   }, pauseTime);
