@@ -327,40 +327,54 @@ function flashing(test) {
 function assert_properties(object, targets, message, epsilons){
   console.log("watch now");
   console.log(targets);
-  console.log(tempOb); 
+
+  var isSVG = (object.nodeName != "DIV");
+
   //make fake object
   var tempOb = document.createElement(object.nodeName);
+  tempOb.style.position = "absolute";
   var parent = object.parentNode;
   console.log(parent);
   parent.appendChild(tempOb);
-  console.log(tempOb); 
+
+  console.log("woot");
 
   //apply properties to it
   for(var propName in targets){
     console.log(propName);
     console.log(targets[propName]);
-    tempOb.style[propName] = targets[propName];
+    if(isSVG) tempOb.setAttribute(propName, targets[propName])
+    else tempOb.style[propName] = targets[propName];
   }
   console.log(tempOb); 
   
   //read back properties and compare to objects current properties
-  var compS = object.currentStyle || getComputedStyle(object, null);
-  var tempS = tempOb.currentStyle || getComputedStyle(tempOb, null);
+  if(isSVG){
+    var compS = object.attributes;
+    var tempS = tempOb.attributes;
+  } else {
+    var compS = object.currentStyle || getComputedStyle(object, null);
+    var tempS = tempOb.currentStyle || getComputedStyle(tempOb, null);
+  }
+  console.log(tempS);
+  console.log(compS);
   for(var propName in targets){
     console.log(tempS[propName]);
     console.log(compS[propName]);
 
-    var t = tempS[propName];
-    t = t.replace(/[^0-9,]/g, "");
+    if(isSVG) var t = tempS[propName].value;
+    else var t = tempS[propName];
+    t = t.replace(/[^0-9,.]/g, "");
     t = t.split(",");
     console.log(t);
 
-    var c = compS[propName];
-    c = c.replace(/[^0-9,]/g, "");
+    if(isSVG) var c = compS[propName].value;
+    else var c = compS[propName];
+    c = c.replace(/[^0-9,.]/g, "");
     c = c.split(",");
     console.log(c);
     for(var x in t){
-      assert_approx_equals(Number(c[x]), Number(t[x]), 3, message + " " + x);
+      assert_approx_equals(Number(c[x]), Number(t[x]), 5, message + " " + x);
     }
   }
 
