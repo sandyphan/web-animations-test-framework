@@ -121,7 +121,6 @@ function check(object, targets, time, message){
   var offsets = [];
   offsets["top"] = getOffset(object).top - parseInt(css.top);
   offsets["left"] = getOffset(object).left- parseInt(css.left);
-  console.log(targets.refTest);
   if(targets.refTest == true){
     var maxTime = document.animationTimeline.children[0].animationDuration;
     //generate a test for each time you want to check the objects
@@ -161,8 +160,9 @@ function runTests(){
   if(testStack.length == 0) reparent();
   animTimeViewer();
   sortTests();
-  if(state == "Manual") testRunner();
-  else autoTestRunner();
+  //to cause no tests to start until 1 frame is rendered
+  if(state == "Manual") window.webkitRequestAnimationFrame(function(){testRunner();});
+  else window.webkitRequestAnimationFrame(function(){autoTestRunner();});  
 }
 
 function animTimeViewer(){
@@ -331,21 +331,25 @@ function assert_properties(object, targets, message, epsilons){
   var isSVG = (object.nodeName != "DIV");
 
   //make fake object
-  var tempOb = document.createElement(object.nodeName);
+  var tempOb = object.cloneNode(false);
   tempOb.style.position = "absolute";
   var parent = object.parentNode;
-  console.log(parent);
-  parent.appendChild(tempOb);
-
-  console.log("woot");
+  //console.log(parent);
+  
+  console.log(tempOb); 
 
   //apply properties to it
   for(var propName in targets){
     console.log(propName);
     console.log(targets[propName]);
-    if(isSVG) tempOb.setAttribute(propName, targets[propName])
+    if(isSVG){
+      tempOb.setAttribute("style", propName + ":" + targets[propName]);
+      //tempOb.setAttribute(propName, targets[propName]);
+      //console.log(tempOb.getAttribute("-webkit-transform"));
+    } 
     else tempOb.style[propName] = targets[propName];
   }
+  console.log("woot");
   console.log(tempOb); 
   
   //read back properties and compare to objects current properties
@@ -358,28 +362,38 @@ function assert_properties(object, targets, message, epsilons){
   }
   console.log(tempS);
   console.log(compS);
+  parent.appendChild(tempOb);
+
   for(var propName in targets){
-    console.log(tempS[propName]);
-    console.log(compS[propName]);
 
-    if(isSVG) var t = tempS[propName].value;
-    else var t = tempS[propName];
-    t = t.replace(/[^0-9,.]/g, "");
-    t = t.split(",");
-    console.log(t);
+    if(propName.indexOf("transform") != -1){
+      var c = object.getCTM();
+      console.log(c);
+      var t = tempOb.getCTM();
+      console.log(t);
+    } else {
+      console.log(tempS[propName]);
+      console.log(compS[propName]);
 
-    if(isSVG) var c = compS[propName].value;
-    else var c = compS[propName];
-    c = c.replace(/[^0-9,.]/g, "");
-    c = c.split(",");
-    console.log(c);
+      if(isSVG) var t = tempS[propName].value;
+      else var t = tempS[propName];
+      t = t.replace(/[^0-9\s.]/g, "");
+      t = t.split(" ");
+      console.log(t);
+
+      if(isSVG) var c = compS[propName].value;
+      else var c = compS[propName];
+      c = c.replace(/[^0-9\s.]/g, "");
+      c = c.split(" ");
+      console.log(c);
+    }
     for(var x in t){
-      assert_approx_equals(Number(c[x]), Number(t[x]), 5, message + " " + x);
+      assert_approx_equals(Number(c[x]), Number(t[x]), 10, message + " " + x);
     }
   }
 
   //clean up
-  tempOb.remove();
+  //tempOb.remove();
   console.log("watch nope");
 
   //assert_true(true);
