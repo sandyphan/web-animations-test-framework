@@ -255,9 +255,6 @@ function flashing(test) {
   //Create a new object of the same type as the thing being tested
   if(type == "DIV") var flash = document.createElement('div');
   else var flash = document.createElementNS("http://www.w3.org/2000/svg", type);
-   
-  // if(type == "DIV") document.getElementById("test").appendChild(flash);
-  // else document.getElementsByTagName("svg")[0].appendChild(flash);
   test.object.parentNode.appendChild(flash);
 
   if(type == "DIV"){
@@ -275,37 +272,37 @@ function flashing(test) {
   for(var propName in test.targets){
     var tar = test.targets[propName];
     var prop = propName
-    //
-      if(test.cssStyle.position == "relative"){
-        if(prop == "left"){
-          seenLeft = true;
-          tar = parseInt(tar);
-          tar += parseInt(test.offsets["left"]);
-          tar = tar + "px";
-        } else if(prop == "top"){
-          seenTop = true;
-          tar = parseInt(tar);
-          tar += parseInt(test.offsets["top"]);
-          tar = tar + "px";
-        }
-      } else {
-        if(prop == "left") seenLeft = true;
-        else if(prop == "top") seenTop = true;
+    if(test.cssStyle.position == "relative"){
+      if(prop == "left"){
+        seenLeft = true;
+        tar = parseInt(tar);
+        tar += parseInt(test.offsets["left"]);
+        tar = tar + "px";
+      } else if(prop == "top"){
+        seenTop = true;
+        tar = parseInt(tar);
+        tar += parseInt(test.offsets["top"]);
+        tar = tar + "px";
       }
+    } else {
+      if(prop == "left") seenLeft = true;
+      else if(prop == "top") seenTop = true;
+    }
     if(type == "DIV"){
       flash.style[prop] = tar;
     } else {
         flash.setAttribute(prop, tar);
-        console.log("pop");
     }
   }
   
-  if(type == "DIV"){
+  if(type == "DIV" && test.cssStyle.position == "relative"){
     if(!seenTop){
-      flash.style.top = getOffset(test.object).top+"px";
+      flash.style.top = (getOffset(test.object).top - getOffset(test.object.parentNode).top) +"px";
+      console.log(getOffset(test.object.parentNode).top);
     }
     if(!seenLeft){
-      flash.style.left = getOffset(test.object).left+"px";
+      flash.style.left = (getOffset(test.object).left - getOffset(test.object.parentNode).left)+"px";
+      console.log(getOffset(test.object.parentNode).left);
     }
   }
   
@@ -378,11 +375,9 @@ function assert_properties(object, targets, message, epsilons){
 
 //deals with svg transforms *sigh*
 function assert_transform(object, target, message){
-  console.log("ring ring ring ring banana phone!");
-
   var currStyle = object.attributes["style"].value;
   currStyle = currStyle.replace(/[;\s]/,"");
-  currStyle = currStyle.split(":")[1]; //get rid of the begining webkit bit
+  currStyle = currStyle.split(":")[1]; //get rid of the begining property name bit
   
   currStyle = currStyle.split(/[()]+/);
   target = target.split(/[()]+/);
