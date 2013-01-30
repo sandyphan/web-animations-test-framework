@@ -27,6 +27,7 @@ Written by Steph McArthur
 }
 
 #a {
+  background-color: red;
   left: 50px
 }
 
@@ -78,21 +79,17 @@ Written by Steph McArthur
 <link rel='stylesheet' type="text/css" href="../animation-test-style.css">
 
 <script>
-
 setupTests();
 
 new testAnimation(document.querySelector("#a"), {"background-color": ["red", "green"]}, 2);
 new testAnimation(document.querySelector("#b"), {"background-color": "rgb(0, 128, 0)"}, 2);
 new testAnimation(document.querySelector("#c"), {"background-color": [{offset: 0.25, value: "rgb(255, 0, 0)"}, {offset: 0.75, value: "rgb(0, 0, 255)"}], operation: "add"}, 2);
 
-check(document.querySelector("#a"), ["backgroundColor"], ["green"], 2, "Is green");
-check(document.querySelector("#a"), ["backgroundColor"], ["red"], 0, "Is red");
-check(document.querySelector("#b"), ["backgroundColor"], ["lightsteelblue"], 0, "Is lightsteelblue");
-
+check(document.querySelector("#a"), {backgroundColor: "green"}, 2, "Is green");
+check(document.querySelector("#a"), {backgroundColor: "red", top: "50px"}, 0, "Is red");
+check(document.querySelector("#b"), {backgroundColor: "lightsteelblue"}, 0, "Is lightsteelblue");
 
 runTests();
-
-
 </script>
 
 <div id="log"></div>
