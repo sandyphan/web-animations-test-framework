@@ -121,7 +121,6 @@ function check(object, targets, time, message){
   var offsets = [];
   offsets["top"] = getOffset(object).top - parseInt(css.top);
   offsets["left"] = getOffset(object).left- parseInt(css.left);
-  console.log(targets.refTest);
   if(targets.refTest == true){
     var maxTime = document.animationTimeline.children[0].animationDuration;
     //generate a test for each time you want to check the objects
@@ -161,8 +160,9 @@ function runTests(){
   if(testStack.length == 0) reparent();
   animTimeViewer();
   sortTests();
-  if(state == "Manual") testRunner();
-  else autoTestRunner();
+  //to cause no tests to start until 1 frame is rendered
+  if(state == "Manual") window.webkitRequestAnimationFrame(function(){testRunner();});
+  else window.webkitRequestAnimationFrame(function(){autoTestRunner();});  
 }
 
 function animTimeViewer(){
@@ -320,35 +320,19 @@ function flashing(test) {
 //  All asserts below here                                             //
 /////////////////////////////////////////////////////////////////////////
 
-//allows you to choose any combination of single number css properties to 
-//approximatly check if they are correct e.g checks width, top
-//works for colour but other worded/multinumbered properties might not work
-//specify your own epsilons if you want or leave for default
 function assert_properties(object, targets, message, epsilons){
-  console.log("watch now");
-  console.log(targets);
-
   var isSVG = (object.nodeName != "DIV");
-
-  //make fake object
   var tempOb = document.createElement(object.nodeName);
   tempOb.style.position = "absolute";
-  var parent = object.parentNode;
-  console.log(parent);
-  parent.appendChild(tempOb);
+  object.parentNode.appendChild(tempOb);
 
-  console.log("woot");
-
-  //apply properties to it
   for(var propName in targets){
-    console.log(propName);
-    console.log(targets[propName]);
-    if(isSVG) tempOb.setAttribute(propName, targets[propName])
+    if(isSVG){
+      if(propName.indexOf("transform") == -1) tempOb.setAttribute(propName, targets[propName]);
+    } 
     else tempOb.style[propName] = targets[propName];
-  }
-  console.log(tempOb); 
+  } 
   
-  //read back properties and compare to objects current properties
   if(isSVG){
     var compS = object.attributes;
     var tempS = tempOb.attributes;
@@ -356,147 +340,52 @@ function assert_properties(object, targets, message, epsilons){
     var compS = object.currentStyle || getComputedStyle(object, null);
     var tempS = tempOb.currentStyle || getComputedStyle(tempOb, null);
   }
-  console.log(tempS);
-  console.log(compS);
+  
   for(var propName in targets){
-    console.log(tempS[propName]);
-    console.log(compS[propName]);
+    if(isSVG && propName.indexOf("transform") != -1) assert_transform(object, targets[propName], message);
+    else {
+      if(isSVG){
+        var t = tempS[propName].value;
+        var c = compS[propName].value;
+      } else {
+        var t = tempS[propName];
+        var c = compS[propName];
+      }
+      t = t.replace(/[^0-9,.]/g, "");
+      t = t.split(",");
 
-    if(isSVG) var t = tempS[propName].value;
-    else var t = tempS[propName];
-    t = t.replace(/[^0-9,.]/g, "");
-    t = t.split(",");
-    console.log(t);
+      c = c.replace(/[^0-9,.]/g, "");
+      c = c.split(",");
 
-    if(isSVG) var c = compS[propName].value;
-    else var c = compS[propName];
-    c = c.replace(/[^0-9,.]/g, "");
-    c = c.split(",");
-    console.log(c);
-    for(var x in t){
-      assert_approx_equals(Number(c[x]), Number(t[x]), 5, message + " " + x);
+      for(var x in t){
+        assert_approx_equals(Number(c[x]), Number(t[x]), 10, message + " " + x);
+      }
     }
   }
-
-  //clean up
   tempOb.remove();
-  console.log("watch nope");
-
-  //assert_true(true);
-  // var type = object.nodeName;
-  // var isSVG = (type != "DIV");
-  // var comp = object.currentStyle || getComputedStyle(object, null);
-  // var i = 0;
-  // var isRefTest = (props[0] == "refTest");
-  // if(isRefTest) {
-  //   var tar = targets.currentStyle || getComputedStyle(targets, null);
-  //   i = 1;
-  // }
-  
-  // for(; i < props.length; i++){
-  //   //for anything with the word color in it do the color assert (C is not there because it could be a c or C)
-  // 	if(props[i].indexOf("olor") != -1){ 
-  // 	  assert_color(object, targets[i], message);
-  // 	} else if(props[i] == "style"){
-  // 	  if(isRefTest); //TODO
-  // 	  else ; //TODO
-  // 	  assert_transform(object, targets[i], message);
-  // 	} else {
-  // 	  var t = targets[i];
-  // 	  var c = comp[props[i]];
-  // 	  if(isRefTest) t = tar[props[i]];
-  // 	  else if(isSVG) c = object.attributes[props[i]].value;
-  // 	  assert_approx_equals(parseInt(c), parseInt(t), 10, message);
-  // 	}
-  // } 
 }
 
-//Pass in either the css colour name to expectedColor OR 
-//a rbg string e.g. "0,0,0". Each number must be separated by a comma
-function assert_color(component, expectedColor, message) {
-  var params = document.defaultView.getComputedStyle(component, null);
-  var color = params.backgroundColor;
-  color = color.replace(/[^0-9,]/g, "");
-  var rgbValues = color.split(",");
-
-  var parsedColor = expectedColor.replace(/[^0-9,]/g, "");
-  if(parsedColor.length != 0) expectedColor = parsedColor.split(",");
-  else expectedColor = convertToRgb(expectedColor);
-
-  assert_approx_equals(parseInt(rgbValues[0]), expectedColor[0], 12, "red " +message);
-  assert_approx_equals(parseInt(rgbValues[1]), expectedColor[1], 12, "green " +message);
-  assert_approx_equals(parseInt(rgbValues[2]), expectedColor[2], 12, "blue " +message);
-}
-
-//This whole function is kind of hacky... unsure how to do this properly. Suggestions?
-function convertToRgb(englishColor) {
-    var tempDiv = document.createElement("div");
-    document.querySelector("#log").appendChild(tempDiv); 
-    tempDiv.style.backgroundColor = englishColor;
-    var p = document.defaultView.getComputedStyle(tempDiv, null);
-    var color = p.backgroundColor;
-    color = color.replace(/[^0-9,]/g, "");
-    var rgbValues = color.split(",");
-    tempDiv.remove(); 
-    return rgbValues;
-}
-
-//deals with transforms
-//TODO: clean this mess up
+//deals with svg transforms *sigh*
 function assert_transform(object, target, message){
-  if(object.nodeName == "DIV"){
-    var comp = object.currentStyle || getComputedStyle(object, null);
-    var currStyle = comp.getPropertyValue('transform')
-     || comp.getPropertyValue('-moz-transform')
-     || comp.getPropertyValue('-webkit-transform')
-     || comp.getPropertyValue('-ms-transform')
-     || comp.getPropertyValue('-o-transform');
+  console.log("ring ring ring ring banana phone!");
 
-    //now convert the target into matrix style format
-    var tempDiv = document.createElement("div");
-    document.querySelector("#log").appendChild(tempDiv); 
-    tempDiv.style["webkitTransform"] = target;
+  var currStyle = object.attributes["style"].value;
+  currStyle = currStyle.replace(/[;\s]/,"");
+  currStyle = currStyle.split(":")[1]; //get rid of the begining webkit bit
+  
+  currStyle = currStyle.split(/[()]+/);
+  target = target.split(/[()]+/);
 
-    var p = tempDiv.currentStyle || getComputedStyle(tempDiv, null);
-    var target = p.getPropertyValue('transform')
-     || p.getPropertyValue('-moz-transform')
-     || p.getPropertyValue('-webkit-transform')
-     || p.getPropertyValue('-ms-transform')
-     || p.getPropertyValue('-o-transform');
-
-    tempDiv.remove();
-
-    currStyle = currStyle.replace(/[^0-9.,]/g, "");
-    currStyle = currStyle.split(",");
-
-    target = target.replace(/[^0-9.,]/g, "");
-    target = target.split(",");
-
-    for(var x in currStyle){
-      if(x < 3) assert_approx_equals(Number(currStyle[x]), Number(target[x]), 0.1, message);
-      else assert_approx_equals(Number(currStyle[x]), Number(target[x]), 3, message);
+  var x = 0;
+  while(x < currStyle.length-1){
+    assert_equals(currStyle[x], target[x], message);
+    x++;
+    var c = currStyle[x].split(",");
+    var t = target[x].split(",");
+    for(var i in c){
+      assert_approx_equals(parseInt(c[i]), parseInt(t[i]), 10, message);
     }
-
-  } else {
-    var currStyle = object.attributes["style"].value;
-    //currStyle = currStyle.replace(";","");
-    currStyle = currStyle.split(":")[1]; //get rid of the begining webkit bit
-    currStyle = currStyle.split(/[()]+/);
-
-    target = target.split(":")[1];
-    target = target.split(/[()]+/);
-
-    var x = 0;
-    while(x < currStyle.length-1){
-      assert_equals(currStyle[x], target[x], message);
-      x++;
-      var c = currStyle[x].split(",");
-      var t = target[x].split(",");
-      for(var i in c){
-        assert_approx_equals(parseInt(c[i]), parseInt(t[i]), 10, message);
-      }
-      x++;
-    }
+    x++;
   }
 }
 
