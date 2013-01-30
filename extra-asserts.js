@@ -322,11 +322,9 @@ function flashing(test) {
 
 function assert_properties(object, targets, message, epsilons){
   var isSVG = (object.nodeName != "DIV");
-
-  var tempOb = object.cloneNode(false);
+  var tempOb = document.createElement(object.nodeName);
   tempOb.style.position = "absolute";
-  var parent = object.parentNode;
-  parent.appendChild(tempOb);
+  object.parentNode.appendChild(tempOb);
 
   for(var propName in targets){
     if(isSVG) tempOb.setAttribute(propName, targets[propName]);
@@ -349,17 +347,16 @@ function assert_properties(object, targets, message, epsilons){
       var t = tempS[propName];
       var c = compS[propName];
     }
-    t = t.replace(/[^0-9\s.]/g, "");
-    t = t.split(" ");
+    t = t.replace(/[^0-9,.]/g, "");
+    t = t.split(",");
 
-    c = c.replace(/[^0-9\s.]/g, "");
-    c = c.split(" ");
+    c = c.replace(/[^0-9,.]/g, "");
+    c = c.split(",");
 
     for(var x in t){
       assert_approx_equals(Number(c[x]), Number(t[x]), 10, message + " " + x);
     }
   }
-
   tempOb.remove();
 }
 
