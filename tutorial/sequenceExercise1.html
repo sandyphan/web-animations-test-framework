@@ -59,7 +59,8 @@ limitations under the License.
           <code>var A = new Animation(document.querySelector("#a"), {left: "300px", top: "300px"}, 3); <br />
                 var B = new Animation(document.querySelector("#a"), {left: "600px", top: "0px"}, 3); <br />
                 var C = new Animation(document.querySelector("#a"), {left: "0px", top: "0px"}, 3); <br />
-                new SeqGroup([A, B, C]);
+                var seq = new SeqGroup([A, B, C]);
+                seq.play();
           </code>
         </div>
 

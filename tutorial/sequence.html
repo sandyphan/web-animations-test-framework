@@ -53,10 +53,28 @@ limitations under the License.
 
         <p class="description">You can see that the interfaces are very similar, even the properties of the children and timing are the same as well. That is, both children and timing are nullable but only timing is optional.</p>
 
+        <p class="description note">Note: for sequence groups, you have to always manually set it to play, else it would not play automatically. Hence, the following sample is a more recommended one.</p>
+
+        <code class="codeSamples">
+          var seqGr = new SeqGroup([A, B]);
+          seqGr.play();
+        </code>
+
+        <p class="description">Where A and B are individual animations. play() is a method to let the animation runs. In order to pause the animation, you can use pause().</p>
+
         <div class="separator"></div>
 
       </div>  <!-- content ending div -->
+      <div class="line-separator"></div>
     </div> <!-- main ending div -->
+
+    <ul class="sideMenu">
+      <li id="menuLabel">Sequential Animation Group</li>
+      <li><a href="sequence.html">Basic Info</a></li>
+      <li><a href="sequenceExercise1.html">Exercise 1</a></li>
+      <li><a href="sequenceExercise2.html">Exercise 2</a></li>
+      <li><a href="sequenceExercise3.html">Exercise 3</a></li>
+    </ul>
     <script type="text/javascript" src="tryItYourself.js"></script>
   </body>
 </html>
