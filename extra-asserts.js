@@ -327,7 +327,9 @@ function assert_properties(object, targets, message, epsilons){
   object.parentNode.appendChild(tempOb);
 
   for(var propName in targets){
-    if(isSVG) tempOb.setAttribute(propName, targets[propName]);
+    if(isSVG){
+      if(propName.indexOf("transform") == -1) tempOb.setAttribute(propName, targets[propName]);
+    } 
     else tempOb.style[propName] = targets[propName];
   } 
   
@@ -340,21 +342,24 @@ function assert_properties(object, targets, message, epsilons){
   }
   
   for(var propName in targets){
-    if(isSVG){
-      var t = tempS[propName].value;
-      var c = compS[propName].value;
-    } else {
-      var t = tempS[propName];
-      var c = compS[propName];
-    }
-    t = t.replace(/[^0-9,.]/g, "");
-    t = t.split(",");
+    if(isSVG && propName.indexOf("transform") != -1) assert_transform(object, targets[propName], message);
+    else {
+      if(isSVG){
+        var t = tempS[propName].value;
+        var c = compS[propName].value;
+      } else {
+        var t = tempS[propName];
+        var c = compS[propName];
+      }
+      t = t.replace(/[^0-9,.]/g, "");
+      t = t.split(",");
 
-    c = c.replace(/[^0-9,.]/g, "");
-    c = c.split(",");
+      c = c.replace(/[^0-9,.]/g, "");
+      c = c.split(",");
 
-    for(var x in t){
-      assert_approx_equals(Number(c[x]), Number(t[x]), 10, message + " " + x);
+      for(var x in t){
+        assert_approx_equals(Number(c[x]), Number(t[x]), 10, message + " " + x);
+      }
     }
   }
   tempOb.remove();
@@ -362,6 +367,25 @@ function assert_properties(object, targets, message, epsilons){
 
 //deals with svg transforms *sigh*
 function assert_transform(object, target, message){
+  console.log("ring ring ring ring banana phone!");
 
+  var currStyle = object.attributes["style"].value;
+  currStyle = currStyle.replace(/[;\s]/,"");
+  currStyle = currStyle.split(":")[1]; //get rid of the begining webkit bit
+  
+  currStyle = currStyle.split(/[()]+/);
+  target = target.split(/[()]+/);
+
+  var x = 0;
+  while(x < currStyle.length-1){
+    assert_equals(currStyle[x], target[x], message);
+    x++;
+    var c = currStyle[x].split(",");
+    var t = target[x].split(",");
+    for(var i in c){
+      assert_approx_equals(parseInt(c[i]), parseInt(t[i]), 10, message);
+    }
+    x++;
+  }
 }
 
