@@ -76,6 +76,12 @@
   clear: right;
   float: right;
 }
+.fail {
+  background-color: white;
+}
+.pass {
+  background-color: green;
+}
 #label {
   font: bold 1em Arial;
   padding: 5px;
