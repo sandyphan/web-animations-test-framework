@@ -14,7 +14,6 @@
  * limitations under the License.
  */
  /*TODO:
- - incorperate object notation (JSON) varibles for the test so it is easier to call
  - Change the pause method for flashing so it doesn't rely on par groups. This requires the 
     ability to either globally pause or check if a animation is currently playing
  - Make sure this is compatible with all browsers
@@ -335,10 +334,13 @@ function assert_properties(object, targets, message, epsilons){
   object.parentNode.appendChild(tempOb);
 
   for(var propName in targets){
+    if(targets[propName].nodeName != undefined) var tar = (targets[propName].currentStyle || getComputedStyle(targets[propName], null))[propName];
+    else var tar = targets[propName];
+
     if(isSVG){
-      if(propName.indexOf("transform") == -1) tempOb.setAttribute(propName, targets[propName]);
+      if(propName.indexOf("transform") == -1) tempOb.setAttribute(propName, tar);
     } 
-    else tempOb.style[propName] = targets[propName];
+    else tempOb.style[propName] = tar;
   } 
   
   if(isSVG){
@@ -350,23 +352,25 @@ function assert_properties(object, targets, message, epsilons){
   }
   
   for(var propName in targets){
-    if(isSVG && propName.indexOf("transform") != -1) assert_transform(object, targets[propName], message);
-    else {
-      if(isSVG){
-        var t = tempS[propName].value;
-        var c = compS[propName].value;
-      } else {
-        var t = tempS[propName];
-        var c = compS[propName];
-      }
-      t = t.replace(/[^0-9,.]/g, "");
-      t = t.split(",");
+    if(propName != "refTest"){
+      if(isSVG && propName.indexOf("transform") != -1) assert_transform(object, targets[propName], message);
+      else {
+        if(isSVG){
+          var t = tempS[propName].value;
+          var c = compS[propName].value;
+        } else {
+          var t = tempS[propName];
+          var c = compS[propName];
+        }
+        t = t.replace(/[^0-9,.]/g, "");
+        t = t.split(",");
 
-      c = c.replace(/[^0-9,.]/g, "");
-      c = c.split(",");
+        c = c.replace(/[^0-9,.]/g, "");
+        c = c.split(",");
 
-      for(var x in t){
-        assert_approx_equals(Number(c[x]), Number(t[x]), 10, message + " " + x);
+        for(var x in t){
+          assert_approx_equals(Number(c[x]), Number(t[x]), 10, message + " " + x);
+        }
       }
     }
   }
