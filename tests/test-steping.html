@@ -77,29 +77,28 @@ for (var i = 0; i < elems.length; i++) {
   anims[i] = new Animation(element, {left: "600px"}, {startDelay: 1, duration: 2, timingFunction: element.textContent});
 }
 var buffer = 0.05;
-check(elems[0], ["left"], ["600px"], 1+buffer, "Div 1: 1 sec");
+check(elems[0], {"left":"600px"}, 1+buffer, "Div 1: 1 sec");
 
-check(elems[1], ["left"], ["300px"], 1+buffer, "Div 2: 1 sec");
-check(elems[1], ["left"], ["300px"], 1.2+buffer, "Div 2: 1.2 sec");
-check(elems[1], ["left"], ["600px"], 2+buffer, "Div 2: 2 sec");
+check(elems[1], {"left":"300px"}, 1+buffer, "Div 2: 1 sec");
+check(elems[1], {"left":"300px"}, 1.2+buffer, "Div 2: 1.2 sec");
+check(elems[1], {"left":"600px"}, 2+buffer, "Div 2: 2 sec");
 
-check(elems[2], ["left"], ["200px"], 1+buffer, "Div 3: 1 sec");
-check(elems[2], ["left"], ["200px"], 1.2+buffer, "Div 3: 1.2 sec");
-check(elems[2], ["left"], ["400px"], 1.66+buffer, "Div 3: 1.66 sec");
-check(elems[2], ["left"], ["400px"], 1.9+buffer, "Div 3: 1.9 sec");
-check(elems[2], ["left"], ["600px"], 2.4+buffer, "Div 3: 2.4 sec");
+check(elems[2], {"left":"200px"}, 1+buffer, "Div 3: 1 sec");
+check(elems[2], {"left":"200px"}, 1.2+buffer, "Div 3: 1.2 sec");
+check(elems[2], {"left":"400px"}, 1.66+buffer, "Div 3: 1.66 sec");
+check(elems[2], {"left":"400px"}, 1.9+buffer, "Div 3: 1.9 sec");
+check(elems[2], {"left":"600px"}, 2.4+buffer, "Div 3: 2.4 sec");
 
-check(elems[3], ["left"], ["0px"], 1+buffer, "Div 4: 1 sec");
-check(elems[3], ["left"], ["0px"], 1.2+buffer, "Div 4: 1.2 sec");
-check(elems[3], ["left"], ["300px"], 1.5+buffer, "Div 4: 1.5 sec");
-check(elems[3], ["left"], ["300px"], 1.6+buffer, "Div 4: 1.6 sec");
-check(elems[3], ["left"], ["600px"], 2.6+buffer, "Div 4: 2.6 sec");
+check(elems[3], {"left":"0px"}, 1+buffer, "Div 4: 1 sec");
+check(elems[3], {"left":"0px"}, 1.2+buffer, "Div 4: 1.2 sec");
+check(elems[3], {"left":"300px"}, 1.5+buffer, "Div 4: 1.5 sec");
+check(elems[3], {"left":"300px"}, 1.6+buffer, "Div 4: 1.6 sec");
+check(elems[3], {"left":"600px"}, 2.6+buffer, "Div 4: 2.6 sec");
 
-check(elems[4], ["left"], ["0px"], 1.9+buffer, "Div 5: 1.9 sec");
-check(elems[4], ["left"], ["300px"], 2+buffer, "Div 5: 2 sec");
-check(elems[4], ["left"], ["300px"], 2.9+buffer, "Div 5: 2.9 sec");
-check(elems[4], ["left"], ["600px"], 3+buffer, "Div 5: 3.1 sec");
-
+check(elems[4], {"left":"0px"}, 1.9+buffer, "Div 5: 1.9 sec");
+check(elems[4], {"left":"300px"}, 2+buffer, "Div 5: 2 sec");
+check(elems[4], {"left":"300px"}, 2.9+buffer, "Div 5: 2.9 sec");
+check(elems[4], {"left":"600px"}, 3+buffer, "Div 5: 3.1 sec");
 
 runTests();
 </script>

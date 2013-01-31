@@ -17,7 +17,6 @@
  - Change the pause method for flashing so it doesn't rely on par groups. This requires the 
     ability to either globally pause or check if a animation is currently playing
  - Make sure this is compatible with all browsers
- - handle refTests + JSON better
  * Features to Add
  *  - Templates
  */
@@ -290,7 +289,8 @@ function flashing(test) {
     if(type == "DIV"){
       flash.style[prop] = tar;
     } else {
-        flash.setAttribute(prop, tar);
+      if(prop.indexOf("transform") != -1) prop = "transform";
+      flash.setAttribute(prop, tar);
     }
   }
   
