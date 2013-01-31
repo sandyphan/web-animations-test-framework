@@ -20,20 +20,20 @@ limitations under the License.
 <html>
   <head>
     <link rel="author" title="Sandy Phan, Sarah Heimlich", href="mailto:sandyphan@google.com, sarahheimlich@google.com">
-    <title>Basic Animation Exercise 5</title>
+    <title>Parallel Animation Group Exercise 1</title>
     <meta name="flags" content="dom">
     <meta name="tutorial" content="Web Animations tutorials">
-    <link rel="stylesheet" type="text/css" href="tutorialStyle.css">
+    <link rel="stylesheet" type="text/css" href="../tutorialStyle.css">
   </head>
 
   <body  onload="displayDefault()">
     <ul class="topMenu">
-      <li><a href="homePage.html">Home</a></li>
+      <li><a href="../homePage.html">Home</a></li>
       <li><a href="#">Tutorials</a></li>
-      <li><a href="references.html">References</a></li>
-      <li><a href="about.html">About</a></li>
+      <li><a href="../references/references.html">References</a></li>
+      <li><a href="../about.html">About</a></li>
     </ul>
-
+      
     <div id="main">
 
       <div id="title">Web Animations Tutorial</div>
@@ -42,26 +42,23 @@ limitations under the License.
 
       <div class="content">
 
-        <div class="heading subTitle">Create a new basic animation</div>
+      	<div class="heading subTitle">Parallel Animation Group</div>
 
-        <div class="heading exercises">Exercise 5 - Changing Colours</div>
-        <p class="description">Now you have known a tonne of basics stuffs about web aniamtions, how about let's try out changing the colour of the block since red doesn't look as nice. The question is, how?</p>
+        <div class="heading exercises">Exercise 1 - Make a Parallel Group</div>
 
-        <p class="description">It is easy, we only need to access it's background-color property and change it. Sounds easy enough? The following code will change the block from red to green:</p>
+        <p class="description">Groupings are important so let's get started on the exercise</p>
 
-        <code class="codeSamples">new Animation(document.querySelector("#a"), {"background-color:" ["red", "green"]}, 2);</code>
+        <p class="description">In this exercise, create a parallel group of animation that has 3 children. Each children should run 300px, 500px, 700px from top respectively for 5 seconds.</p>
 
-        <p class="description">So the above code had just access the background-color property in CSS and change it from red to green. You can always change them to other colours such as blue, grey, yellow, or even #827031.</p>
-
-        <p class="description">Now let's give it a try. Your task for this exercise is to change the colour of the block from red to green, then to yellow then red again in 10 seconds.</p>
-
-        <p class="description">Hint: you will only need one line of code so don't write 3 lines of codes for changing 3 colours. You can actually put 2+ colours in the square brackets.</p>
-
-        <br />
+        <p class="description">Hint: you should first create the children then include the children into the group. You might also need to create more animation divs in the html section and change their colour depends on your preferences.</p>
 
         <div id="hideLabel" onclick="toggleSolution()">Show Solution</div>
         <div id="toggleText" class="codeSamples">
-          <code>new Animation(document.querySelector("#a"), {"background-color:" ["red", "green", "yellow", "red"]}, 10);</code>
+          <code>var A = new Animation(document.querySelector("#a"), {top: 300px}, 5); <br />
+                var B = new Animation(document.querySelector("#b"), {top: 500px}, 5); <br />
+                var C = new Animation(document.querySelector("#c"), {top: 500px}, 5); <br />
+                new ParGroup([A, B, C]);
+          </code>
         </div>
 
         <div id="tryIt">
@@ -72,6 +69,8 @@ limitations under the License.
             <div id="label">HTML Code</div>
             <textarea id="htmlCode" class="code" spellcheck="false">
 <div id="a" class="test"></div>
+<div id="b" class="test"></div>
+<div id="c" class="test"></div>
 </textarea>
             <div id="label">CSS Style</div>
             <textarea id="cssCode" class="code" spellcheck="false">
@@ -82,13 +81,15 @@ width: 100px;
 height: 50px;
 top: 0px;
 left: 0px;
-position: absolute;
+position: relative;
 }</textarea>
             <div id="label">Javascript</div>
             <textarea id="jsCode" class="code" spellcheck="false"></textarea>
           </div>
           <iframe id="display" src='iframe-contents.html'><p>Your browser does not support iframes</p></iframe>  
         </div>
+
+        <div class="separator"></div>
 
       </div>  <!-- content ending div -->
 
@@ -97,18 +98,14 @@ position: absolute;
       <div class="separator"></div>
     </div> <!-- main ending div -->
 
-    <div class="separator"></div>
-
     <ul class="sideMenu">
-      <li id="menuLabel">Create Basic Animation</li>
-      <li><a href="createBasicAnim.html">Basic Info</a></li>
-      <li><a href="basicAnimExercise1.html">Exercise 1</a></li>
-      <li><a href="basicAnimExercise2.html">Exercise 2</a></li>
-      <li><a href="basicAnimExercise3.html">Exercise 3</a></li>
-      <li><a href="basicAnimExercise4.html">Exercise 4</a></li>
-      <li><a href="basicAnimExercise5.html">Exercise 5</a></li>
+      <li id="menuLabel">Parallel Animation Group</li>
+      <li><a href="parallel.html">Basic Info</a></li>
+      <li><a href="parallelExercise1.html">Exercise 1</a></li>
+      <li><a href="parallelExercise2.html">Exercise 2</a></li>
+      <li><a href="parallelExercise3.html">Exercise 3</a></li>
     </ul>
 
-    <script type="text/javascript" src="tryItYourself.js"></script>
+    <script type="text/javascript" src="../tryItYourself.js"></script>
   </body>
 </html>
