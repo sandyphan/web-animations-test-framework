@@ -23,15 +23,15 @@ limitations under the License.
     <title>Parallel Animation Group Exercise 1</title>
     <meta name="flags" content="dom">
     <meta name="tutorial" content="Web Animations tutorials">
-    <link rel="stylesheet" type="text/css" href="tutorialStyle.css">
+    <link rel="stylesheet" type="text/css" href="../tutorialStyle.css">
   </head>
 
   <body  onload="displayDefault()">
     <ul class="topMenu">
-      <li><a href="homePage.html">Home</a></li>
+      <li><a href="../homePage.html">Home</a></li>
       <li><a href="#">Tutorials</a></li>
-      <li><a href="references.html">References</a></li>
-      <li><a href="about.html">About</a></li>
+      <li><a href="../references/references.html">References</a></li>
+      <li><a href="../about.html">About</a></li>
     </ul>
       
     <div id="main">
@@ -67,11 +67,13 @@ limitations under the License.
           </div>
           <div class="code">
             <div id="label">HTML Code</div>
-            <textarea id="htmlCode" class="code">
+            <textarea id="htmlCode" class="code" spellcheck="false">
 <div id="a" class="test"></div>
+<div id="b" class="test"></div>
+<div id="c" class="test"></div>
 </textarea>
             <div id="label">CSS Style</div>
-            <textarea id="cssCode" class="code">
+            <textarea id="cssCode" class="code" spellcheck="false">
 .test {
 background-color: red;
 border-radius: 10px;
@@ -79,10 +81,10 @@ width: 100px;
 height: 50px;
 top: 0px;
 left: 0px;
-position: absolute;
+position: relative;
 }</textarea>
             <div id="label">Javascript</div>
-            <textarea id="jsCode" class="code"></textarea>
+            <textarea id="jsCode" class="code" spellcheck="false"></textarea>
           </div>
           <iframe id="display" src='iframe-contents.html'><p>Your browser does not support iframes</p></iframe>  
         </div>
@@ -104,6 +106,6 @@ position: absolute;
       <li><a href="parallelExercise3.html">Exercise 3</a></li>
     </ul>
 
-    <script type="text/javascript" src="tryItYourself.js"></script>
+    <script type="text/javascript" src="../tryItYourself.js"></script>
   </body>
 </html>
