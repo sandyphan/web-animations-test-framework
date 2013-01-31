@@ -48,18 +48,36 @@ limitations under the License.
 
         <p class="description">Now you know how to use both parallel and sequential animation groups. Let's get started on some harder exercises.</p>
 
-        <p class="description">For this exercise, create 4 animations to 4 different items. Divide the animations evenly into 2 groups where the first group contains the 1st and 2nd elements. The second group should wait until the first group has finished running to run. The elements of the first group should move 300px and 400px from left respectively. The group should run for 3 seconds and repeat twice. The second group should move 300px and 400px from left respectively where the 2nd element in the group will have to wait half way to start. That is each elemnt should run for 4 seconds and the 2nd element will wait for 2 seconds to run. In addition, both groups should change colours from red to green then to red when they run.</p>
+        <p class="description">For this exercise, create 4 animations to 4 different items. Divide the animations evenly into 2 groups where the first group contains the 1st and 2nd elements. The second group should wait until the first group has finished running to run. The elements of the first group should move 300px and 400px from left respectively. The group should run for 3 seconds and repeat twice. The second group should move 300px and 400px from left respectively where the 2nd element in the group will have to wait half way to start. That is each elemnt should run for 4 seconds and the 2nd element will wait for 2 seconds to run. The second group should also repeat itself 3 times. In addition, the first group will change colours from red to green then back to red, the second group will change colours from blue to yellow then to blue.</p>
 
         <ul class="description">
-          <li>Create 4 animations</li>
-          <li>Create 2 groups, group the 1st and 2nd elements into the first and the rest into the second</li>
-          <li>Animate the first group such that it repeats twice and </li>
+          <li>Create 4 animations.</li>
+          <li>Create 2 groups, group the 1st and 2nd elements into the first and the rest into the second.</li>
+          <li>Animate the first group such that it repeats twice. Elements in this group should run in parallel.</li>
+          <li>Animate the second group such that one runs half way to anther and repeats itself 3 times. Elements should run in sequence</li>
+          <li>First group changes colour from red to green then to red.</li>
+          <li>Second group changes colour from blue to yellow then to blue.</li>
         </ul>
 
         <div id="hideLabel" onclick="toggleSolution()">Show Solution</div>
         <div id="toggleText" class="codeSamples">
           <code>
-            
+            var group1 = new ParGroup([], {iterationCount: 2}); <br />
+            new Animation(document.querySelector("#a"), {left: "300px"}, 3, group1); <br />
+            new Animation(document.querySelector("#b"), {left: "400px"}, 3, group1); <br />
+            var group2 = new SeqGroup([], {iterationCount: 3}); <br />
+            new Animation(document.querySelector("#c"), {left: "300px"}, 4, group2); <br />
+            new Animation(document.querySelector("#d"), {left: "400px"}, {startDelay: -2, duration: 4}, group2); <br />
+            var elems = document.querySelectorAll(".test"); <br />
+            for (var i = 0; i < elems.length; i++) { <br />
+              if (i < 2) { <br />
+                new Animation(elems[i], {"background-color:", ["red", "green", "red"]}, 3, group1); <br />
+              } else { <br />
+                new Animation(elems[i], {"background-color:", ["blue", "yellow", "blue"]}, 4, group2); <br />
+              } <br />
+            } <br />
+            var seq = new SeqGroup([group1, group2]); <br />
+            seq.play();
           </code>
         </div>
 
@@ -69,11 +87,14 @@ limitations under the License.
           </div>
           <div class="code">
             <div id="label">HTML Code</div>
-            <textarea id="htmlCode" class="code">
+            <textarea id="htmlCode" class="code" spellcheck="false">
 <div id="a" class="test"></div>
+<div id="b" class="test"></div>
+<div id="c" class="test"></div>
+<div id="d" class="test"></div>
 </textarea>
             <div id="label">CSS Style</div>
-            <textarea id="cssCode" class="code">
+            <textarea id="cssCode" class="code" spellcheck="false">
 .test {
 background-color: red;
 border-radius: 10px;
@@ -81,10 +102,10 @@ width: 100px;
 height: 50px;
 top: 0px;
 left: 0px;
-position: absolute;
+position: relative;
 }</textarea>
             <div id="label">Javascript</div>
-            <textarea id="jsCode" class="code"></textarea>
+            <textarea id="jsCode" class="code" spellcheck="false"></textarea>
           </div>
           <iframe id="display" src='iframe-contents.html'><p>Your browser does not support iframes</p></iframe>  
         </div>
