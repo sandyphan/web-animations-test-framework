@@ -63,8 +63,6 @@ function updateState(change) {
 
 function checkForResults(){
   if(window.frame.testResults != undefined){
-    //console.log("BOOM");
-    //console.log(window.frame.testResults);
     logResults(window.frame.testResults);
     window.frame.testResults = undefined;
     if(currentTest < tests.length-1) updateState(1);
@@ -73,13 +71,23 @@ function checkForResults(){
 }
 
 function logResults (results){
+  newTestDiv = document.createElement('div');
+  newTestDiv.innerHTML = tests[currentTest];
   var grade = "pass";
-  var newDiv = document.createElement('div');
   for(var x in results){
     if(results[x].status != 0) grade = "fail";
   }
-  newDiv.innerHTML = grade;
-  document.getElementById("results").appendChild(newDiv);
+  if(grade == "pass") newTestDiv.style.backgroundColor = "LightGreen";
+  else newTestDiv.style.backgroundColor = "LightCoral";
+  document.getElementById("results").appendChild(newTestDiv);
+
+  // var grade = "pass";
+  // var newDiv = document.createElement('div');
+  // for(var x in results){
+  //   if(results[x].status != 0) grade = "fail";
+  // }
+  // newDiv.innerHTML = grade;
+  // document.getElementById("results").appendChild(newDiv);
 }
 updateState();
 </script>
