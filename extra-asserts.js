@@ -18,7 +18,7 @@
     ability to either globally pause or check if a animation is currently playing
  - Make sure this is compatible with all browsers
  * Features to Add
- *  - Templates
+ *  - 
  */
 
 var animObjects = []; //to keep track of all animations
@@ -32,6 +32,8 @@ var testPacket = []; //Each index holds all the tests that occur at the same tim
 var pauseTime = 500; //how long to show each manual check for
 var testTimeout = 10000; //how long it takes an individual test to timeout
 var frameworkTimeout = 20000; //how long it takes for the whole test system to timeout
+
+var testResults = undefined;
 
 function testRecord(test, object, targets, time, message, cssStyle, offsets, isRefTest){
   this.test = test;
@@ -297,11 +299,11 @@ function flashing(test) {
   if(type == "DIV" && test.cssStyle.position == "relative"){
     if(!seenTop){
       flash.style.top = (getOffset(test.object).top - getOffset(test.object.parentNode).top) +"px";
-      console.log(getOffset(test.object.parentNode).top);
+      //console.log(getOffset(test.object.parentNode).top);
     }
     if(!seenLeft){
       flash.style.left = (getOffset(test.object).left - getOffset(test.object.parentNode).left)+"px";
-      console.log(getOffset(test.object.parentNode).left);
+      //console.log(getOffset(test.object.parentNode).left);
     }
   }
   
@@ -322,6 +324,12 @@ function flashing(test) {
         < document.animationTimeline.children[0].animationDuration - 0.01) parentAnimation.play();
   }, pauseTime);
 }
+
+add_completion_callback(function (allRes, status) {
+    //console.log("Test run completed", allRes, status);
+    testResults = allRes;
+    //console.log(window.parent.checkForResults());
+});
 
 /////////////////////////////////////////////////////////////////////////
 //  All asserts below here                                             //
