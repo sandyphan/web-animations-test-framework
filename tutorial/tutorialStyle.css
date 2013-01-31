@@ -136,7 +136,8 @@ a:visited {
 .sideMenu {
   list-style-type: none;
   position: absolute;
-  top: 18%;
+  top: 12%;
+  z-index: 0;
 }
 .sideMenu a:hover {
   background-color: #E6E6E6;
@@ -149,9 +150,11 @@ a:visited {
   padding: 20px;
   color: #CCC;
   border: 1px solid black;
+  z-index: 0;
 }
 .sideMenu li, #alphabet-menu li {
   font: 1em "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+  z-index: 0;
 }
 #menuLabel {
   background-color: #222;
@@ -197,27 +200,61 @@ a:visited {
   border-radius: 10px;
   cursor: pointer;
 }
-.topMenu{
+.topMenu {
   list-style-type: none;
-  display: inline;
+  float: left;
+  position: absolute;
+  z-index: 5;
+  top: 0;
+  left: 0;
+  margin: 0;
+}
+.topMenu li {
+  float: left;
+  margin-right: 5px;
+  position: relative;
 }
 .topMenu a {
+  padding: 10px;
   top: 0px;
-  float: left;
-  width: 5%;
-  padding: 20px;
+  display: block;
   background-color: #222;
-  color: #EEE;
-  margin-right: 5px;
+  width: 150px;
+  color: #DDD;
   text-align: center;
   border: 1px solid black;
+  text-decoration: none;
   font: 1.1em "Lucida Sans Unicode", "Lucida Grande", sans-serif;
 }
 .topMenu a:hover {
-  background-color: #E6E6E6;
+  background-color: #EEE;
   color: black;
-  border: 2px solid black;
-  border-shadow: 2px solid #DDD;
+}
+.topMenu .subMenu {
+  list-style-type: none;
+  position: absolute;
+  left: -9999px;
+  font-size: 0.8em;
+  z-index: 990;
+}
+.topMenu .subMenu li {
+  padding-top: 1px;
+  float: none;
+  z-index: 990;
+}
+.topMenu .subMenu a {
+  white-space: nowrap;
+  background-color: rgba(34,34,34, 0.1);
+  color: #222;
+  z-index: 990;
+}
+.topMenu li:hover .subMenu {
+  left: -40px;
+  z-index: 990;
+}
+.topMenu .subMenu li:hover a {
+  background-color: rgba(34,34,34,0.9);
+  color: #EEE;
 }
 .line-separator {
   height: 2px;
@@ -229,9 +266,6 @@ a:visited {
   height: 800px;
   width: 110%;
   border: 0px;
-}
-.subTutorial {
-  display: none;
 }
 #alphabet-menu {
   list-style-type: none;
