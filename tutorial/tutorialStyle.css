@@ -136,7 +136,8 @@ a:visited {
 .sideMenu {
   list-style-type: none;
   position: absolute;
-  top: 18%;
+  top: 12%;
+  z-index: 0;
 }
 .sideMenu a:hover {
   background-color: #E6E6E6;
@@ -149,9 +150,11 @@ a:visited {
   padding: 20px;
   color: #CCC;
   border: 1px solid black;
+  z-index: 0;
 }
 .sideMenu li, #alphabet-menu li {
   font: 1em "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+  z-index: 0;
 }
 #menuLabel {
   background-color: #222;
@@ -232,23 +235,25 @@ a:visited {
   position: absolute;
   left: -9999px;
   font-size: 0.8em;
+  z-index: 990;
 }
 .topMenu .subMenu li {
   padding-top: 1px;
   float: none;
-  
+  z-index: 990;
 }
 .topMenu .subMenu a {
   white-space: nowrap;
   background-color: rgba(34,34,34, 0.1);
   color: #222;
+  z-index: 990;
 }
 .topMenu li:hover .subMenu {
   left: -40px;
-  
+  z-index: 990;
 }
 .topMenu .subMenu li:hover a {
-  background-color: rgba(34,34,34,0.8);
+  background-color: rgba(34,34,34,0.9);
   color: #EEE;
 }
 .line-separator {
