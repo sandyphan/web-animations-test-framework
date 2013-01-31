@@ -287,3 +287,6 @@ a:visited {
   color: red;
   font-size: 0.9em;
 }
+.animViewerText {
+  top: 500px;
+}

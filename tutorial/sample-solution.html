@@ -7,19 +7,22 @@
   border-radius: 10px;
   width: 100px;
   height: 50px;
-  top: 0px;
+  top: 50px;
   left: 0px;
   position: absolute;
 }
+    }
     </style>
   <div id="a" class="test"></div>
   </head>
   <body>
     <script type='text/javascript' src='tutorialTesting.js'></script>
     <script src='../../web-animations-js/web-animation.js'></script>
+    <script src='tryItYourself.js'></script>
     <script id='wait' type='text/javascript' src='../extra-asserts.js'></script>
+    <link rel='stylesheet' href='tutorialStyle.css'>
       <script>
-        setupTests();
+        setupTutorialTests();
         new testAnimation(document.querySelector("#a"), {left: "300px"}, 2);
         check(document.querySelector("#a"), {"left": "300px"}, 2, "Div 2: 2 sec");
         runTests();
