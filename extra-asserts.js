@@ -20,8 +20,9 @@
  * Features to Add
  *  - 
  */
+var testResults = undefined;
 
-var animObjects = []; //to keep track of all animations
+var animObjects = [];  // to keep track of all animations
 var parentAnimation; //The parGroup all animations need to be added to
 var testStack = []; //holds all tests
 var runType; //to keep track of what the dropdown list state is
@@ -32,8 +33,6 @@ var testPacket = []; //Each index holds all the tests that occur at the same tim
 var pauseTime = 500; //how long to show each manual check for
 var testTimeout = 10000; //how long it takes an individual test to timeout
 var frameworkTimeout = 20000; //how long it takes for the whole test system to timeout
-
-var testResults = undefined;
 
 function testRecord(test, object, targets, time, message, cssStyle, offsets, isRefTest){
   this.test = test;
@@ -125,7 +124,7 @@ function check(object, targets, time, message){
     var maxTime = document.animationTimeline.children[0].animationDuration;
     //generate a test for each time you want to check the objects
     for(var x = 0; x < maxTime/time; x++){
-      var temp = new testRecord(test, object, targets, time*x, "Property "+targets+" is not satisfied", css, offsets, true);
+      var temp = new testRecord(test, object, targets, time*x, "Property " + targets+" is not satisfied", css, offsets, true);
       testStack.push(temp);
     }
     var temp = new testRecord(test, object, targets, time*x, "Property "+targets+" is not satisfied", css, offsets, "Last refTest");
@@ -299,7 +298,7 @@ function flashing(test) {
     }
   }
   
-  if(type == "DIV" && test.cssStyle.position == "relative"){
+  if (type == "DIV" && test.cssStyle.position == "relative"){
     if(!seenTop){
       flash.style.top = (getOffset(test.object).top - getOffset(test.object.parentNode).top) +"px";
       //console.log(getOffset(test.object.parentNode).top);

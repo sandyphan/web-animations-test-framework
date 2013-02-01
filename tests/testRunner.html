@@ -13,7 +13,25 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
-<script>
+<style>
+iframe {
+  width: 800px;
+  height: 600px;
+}
+body{
+  font-family: Comic Sans MS, Monospace;
+}
+</style>
+
+<button id=prev-button onclick="updateState(-1)">Prev</button>
+<button id=reload-button onclick="updateState()">Reload</button>
+<button id=next-button onclick="updateState(1)">Next</button>
+<button id=Auto-Run onclick="reRunTests()">Auto Run Tests</button><br>
+<div id="test-name"></div>
+<iframe id = "frame"></iframe> 
+<div id="results"></div>
+
+<script> 
 var tests = [
   'run-fast-test.html',
   'test-calc-w3c.html',
@@ -28,41 +46,40 @@ var tests = [
   'test-repetition-w3c.html',
   'test-svg-animation-w3c.html'
 ];
-</script>
-<style>
-iframe {
-  width: 800px;
-  height: 600px;
-}
-body{
-  font-family: Comic Sans MS, Monospace;
-}
-</style>
-<button id=prev-button onclick="updateState(-1)">Prev</button>
-<button id=reload-button onclick="updateState()">Reload</button>
-<button id=next-button onclick="updateState(1)">Next</button>
-<button id=Auto-Run onclick="reRunTests()">Auto Run Tests</button><br>
-<div id="test-name"></div>
-<iframe id = "frame"></iframe> 
-<div id="results"></div>
-<script> 
 var resultsOutputted = 0;
 var currentTest = 0;
-checkForResults();
+
 if (window.location.hash && tests.indexOf(window.location.hash.substr(1))) {
   currentTest = tests.indexOf(window.location.hash.substr(1));
 }
+updateState();
+checkForResults();
 
 function updateState(change) {
-  if((currentTest < tests.length-1 && change > 0) || (currentTest > 0 && change < 0)){
+  if((currentTest < tests.length-1 && change > 0) || 
+        (currentTest > 0 && change < 0)){
     currentTest += change;
   }
   var test = tests[currentTest];
   window.location.hash = test;
-  document.querySelector('#test-name').innerText = (currentTest + 1) + ' of ' + tests.length + ': ' + test;
+  document.querySelector('#test-name').innerText = (currentTest + 1) + ' of ' 
+      + tests.length + ': ' + test;
   document.querySelector('iframe').src = test;
   document.querySelector('#prev-button').disabled = currentTest <= 0;
-  document.querySelector('#next-button').disabled = currentTest >= tests.length - 1;
+  document.querySelector('#next-button').disabled = 
+      currentTest >= tests.length - 1;
+}
+
+function checkForResults(){
+  if(window.frame.testResults != undefined){
+    logResults(window.frame.testResults);
+    resultsOutputted++;
+    window.frame.testResults = undefined;
+    if(currentTest < tests.length-1) updateState(1);
+  } 
+  if(resultsOutputted < tests.length){
+    window.webkitRequestAnimationFrame(function(){checkForResults();});
+  }
 }
 
 function reRunTests(){
@@ -75,16 +92,6 @@ function reRunTests(){
   window.frame.testResults = undefined;
   updateState();
   checkForResults();
-}
-
-function checkForResults(){
-  if(window.frame.testResults != undefined){
-    logResults(window.frame.testResults);
-    resultsOutputted++;
-    window.frame.testResults = undefined;
-    if(currentTest < tests.length-1) updateState(1);
-  } 
-  if(resultsOutputted < tests.length) window.webkitRequestAnimationFrame(function(){checkForResults();});
 }
 
 function logResults (results){
@@ -112,7 +119,9 @@ function logResults (results){
     if(results[x].status == 0) grade = "pass";
     else grade = "fail";
     newResultsDiv.innerHTML += grade + " ";
-    if(results[x].message != null) newResultsDiv.innerHTML += results[x].message;
+    if(results[x].message != null) {
+      newResultsDiv.innerHTML += results[x].message;
+    }
     newResultsDiv.innerHTML += "<br>";
   }
   newResultsDiv.style.display = "none";
@@ -124,23 +133,18 @@ function showDetails(object){
   var changeIframe = false;
   for(var x in childs){
     if(childs[x].nodeName == "DIV"){
-      if(childs[x].style.display == 'block') childs[x].style.display = 'none';
-      else {
+      if(childs[x].style.display == 'block') {
+        childs[x].style.display = 'none';
+      } else {
         childs[x].style.display = 'block';
         changeIframe = true;
       }
     } 
   } 
   if(changeIframe){
-    //show the test in the iframe
-    console.log(object.id);
-    for(var x = 0;tests[x] != object.id; x++){
-      console.log(tests[x]);
-      if(x > 20) break;
-    }
+    for(var x = 0; (tests[x] != object.id) && (x < tests.length); x++);
     currentTest = x;
     updateState();
   }
 }
-updateState();
 </script>

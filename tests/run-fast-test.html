@@ -58,9 +58,9 @@ Written by Steph McArthur
 <script>
 setupTests();
 
-new testAnimation(document.querySelector(".anim"), {left: "600px"}, {duration: 2});
+new testAnimation(document.querySelector(".anim"), {left: "600px"}, {duration: 4});
 new testAnimation(document.querySelectorAll(".anim")[1], {top: "200px"}, {duration: 2});
-new testAnimation(document.querySelectorAll(".anim")[2], {top: "200px", left:"600px"}, {duration: 2});
+new testAnimation(document.querySelectorAll(".anim")[2], {top: "200px", left:"600px"}, {duration: 4});
 
 check(document.querySelector(".anim"), {"left":"300px"}, 1, "300px at 3 secs");
 check(document.querySelector(".anim"), {"left":"600px"}, 2, "moved the right rate");
