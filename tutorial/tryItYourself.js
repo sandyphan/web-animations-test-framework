@@ -21,32 +21,40 @@ var cssVal;
 var jsVal;
 var pass = new Array();
 var i = 0;
+var iframeDoc;
 
 // elements such as animation divs and its associated style
 // is appended into the body of iframe as well as any associating
 // js scripts
 var displayDefault = function() {
-  htmlVal = document.getElementById('htmlCode').value;
-  cssVal = document.getElementById('cssCode').value;
-  frames['display'].document.documentElement.getElementsByTagName("body")[0].innerHTML = htmlVal;
-  frames['display'].document.getElementsByTagName('style')[0].innerHTML = cssVal;
+  htmlVal = "<div id='test' class='testBox'>" + document.getElementById('htmlCode').value + "\n<div id='dummy' class='test'></div>" + "</div>";
+  cssVal = document.getElementById('cssCode').value +"\n" +"#dummy { display: none; }";
+  iframeDoc = document.getElementById('display').contentWindow.document;
+  console.log(iframeDoc);
+  iframeDoc.getElementsByTagName("body")[0].innerHTML = htmlVal;
+  iframeDoc.getElementsByTagName('style')[0].innerHTML = cssVal;
 }
 
 // executed when button called update is clicked
 // extract texts from the 3 text areas,
 var update = function() { 
-  pass = [];
-  i = 0;
-  document.getElementById('display').className = 'fail';
+  console.log(document.getElementById("display").src);
+  document.getElementById("display").src = document.getElementById("display").src;
+  document.getElementById("display").onload =(function() {
+    document.getElementById('display').className = 'fail';
   displayDefault();
-  iframeDoc = frames['display'].document;
+  //iframeDoc = frames['display'].document;
   iframeDoc.documentElement.getElementsByTagName("body")[0].innerHTML = htmlVal;
   console.log(iframeDoc);
   iframeDoc.getElementsByTagName('style')[0].innerHTML = cssVal;
   console.log(document.getElementsByTagName('script'));
   
   var scriptEle = document.createElement('script');
-  jsVal = document.getElementById('jsCode').value;
+  jsVal = "setupTutorialTests(); \n" + document.getElementById('jsCode').value +"\nnew testAnimation(document.getElementById('dummy'), {left: '1000px'}, 2);" 
+        + "\ncheck(document.querySelector('#a'), {'left': '0px'}, 0, 'Div 2: 0 sec');"
+        + "\ncheck(document.querySelector('#a'), {'left': '300px'}, 2, 'Div 2: 2 sec');"
+        +" \nrunTests();";
+  jsVal = jsVal.replace("new Animation", "new testAnimation");
 
   var addAnimScript = function() {
     var scriptDivs = iframeDoc.getElementsByTagName('script');
@@ -61,12 +69,13 @@ var update = function() {
     }
   }
   window.onload = addAnimScript();
+});
 
-  var pass = assertLocation(iframeDoc.getElementById('a'), "left", "0px", 0, "Your block starts in the right location");
+  /*var pass = assertLocation(iframeDoc.getElementById('a'), "left", "0px", 0, "Your block starts in the right location");
   assertLocation(iframeDoc.getElementById('a'), "left", "300px", 2000, "Your block ends in the right location");
   var styleDivs = iframeDoc.getElementsByTagName('script');
   console.log(iframeDoc.getElementById('a'));
-  endTests(2000);
+  endTests(2000);*/
   
   
 }
@@ -117,9 +126,9 @@ function endTests(time) {
 }
 
 function setupTutorialTests() {
-  var timeOfAnimation = document.createElement('div');
   state = "Manual";
+  var timeOfAnimation = document.createElement('div');
   timeOfAnimation.id = "animViewerText";
-  timeOfAnimation.innerHTML = "Current animation time: 0.00; \ntop: 500px;";
+  timeOfAnimation.innerHTML = "Current animation time: 0.00;";
   document.body.appendChild(timeOfAnimation);
 }
