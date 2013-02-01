@@ -43,6 +43,7 @@ iframe {
 <iframe id = "frame"></iframe> 
 <div id="results"></div>
 <script> 
+var resultsOutputted = 0;
 var currentTest = 0;
 checkForResults();
 if (window.location.hash && tests.indexOf(window.location.hash.substr(1))) {
@@ -50,7 +51,7 @@ if (window.location.hash && tests.indexOf(window.location.hash.substr(1))) {
 }
 
 function updateState(change) {
-  if (change && currentTest < tests.length-1) {
+  if((currentTest < tests.length-1 && change > 0) || (currentTest > 0 && change < 0)){
     currentTest += change;
   }
   var test = tests[currentTest];
@@ -64,10 +65,11 @@ function updateState(change) {
 function checkForResults(){
   if(window.frame.testResults != undefined){
     logResults(window.frame.testResults);
+    resultsOutputted++;
     window.frame.testResults = undefined;
-    if(currentTest < tests.length-1) updateState(1);
+    if(currentTest < tests.length-1); updateState(1);
   } 
-  window.webkitRequestAnimationFrame(function(){checkForResults();});
+  if(resultsOutputted < tests.length) window.webkitRequestAnimationFrame(function(){checkForResults();});
 }
 
 function logResults (results){
