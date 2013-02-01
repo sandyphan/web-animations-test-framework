@@ -73,6 +73,7 @@ function checkForResults(){
 function logResults (results){
   newTestDiv = document.createElement('div');
   newTestDiv.innerHTML = tests[currentTest];
+  newTestDiv.onclick=function(){showDetails(this);};
   var grade = "pass";
   for(var x in results){
     if(results[x].status != 0) grade = "fail";
@@ -81,13 +82,28 @@ function logResults (results){
   else newTestDiv.style.backgroundColor = "LightCoral";
   document.getElementById("results").appendChild(newTestDiv);
 
-  // var grade = "pass";
-  // var newDiv = document.createElement('div');
-  // for(var x in results){
-  //   if(results[x].status != 0) grade = "fail";
-  // }
-  // newDiv.innerHTML = grade;
-  // document.getElementById("results").appendChild(newDiv);
+  var newResultsDiv = document.createElement('div');
+  for(var x in results){
+    newResultsDiv.innerHTML += "<p>";
+    newResultsDiv.innerHTML += results[x].name + " ";
+    if(results[x].status == 0) grade = "pass";
+    else grade = "fail";
+    newResultsDiv.innerHTML += grade + " ";
+    if(results[x].message != null) newResultsDiv.innerHTML += results[x].message;
+    newResultsDiv.innerHTML += "</p>";
+  }
+  newResultsDiv.style.display = "none";
+  newTestDiv.appendChild(newResultsDiv);
+}
+
+function showDetails(object){
+  var childs = object.childNodes;
+  for(var x in childs){
+    if(childs[x].nodeName == "DIV"){
+      if(childs[x].style.display == 'block') childs[x].style.display = 'none';
+      else childs[x].style.display = 'block';
+    } 
+  } 
 }
 updateState();
 </script>
