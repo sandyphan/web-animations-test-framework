@@ -52,7 +52,7 @@ setupTests();
 
 var rect = document.querySelector(".anim");
 var fish = document.querySelector(".divvy");
-new testAnimation(rect, {cx: "400px"}, 2);
+new testAnimation(rect, {cx: "400px"}, 1);
 new testAnimation(fish, {left: "400px"}, 1);
 
 check(rect, {cx: "400px", cy:"100px"}, 1, "SVG check");
