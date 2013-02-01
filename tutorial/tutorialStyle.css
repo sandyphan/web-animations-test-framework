@@ -287,7 +287,6 @@ a:visited {
   color: red;
   font-size: 0.9em;
 }
-<<<<<<< HEAD
 .alphabet-title {
   float: left;
   clear: left;
@@ -302,8 +301,7 @@ a:visited {
 }
 .datatype {
   background-color: yellow;
-=======
+}
 .animViewerText {
   top: 500px;
->>>>>>> upstream/master
 }
