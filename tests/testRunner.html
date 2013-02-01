@@ -92,19 +92,24 @@ function logResults (results){
   for(var x in results){
     if(results[x].status != 0) grade = "fail";
   }
-  if(grade == "pass") newTestDiv.style.backgroundColor = "LightGreen";
-  else newTestDiv.style.backgroundColor = "LightCoral";
-  document.getElementById("results").appendChild(newTestDiv);
 
   var newResultsDiv = document.createElement('div');
+  if(grade == "pass"){
+    newTestDiv.style.backgroundColor = "LimeGreen";
+    newResultsDiv.style.backgroundColor = "LightGreen";
+  } else {
+    newTestDiv.style.backgroundColor = "LightCoral";
+    newResultsDiv.style.backgroundColor = "LightPink";
+  }
+  document.getElementById("results").appendChild(newTestDiv);
+
   for(var x in results){
-    newResultsDiv.innerHTML += "<p>";
     newResultsDiv.innerHTML += results[x].name + " ";
     if(results[x].status == 0) grade = "pass";
     else grade = "fail";
     newResultsDiv.innerHTML += grade + " ";
     if(results[x].message != null) newResultsDiv.innerHTML += results[x].message;
-    newResultsDiv.innerHTML += "</p>";
+    newResultsDiv.innerHTML += "<br>";
   }
   newResultsDiv.style.display = "none";
   newTestDiv.appendChild(newResultsDiv);
