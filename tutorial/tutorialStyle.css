@@ -240,17 +240,17 @@ a:visited {
 .topMenu .subMenu li {
   padding-top: 1px;
   float: none;
-  z-index: 990;
+  z-index: 1;
 }
 .topMenu .subMenu a {
   white-space: nowrap;
   background-color: rgba(34,34,34, 0.1);
   color: #222;
-  z-index: 990;
+  z-index: 1;
 }
 .topMenu li:hover .subMenu {
   left: -40px;
-  z-index: 990;
+  z-index: 1;
 }
 .topMenu .subMenu li:hover a {
   background-color: rgba(34,34,34,0.9);
@@ -286,6 +286,21 @@ a:visited {
 .note {
   color: red;
   font-size: 0.9em;
+}
+.alphabet-title {
+  float: left;
+  clear: left;
+  width: 100%;
+  font: 1.5em "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+  color: #6699FF;
+  margin-top: 10px;
+  border-bottom: 3px dotted #334C80;
+}
+.keywords {
+  color: red;
+}
+.datatype {
+  background-color: yellow;
 }
 .animViewerText {
   top: 500px;
