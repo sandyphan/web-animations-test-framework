@@ -26,14 +26,13 @@ var iframeDoc;
 // elements such as animation divs and its associated style
 // is appended into the body of iframe as well as any associating
 // js scripts
-var displayDefault = function() {
+var setCssHTML = function() {
   htmlVal = "<div id='test' class='testBox'>" + document.getElementById('htmlCode').value + "\n<div id='dummy' class='test'></div>" + "</div>";
   cssVal = document.getElementById('cssCode').value +"\n" +"#dummy { display: none; }";
-  iframeDoc = document.getElementById('display').contentWindow.document;
-  console.log(iframeDoc);
   iframeDoc.getElementsByTagName("body")[0].innerHTML = htmlVal;
   iframeDoc.getElementsByTagName('style')[0].innerHTML = cssVal;
 }
+
 
 // executed when button called update is clicked
 // extract texts from the 3 text areas,
@@ -42,42 +41,34 @@ var update = function() {
   document.getElementById("display").src = document.getElementById("display").src;
   document.getElementById("display").onload =(function() {
     document.getElementById('display').className = 'fail';
-  displayDefault();
-  //iframeDoc = frames['display'].document;
-  iframeDoc.documentElement.getElementsByTagName("body")[0].innerHTML = htmlVal;
-  console.log(iframeDoc);
-  iframeDoc.getElementsByTagName('style')[0].innerHTML = cssVal;
-  console.log(document.getElementsByTagName('script'));
+    iframeDoc = document.getElementById('display').contentWindow.document;
+    setCssHTML();
+    iframeDoc.documentElement.getElementsByTagName("body")[0].innerHTML = htmlVal;
+    console.log(iframeDoc);
+    iframeDoc.getElementsByTagName('style')[0].innerHTML = cssVal;
+    console.log(document.getElementsByTagName('script'));
   
-  var scriptEle = document.createElement('script');
-  jsVal = "setupTutorialTests(); \n" + document.getElementById('jsCode').value +"\nnew testAnimation(document.getElementById('dummy'), {left: '1000px'}, 2);" 
-        + "\ncheck(document.querySelector('#a'), {'left': '0px'}, 0, 'Div 2: 0 sec');"
-        + "\ncheck(document.querySelector('#a'), {'left': '300px'}, 2, 'Div 2: 2 sec');"
-        +" \nrunTests();";
-  jsVal = jsVal.replace("new Animation", "new testAnimation");
+    var scriptEle = document.createElement('script');
+    jsVal = "setupTutorialTests(); \n" + document.getElementById('jsCode').value +"\nnew testAnimation(document.getElementById('dummy'), {left: '1000px'}, 2);" 
+          + "\ncheck(document.querySelector('#a'), {'left': '0px'}, 0, 'Div 2: 0 sec');"
+          + "\ncheck(document.querySelector('#a'), {'left': '300px'}, 2, 'Div 2: 2 sec');"
+          +" \nrunTests();";
+    jsVal = jsVal.replace("new Animation", "new testAnimation");
 
-  var addAnimScript = function() {
-    var scriptDivs = iframeDoc.getElementsByTagName('script');
-    if (scriptDivs[scriptDivs.length]) {
-      var oldScript = frames['display'].document.getElementsByTagName('script')[scriptDivs.length];
-      scriptEle.innerHTML = '\n' + jsVal + '\n';
-      iframeDoc.getElementsByTagName('body')[0].replaceChild(scriptEle, oldScript);
-    } else {
-      scriptEle.innerHTML = jsVal;
-      par = iframeDoc.getElementsByTagName('body')[0];
-      par.appendChild(scriptEle);
+    var addAnimScript = function() {
+      var scriptDivs = iframeDoc.getElementsByTagName('script');
+      if (scriptDivs[scriptDivs.length]) {
+        var oldScript = frames['display'].document.getElementsByTagName('script')[scriptDivs.length];
+        scriptEle.innerHTML = '\n' + jsVal + '\n';
+        iframeDoc.getElementsByTagName('body')[0].replaceChild(scriptEle, oldScript);
+      } else {
+        scriptEle.innerHTML = jsVal;
+        par = iframeDoc.getElementsByTagName('body')[0];
+        par.appendChild(scriptEle);
+      }
     }
-  }
-  window.onload = addAnimScript();
-});
-
-  /*var pass = assertLocation(iframeDoc.getElementById('a'), "left", "0px", 0, "Your block starts in the right location");
-  assertLocation(iframeDoc.getElementById('a'), "left", "300px", 2000, "Your block ends in the right location");
-  var styleDivs = iframeDoc.getElementsByTagName('script');
-  console.log(iframeDoc.getElementById('a'));
-  endTests(2000);*/
-  
-  
+    window.onload = addAnimScript();
+  });  
 }
 
 // innerDoc the solution box toggleable*/
@@ -95,12 +86,6 @@ var toggleSolution = function() {
   }
 }
 
-var contentNotEqual = function(oldText, newText) {
-  if (oldText !== newText) {
-    return true;
-  }
-  return false;
-}
 
 function assertLocation (object, property, location, time, message) {
   setTimeout(function(){
