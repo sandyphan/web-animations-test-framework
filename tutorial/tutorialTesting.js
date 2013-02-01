@@ -40,5 +40,9 @@
         
     }
 
+    function add_completion_callback(anything) {
+        console.log("in add_complettion_callback");
+    }
+
     
 //})
