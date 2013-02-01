@@ -162,7 +162,10 @@ function runTests(){
   sortTests();
   //to cause no tests to start until 1 frame is rendered
   if(state == "Manual") window.webkitRequestAnimationFrame(function(){testRunner();});
-  else window.webkitRequestAnimationFrame(function(){autoTestRunner();});  
+  else {
+    parentAnimation.pause();
+    window.webkitRequestAnimationFrame(function(){autoTestRunner();});
+  }
 }
 
 function animTimeViewer(){
