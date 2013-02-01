@@ -115,3 +115,11 @@ function endTests(time) {
     object.className = "pass"
   }, time+50)
 }
+
+function setupTutorialTests() {
+  var timeOfAnimation = document.createElement('div');
+  state = "Manual";
+  timeOfAnimation.id = "animViewerText";
+  timeOfAnimation.innerHTML = "Current animation time: 0.00; \ntop: 500px;";
+  document.body.appendChild(timeOfAnimation);
+}
