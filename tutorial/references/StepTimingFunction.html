@@ -19,7 +19,7 @@ limitations under the License.
 <html>
   <head>
     <link rel="author" title="Sandy Phan, Sarah Heimlich", href="mailto:sandyphan@google.com, sarahheimlich@google.com">
-    <title>ParGroup()</title>
+    <title>StepTimingFunction()</title>
     <meta name="flags" content="dom">
     <meta name="tutorial" content="Web Animations tutorials">
     <link rel="stylesheet" type="text/css" href="../tutorialStyle.css">
@@ -49,15 +49,13 @@ limitations under the License.
 
       <div class="content">
 
-        <div class="heading subTitle">ParGroup()</div>
+        <div class="heading subTitle">StepTimingFunction()</div>
 
-        <p class="description"><span class="keywords">ParGroup()</span> is used in grouping animations into a parallel group such that the children inside the group share common timing properties/timing functions.</p>
+        <p class="description"><span class="keywords">StepTimingFunction()</span> is used to scale a timed item's timing such that the timed item occurs in a series of discrete steps. It is included as part of the timing dictionary.</p>
 
-        <p class='description'><span class="keywords">ParGroup()</span> has the following interface with the following properties:</p>
+        <p class='description'><span class="keywords">StepTimingFunction()</span> has the following interface with the following properties:</p>
 
-        <code class="codeSamples">new ParGroup([children, timing]);</code>
-
-        <ol class="description">
+        <code class="codeSamples">StepTimingFunction(numSteps, position)</code>
 
         <table class="properties-table">
           <tr class="properties-table-title">
@@ -68,44 +66,29 @@ limitations under the License.
             <td>Description</td>
           </tr>
           <tr>
-            <td class="keywords">children</td>
-            <td class="datatype">sequence of timed items</td>
-            <td>Yes</td>
+            <td class="keywords">numSteps</td>
+            <td class="datatype">unsigned integer</td>
             <td>No</td>
-            <td>A sequence/list of timed items to add as children of this group.
+            <td>No</td>
+            <td>A number greater than or equal to one representing the number of discrete steps in the function.
+              <br />
+              Exception:
+              <br />
+              DOMException of type IndexSizeError (Raised on setting if the number of steps is zero);
             </td>
           </tr>
           <tr>
-            <td class="keywords">timing</td>
-            <td class="datatype">double or TimingDictionary</td>
-            <td>Yes</td>
-            <td>Yes</td>
-            <td>The timing properties of the sequence group
+            <td class="keywords">position</td>
+            <td class="datatype">StepPosition</td>
+            <td>No</td>
+            <td>Yes (Default to 'end')</td>
+            <td>The point within each interval at which the change in value occurs.
               <br />
-              <ul>
-                <li>If parameter is a <span class="datatype">double</span>:
-                  <ul style="list-style-type: none;">
-                    <li>create a new timing dictionary object with all properties set to their default values.</li>
-                    <li><span class="keywords">iterationDuration</span> is set to the input double value.</li>
-                  </ul>
-                </li>
-              </ul>
+              <span class="keywords">start</span>: the change in value occurs at the beginning of the interval.
               <br />
-              <ul>
-                <li>If parameter is a <span class="datatype">TimingDictionary</span>:
-                  <ul style="list-style-type: none;">
-                    <li>Then <span class="keywords">timing dictionary</span> is set to the input timing.</li>
-                  </ul>
-                </li>
-              </ul>
+              <span class="keywords">middle</span>: the change in value occurs at the midpoint of the interval.
               <br />
-              <ul>
-                <li>If parameter is a <span class="datatype">nul</span>:
-                  <ul style="list-style-type: none;">
-                    <li>create a new timing dictionary object with all properties set to their default values.</li>
-                  </ul>
-                </li>
-              </ul>
+              <span class="keywords">end</span>: the change in value occurs at the end of the interval.
             </td>
           </tr>
         </table>

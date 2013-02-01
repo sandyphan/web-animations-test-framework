@@ -278,6 +278,7 @@ a:visited {
   border: 1px solid white;
   background-color: #FF3333;
   color: black;
+  font-weight: bold;
 }
 #alphabet-menu a:hover {
   background-color: #FFE6E6;
@@ -291,7 +292,7 @@ a:visited {
   float: left;
   clear: left;
   width: 100%;
-  font: 1.5em "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+  font: bold 1.5em "Lucida Sans Unicode", "Lucida Grande", sans-serif;
   color: #6699FF;
   margin-top: 10px;
   border-bottom: 3px dotted #334C80;
@@ -300,8 +301,30 @@ a:visited {
   color: red;
 }
 .datatype {
-  background-color: yellow;
+  color: #009933;
 }
 .animViewerText {
   top: 500px;
+}
+.backToTop {
+  float: right;
+  clear: both;
+  font: 0.6em "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+  color: #6699FF;
+  margin-bottom: 0;
+}
+.content li {
+  line-height: 170%;
+}
+.properties-table {
+  margin: 3% auto;
+  border: 2px solid #EBEBEB;
+  font: 0.9em Georgia, serif;
+}
+.properties-table td {
+  padding: 8px;
+  border-bottom: 2px double #CFCFCF;
+}
+.properties-table-title td {
+  font-weight: bold;
 }
