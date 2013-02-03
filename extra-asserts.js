@@ -163,7 +163,7 @@ function getOffset(el) {
     return { top: _y, left: _x };
 }
 
-// Put all the animations into a par group to get around global pause issue/bug.
+// Put all the animations into a par group to get around global pause issue.
 function reparent(){
   var childList = [];
   for (var i = 0; i < document.animationTimeline.children.length; i++) {
@@ -223,7 +223,8 @@ function testRunner(index){
   if (testStack.length > 0) doNextTest = true;
   while (doNextTest && index < testStack.length){
     var currTest = testStack[index];
-    if (currTest.time > document.animationTimeline.children[0].animationDuration){
+    if (currTest.time > 
+          document.animationTimeline.children[0].animationDuration){
       currTest.time = document.animationTimeline.children[0].animationDuration;
     } 
     if (currTest.time <= document.animationTimeline.children[0].iterationTime){
@@ -257,7 +258,9 @@ function autoTestRunner(){
   }
   if (testIndex < testPacket.length){
     // Small buffer to let the first anim frame render.
-    if (testPacket[testIndex][0].time == 0) testPacket[testIndex][0].time += 0.02;
+    if (testPacket[testIndex][0].time == 0){
+      testPacket[testIndex][0].time += 0.02;
+    } 
     document.animationTimeline.children[0].currentTime = 
         testPacket[testIndex][0].time;
     testIndex++;
@@ -283,7 +286,9 @@ function flashing(test) {
 
   // Create a new object of the same type as the thing being tested.
   if (type == "DIV") var flash = document.createElement('div');
-  else var flash = document.createElementNS("http://www.w3.org/2000/svg", type);
+  else {
+    var flash = document.createElementNS("http://www.w3.org/2000/svg", type);
+  }
   test.object.parentNode.appendChild(flash);
 
   if(type == "DIV"){
@@ -380,7 +385,9 @@ function assert_properties(object, targets, message, epsilons){
                  getComputedStyle(targets[propName], null))[propName];
     } else var tar = targets[propName];
     if (isSVG){
-      if (propName.indexOf("transform") == -1) tempOb.setAttribute(propName, tar);
+      if (propName.indexOf("transform") == -1){
+        tempOb.setAttribute(propName, tar);
+      } 
     } else tempOb.style[propName] = tar;
   } 
   
@@ -411,7 +418,8 @@ function assert_properties(object, targets, message, epsilons){
         c = c.split(",");
 
         for (var x in t){
-          assert_approx_equals(Number(c[x]), Number(t[x]), 10, message + " " + x);
+          assert_approx_equals(Number(c[x]), Number(t[x]), 10, message +
+                               " " + x);
         }
       }
     }
@@ -449,4 +457,3 @@ window.runTests = runTests;
 window.restart = restart;
 window.setState = setState;
 })();
-
