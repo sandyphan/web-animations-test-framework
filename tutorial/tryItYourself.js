@@ -39,10 +39,8 @@ var setCssHTML = function() {
 var update = function(object, properties, times) { 
   addIframe();
   console.log(document.querySelector('.display'));
-  // console.log(document.getElementById("display").src);
    document.getElementById("display").src = document.getElementById("display").src;
   document.getElementById("display").onload =(function() {
-    //document.getElementById('display').className = 'fail';
     iframeDoc = document.getElementById('display').contentWindow.document;
     setCssHTML();
     iframeDoc.documentElement.getElementsByTagName("body")[0].innerHTML = htmlVal;
