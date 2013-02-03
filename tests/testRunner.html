@@ -49,7 +49,7 @@ body{
 var resultsOutputted = 0;
 var currentTest = 0;
 checkForResults();
-if (window.location.hash && tests.indexOf(window.location.hash.substr(1))) {
+if (window.location.hash && tests.indexOf(window.location.hash.substr(1))){
   currentTest = tests.indexOf(window.location.hash.substr(1));
 }
 
@@ -88,21 +88,21 @@ function checkForResults(){
     if (currentTest < tests.length-1) updateState(1);
   } 
   if (resultsOutputted < tests.length) 
-      window.webkitRequestAnimationFrame(function(){checkForResults();});
+      window.webkitRequestAnimationFrame(function(){ checkForResults(); });
 }
 
 function logResults (results){
   newTestDiv = document.createElement('div');
   newTestDiv.id = tests[currentTest];
   newTestDiv.innerHTML = tests[currentTest];
-  newTestDiv.onclick = function(){showDetails(this);};
+  newTestDiv.onclick = function(){ showDetails(this); };
   var grade = "pass";
   for (var x in results){
     if (results[x].status != 0) grade = "fail";
   }
 
   var newResultsDiv = document.createElement('div');
-  if(grade == "pass"){
+  if (grade == "pass"){
     newTestDiv.style.backgroundColor = "LimeGreen";
     newResultsDiv.style.backgroundColor = "LightGreen";
   } else {
@@ -111,12 +111,12 @@ function logResults (results){
   }
   document.getElementById("results").appendChild(newTestDiv);
 
-  for(var x in results){
+  for (var x in results){
     newResultsDiv.innerHTML += results[x].name + " ";
-    if(results[x].status == 0) grade = "pass";
+    if (results[x].status == 0) grade = "pass";
     else grade = "fail";
     newResultsDiv.innerHTML += grade + " ";
-    if(results[x].message != null){
+    if (results[x].message != null){
       newResultsDiv.innerHTML += results[x].message;
     }
     newResultsDiv.innerHTML += "<br>";
@@ -138,11 +138,8 @@ function showDetails(object){
     } 
   } 
   if (changeIframe){
-    //show the test in the iframe
-    console.log(object.id);
-    for (var x = 0; (tests[x] != object.id) && (x < tests.length); x++){
-      console.log(tests[x]);
-    }
+    // Show the test in the iframe
+    for (var x = 0; (tests[x] != object.id) && (x < tests.length); x++);
     currentTest = x;
     updateState();
   }

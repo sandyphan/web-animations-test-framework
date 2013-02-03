@@ -364,7 +364,6 @@ function flashing(test) {
 }
 
 add_completion_callback(function (allRes, status) {
-    console.log("Test run completed", allRes, status);
     testResults = allRes;
     window.testResults = testResults;
 });
