@@ -38,10 +38,11 @@ var setCssHTML = function() {
 // extract texts from the 3 text areas,
 var update = function(object, properties, times) { 
   addIframe();
-  console.log(document.getElementById("display").src);
-  document.getElementById("display").src = document.getElementById("display").src;
+  console.log(document.querySelector('.display'));
+  // console.log(document.getElementById("display").src);
+   document.getElementById("display").src = document.getElementById("display").src;
   document.getElementById("display").onload =(function() {
-    document.getElementById('display').className = 'fail';
+    //document.getElementById('display').className = 'fail';
     iframeDoc = document.getElementById('display').contentWindow.document;
     setCssHTML();
     iframeDoc.documentElement.getElementsByTagName("body")[0].innerHTML = htmlVal;
@@ -79,9 +80,10 @@ function getJsVal(object, properties, times) {
 
 function addIframe() {
   var iframe = document.createElement('iframe');
-  iframe.setAttribute('name', 'display');
+  iframe.setAttribute('id', 'display');
   iframe.setAttribute('class', 'display');
   iframe.setAttribute('src', 'iframe-contents.html');
+  document.querySelector('.display').appendChild(iframe);
 }
 
 // innerDoc the solution box toggleable*/
