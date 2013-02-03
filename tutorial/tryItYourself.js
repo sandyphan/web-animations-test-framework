@@ -20,8 +20,8 @@ var htmlVal;
 var cssVal;
 var jsVal;
 var pass = new Array();
-var i = 0;
-var iframeDoc;
+//var i = 0;
+//var iframeDoc;
 
 // elements such as animation divs and its associated style
 // is appended into the body of iframe as well as any associating
@@ -36,7 +36,8 @@ var setCssHTML = function() {
 
 // executed when button called update is clicked
 // extract texts from the 3 text areas,
-var update = function() { 
+var update = function(object, properties, times) { 
+  addIframe();
   console.log(document.getElementById("display").src);
   document.getElementById("display").src = document.getElementById("display").src;
   document.getElementById("display").onload =(function() {
@@ -49,11 +50,7 @@ var update = function() {
     console.log(document.getElementsByTagName('script'));
   
     var scriptEle = document.createElement('script');
-    jsVal = "setupTutorialTests(); \n" + document.getElementById('jsCode').value +"\nnew testAnimation(document.getElementById('dummy'), {left: '1000px'}, 2);" 
-          + "\ncheck(document.querySelector('#a'), {'left': '0px'}, 0, 'Div 2: 0 sec');"
-          + "\ncheck(document.querySelector('#a'), {'left': '300px'}, 2, 'Div 2: 2 sec');"
-          +" \nrunTests();";
-    jsVal = jsVal.replace("new Animation", "new testAnimation");
+    getJsVal("document.getElementById('a')", ["{'left': '0px'}", "{'left': '300px'}"], [0,2]);
 
     var addAnimScript = function() {
       var scriptDivs = iframeDoc.getElementsByTagName('script');
@@ -71,6 +68,22 @@ var update = function() {
   });  
 }
 
+function getJsVal(object, properties, times) {
+  jsVal = "setupTutorialTests(); \nstate='Manual'; \n" + document.getElementById('jsCode').value +"\nnew testAnimation(document.getElementById('dummy'), {left: '1000px'}, 2);";
+  for(var i = 0; i < properties.length; i++) {
+    jsVal += "\n" + "check(" + object + ", " + properties[i] + ", " + times[i] + ", " + "'hello');";
+  }
+  jsVal += " \nrunTests();";
+  jsVal = jsVal.replace("new Animation", "new testAnimation");
+}
+
+function addIframe() {
+  var iframe = document.createElement('iframe');
+  iframe.setAttribute('name', 'display');
+  iframe.setAttribute('class', 'display');
+  iframe.setAttribute('src', 'iframe-contents.html');
+}
+
 // innerDoc the solution box toggleable*/
 var toggleSolution = function() {
   var ele = document.getElementById('toggleText');
@@ -84,36 +97,4 @@ var toggleSolution = function() {
     ele.style.display = 'none';
     label.innerHTML = 'Show Solution';
   }
-}
-
-
-function assertLocation (object, property, location, time, message) {
-  setTimeout(function(){
-    css = object.currentStyle || getComputedStyle(object, null);
-    console.log((Math.abs(parseInt(css.left) - parseInt(location)) <= 10));
-    pass[i] = (Math.abs(parseInt(css.left) - parseInt(location)) <= 10);
-    i++;
-    }, time)
-}
-
-function endTests(time) {
-  setTimeout(function() {
-    for(var j = 0; j < pass.length; j++) {
-      if (!pass[j]) {
-        console.log("fail");
-        return;
-      }
-    }
-    console.log("PASS");
-    var object = document.getElementById('display');
-    object.className = "pass"
-  }, time+50)
-}
-
-function setupTutorialTests() {
-  state = "Manual";
-  var timeOfAnimation = document.createElement('div');
-  timeOfAnimation.id = "animViewerText";
-  timeOfAnimation.innerHTML = "Current animation time: 0.00;";
-  document.body.appendChild(timeOfAnimation);
 }

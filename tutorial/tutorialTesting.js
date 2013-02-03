@@ -62,6 +62,6 @@ function setupTutorialTests() {
   state = "Manual";
   var timeOfAnimation = document.createElement('div');
   timeOfAnimation.id = "animViewerText";
-  timeOfAnimation.innerHTML = "Current animation time: 0.00;";
+  timeOfAnimation.innerHTML = "Current animation time: 0.00";
   document.body.appendChild(timeOfAnimation);
 }
