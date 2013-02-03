@@ -199,13 +199,13 @@ function animTimeViewer(){
 function sortTests(){
   // Sort tests by time to set up timeouts properly
   testStack.sort(testTimeSort);
-  for(var x =0; x<testStack.length; x++){
+  for (var x = 0; x < testStack.length; x++){
     // Check for all tests that happen at the same time
-    //And add them to the test packet
+    // and add them to the test packet.
     testPacket[testIndex] = [];
     testPacket[testIndex].push(testStack[x]);
-    while(x < (testStack.length-1)){
-      if(testStack[x].time == testStack[x+1].time){
+    while (x < (testStack.length - 1)){
+      if (testStack[x].time == testStack[x + 1].time){
         x++;
         testPacket[testIndex].push(testStack[x]);
       } else break;
@@ -215,47 +215,53 @@ function sortTests(){
   testIndex = 0;
 }
 
-function testTimeSort(a,b) {return(a.time - b.time)};
+function testTimeSort(a,b) { return(a.time - b.time) };
 
 function testRunner(index){
-  if(index == null) index = 0;
+  if (index == null) index = 0;
   var doNextTest = false;
-  if(testStack.length > 0) doNextTest = true;
-  while(doNextTest && index < testStack.length){
+  if (testStack.length > 0) doNextTest = true;
+  while (doNextTest && index < testStack.length){
     var currTest = testStack[index];
-    if(currTest.time > document.animationTimeline.children[0].animationDuration) currTest.time = document.animationTimeline.children[0].animationDuration;
-    if(currTest.time <= document.animationTimeline.children[0].iterationTime){
+    if (currTest.time > document.animationTimeline.children[0].animationDuration){
+      currTest.time = document.animationTimeline.children[0].animationDuration;
+    } 
+    if (currTest.time <= document.animationTimeline.children[0].iterationTime){
       doNextTest = true;
       currTest.test.step(function (){
         assert_properties(currTest.object, currTest.targets, currTest.message);
       });
-      if(currTest.isRefTest == "Last refTest" || currTest.isRefTest == false) currTest.test.done();
+      if(currTest.isRefTest == "Last refTest" || currTest.isRefTest == false){
+        currTest.test.done();
+      } 
       if(currTest.isRefTest == false) flashing(currTest);
       index++;
-    } else {
-      doNextTest = false;
-    }
+    } else doNextTest = false;
   }
-  if(index < testStack.length) window.webkitRequestAnimationFrame(function(){testRunner(index);});
-  else done();
+  if (index < testStack.length){
+    window.webkitRequestAnimationFrame(function(){testRunner(index);});
+  } else done();
 }
 
 function autoTestRunner(){
-  if(testIndex != 0 && testIndex < testPacket.length + 1){
-    for(var x in testPacket[testIndex-1]){
-      var currTest = testPacket[testIndex-1][x];
+  if (testIndex != 0 && testIndex < testPacket.length + 1){
+    for (var x in testPacket[testIndex - 1]){
+      var currTest = testPacket[testIndex - 1][x];
       currTest.test.step(function (){
         assert_properties(currTest.object, currTest.targets, currTest.message);
       });
-      if(currTest.isRefTest == false || currTest.isRefTest == "Last refTest") currTest.test.done();
+      if (currTest.isRefTest == false || currTest.isRefTest == "Last refTest"){
+        currTest.test.done();
+      } 
     }
   }
-  if(testIndex < testPacket.length){
-    //enough to let the first anim frame render
-    if(testPacket[testIndex][0].time == 0) testPacket[testIndex][0].time += 0.02;
-    document.animationTimeline.children[0].currentTime = testPacket[testIndex][0].time;
+  if (testIndex < testPacket.length){
+    // Small buffer to let the first anim frame render.
+    if (testPacket[testIndex][0].time == 0) testPacket[testIndex][0].time += 0.02;
+    document.animationTimeline.children[0].currentTime = 
+        testPacket[testIndex][0].time;
     testIndex++;
-    window.webkitRequestAnimationFrame(function(){autoTestRunner();});
+    window.webkitRequestAnimationFrame(function(){ autoTestRunner(); });
   } else {
     parentAnimation.pause();
     done();
@@ -269,68 +275,71 @@ function restart(){
   window.location.href = url[0] + "?" + state;
 }
 
-// create elements at appropriate locations and flash the elements for manual testing
+// Create elements at appropriate locations and flash the elements for 
+// manual testing.
 function flashing(test) {
   parentAnimation.pause();
   var type = test.object.nodeName;
 
-  //Create a new object of the same type as the thing being tested
-  if(type == "DIV") var flash = document.createElement('div');
+  // Create a new object of the same type as the thing being tested.
+  if (type == "DIV") var flash = document.createElement('div');
   else var flash = document.createElementNS("http://www.w3.org/2000/svg", type);
   test.object.parentNode.appendChild(flash);
 
   if(type == "DIV"){
-    flash.style.cssText = test.cssStyle.cssText; //copy the objects orginal css style
+    // Copy the objects orginal css style
+    flash.style.cssText = test.cssStyle.cssText; 
     flash.style.position = "absolute";
   } else {
-    for(var x = 0; x < test.object.attributes.length; x++){
-      flash.setAttribute(test.object.attributes[x].name, test.object.attributes[x].value);
+    for (var x = 0; x < test.object.attributes.length; x++){
+      flash.setAttribute(test.object.attributes[x].name, 
+                         test.object.attributes[x].value);
     }
     flash.style.position = "absolute";
   }
   
   var seenTop = false;
   var seenLeft = false;
-  for(var propName in test.targets){
+  for (var propName in test.targets){
     var tar = test.targets[propName];
     var prop = propName
-    if(test.cssStyle.position == "relative"){
-      if(prop == "left"){
+    if (test.cssStyle.position == "relative"){
+      if (prop == "left"){
         seenLeft = true;
         tar = parseInt(tar);
         tar += parseInt(test.offsets["left"]);
         tar = tar + "px";
-      } else if(prop == "top"){
+      } else if (prop == "top"){
         seenTop = true;
         tar = parseInt(tar);
         tar += parseInt(test.offsets["top"]);
         tar = tar + "px";
       }
     } else {
-      if(prop == "left") seenLeft = true;
-      else if(prop == "top") seenTop = true;
+      if (prop == "left") seenLeft = true;
+      else if (prop == "top") seenTop = true;
     }
-    if(type == "DIV"){
+    if (type == "DIV"){
       flash.style[prop] = tar;
     } else {
-      if(prop.indexOf("transform") != -1) prop = "transform";
+      if (prop.indexOf("transform") != -1) prop = "transform";
       flash.setAttribute(prop, tar);
     }
   }
   
   if (type == "DIV" && test.cssStyle.position == "relative"){
-    if(!seenTop){
-      flash.style.top = (getOffset(test.object).top - getOffset(test.object.parentNode).top) +"px";
-      //console.log(getOffset(test.object.parentNode).top);
+    if (!seenTop){
+      flash.style.top = (getOffset(test.object).top - 
+                         getOffset(test.object.parentNode).top) +"px";
     }
-    if(!seenLeft){
-      flash.style.left = (getOffset(test.object).left - getOffset(test.object.parentNode).left)+"px";
-      //console.log(getOffset(test.object.parentNode).left);
+    if (!seenLeft){
+      flash.style.left = (getOffset(test.object).left - 
+                          getOffset(test.object.parentNode).left)+"px";
     }
   }
   
   //Set up the border
-  if(type == "DIV"){
+  if (type == "DIV"){
     flash.style.borderColor = 'black';
     flash.style.borderWidth = 'thick';
     flash.style.borderStyle = 'solid';
@@ -342,8 +351,10 @@ function flashing(test) {
   
   setTimeout(function() {
     flash.parentNode.removeChild(flash);
-    if(document.animationTimeline.children[0].iterationTime 
-        < document.animationTimeline.children[0].animationDuration - 0.01) parentAnimation.play();
+    if (document.animationTimeline.children[0].iterationTime 
+        < document.animationTimeline.children[0].animationDuration - 0.01){
+      parentAnimation.play();
+    }      
   }, pauseTime);
 }
 
@@ -353,9 +364,9 @@ add_completion_callback(function (allRes, status) {
     window.testResults = testResults;
 });
 
-/////////////////////////////////////////////////////////////////////////
-//  All asserts below here                                             //
-/////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+//  All asserts below here                                                   //
+///////////////////////////////////////////////////////////////////////////////
 
 function assert_properties(object, targets, message, epsilons){
   var isSVG = (object.nodeName != "DIV");
@@ -363,17 +374,17 @@ function assert_properties(object, targets, message, epsilons){
   tempOb.style.position = "absolute";
   object.parentNode.appendChild(tempOb);
 
-  for(var propName in targets){
-    if(targets[propName].nodeName != undefined) var tar = (targets[propName].currentStyle || getComputedStyle(targets[propName], null))[propName];
-    else var tar = targets[propName];
-
-    if(isSVG){
-      if(propName.indexOf("transform") == -1) tempOb.setAttribute(propName, tar);
-    } 
-    else tempOb.style[propName] = tar;
+  for (var propName in targets){
+    if (targets[propName].nodeName != undefined){
+      var tar = (targets[propName].currentStyle || 
+                 getComputedStyle(targets[propName], null))[propName];
+    } else var tar = targets[propName];
+    if (isSVG){
+      if (propName.indexOf("transform") == -1) tempOb.setAttribute(propName, tar);
+    } else tempOb.style[propName] = tar;
   } 
   
-  if(isSVG){
+  if (isSVG){
     var compS = object.attributes;
     var tempS = tempOb.attributes;
   } else {
@@ -381,24 +392,25 @@ function assert_properties(object, targets, message, epsilons){
     var tempS = tempOb.currentStyle || getComputedStyle(tempOb, null);
   }
   
-  for(var propName in targets){
-    if(propName != "refTest"){
-      if(isSVG && propName.indexOf("transform") != -1) assert_transform(object, targets[propName], message);
-      else {
-        if(isSVG){
+  for (var propName in targets){
+    if (propName != "refTest"){
+      if (isSVG && propName.indexOf("transform") != -1){
+        assert_transform(object, targets[propName], message);
+      } else {
+        if (isSVG){
           var t = tempS[propName].value;
           var c = compS[propName].value;
         } else {
           var t = tempS[propName];
           var c = compS[propName];
         }
+
         t = t.replace(/[^0-9,.]/g, "");
         t = t.split(",");
-
         c = c.replace(/[^0-9,.]/g, "");
         c = c.split(",");
 
-        for(var x in t){
+        for (var x in t){
           assert_approx_equals(Number(c[x]), Number(t[x]), 10, message + " " + x);
         }
       }
@@ -407,29 +419,29 @@ function assert_properties(object, targets, message, epsilons){
   tempOb.remove();
 }
 
-//deals with svg transforms *sigh*
+// Deals with the svg transforms special case.
 function assert_transform(object, target, message){
   var currStyle = object.attributes["style"].value;
   currStyle = currStyle.replace(/[;\s]/,"");
-  currStyle = currStyle.split(":")[1]; //get rid of the begining property name bit
-  
+  // Get rid of the begining property name bit.
+  currStyle = currStyle.split(":")[1]; 
   currStyle = currStyle.split(/[()]+/);
   target = target.split(/[()]+/);
 
-  var x = 0;
-  while(x < currStyle.length-1){
+  for (var x = 0; x < currStyle.length - 1; x++){
     assert_equals(currStyle[x], target[x], message);
     x++;
     var c = currStyle[x].split(",");
     var t = target[x].split(",");
-    for(var i in c){
+    for (var i in c){
       assert_approx_equals(parseInt(c[i]), parseInt(t[i]), 10, message);
     }
-    x++;
   }
 }
 
-/* Exposing functions to be accessed externally */
+///////////////////////////////////////////////////////////////////////////////
+//  Exposing functions to be accessed externally                             //
+///////////////////////////////////////////////////////////////////////////////
 window.setupTests = setupTests;
 window.testAnimation = testAnimation;
 window.check = check;
