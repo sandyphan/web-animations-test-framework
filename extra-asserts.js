@@ -26,8 +26,6 @@ var testResults = undefined;
 var animObjects = [];
 // The parGroup all animations need to be added to to achieve 'global' pause
 var parentAnimation;
-// Holds all tests
-var testStack = [];
 // To keep track of what the dropdown list state is.
 var runType;
 // The current run type of the animation.
@@ -123,7 +121,7 @@ function setState(newState){
 
 // Adds each test to a list to be processed when runTests is called.
 function check(object, targets, time, message){
-  if(testStack.length == 0) reparent();
+  if(testPacket.length == 0) reparent();
 
   // Create new async test
   var test = async_test(message);
@@ -141,12 +139,12 @@ function check(object, targets, time, message){
     for (var x = 0; x < maxTime/time; x++){
       var temp = new testRecord(test, object, targets, time * x,
           "Property " + targets + " is not satisfied", css, offsets, true);
-      testStack.push(temp);
+      testPacket.push(temp);
     }
     var temp = new testRecord(test, object, targets, time * x, "Property "
         + targets + " is not satisfied", css, offsets, "Last refTest");
-    testStack.push(temp);
-  } else testStack.push(new testRecord(test, object, targets, time, "Property "
+    testPacket.push(temp);
+  } else testPacket.push(new testRecord(test, object, targets, time, "Property "
         + targets + " is not satisfied", css, offsets, false));
 }
 
@@ -174,7 +172,7 @@ function reparent(){
 
 //Call this after lining up the tests with check
 function runTests(){
-  if (testStack.length == 0) reparent();
+  if (testPacket.length == 0) reparent();
   animTimeViewer();
   sortTests();
   if (state == "Manual"){
@@ -198,16 +196,18 @@ function animTimeViewer(){
 
 function sortTests(){
   // Sort tests by time to set up timeouts properly
-  testStack.sort(testTimeSort);
-  for (var x = 0; x < testStack.length; x++){
+  var tempStack = testPacket;
+  testPacket = [];
+  tempStack.sort(testTimeSort);
+  for (var x = 0; x < tempStack.length; x++){
     // Check for all tests that happen at the same time
     // and add them to the test packet.
     testPacket[testIndex] = [];
-    testPacket[testIndex].push(testStack[x]);
-    while (x < (testStack.length - 1)){
-      if (testStack[x].time == testStack[x + 1].time){
+    testPacket[testIndex].push(tempStack[x]);
+    while (x < (tempStack.length - 1)){
+      if (tempStack[x].time == tempStack[x + 1].time){
         x++;
-        testPacket[testIndex].push(testStack[x]);
+        testPacket[testIndex].push(tempStack[x]);
       } else break;
     }
     testIndex++;
@@ -218,17 +218,12 @@ function sortTests(){
 function testTimeSort(a,b) { return(a.time - b.time) };
 
 function testRunner(index){
-  if (index == null) index = 0;
-  var doNextTest = false;
-  if (testStack.length > 0) doNextTest = true;
-  while (doNextTest && index < testStack.length){
-    var currTest = testStack[index];
-    if (currTest.time >
-          document.animationTimeline.children[0].animationDuration){
-      currTest.time = document.animationTimeline.children[0].animationDuration;
-    }
-    if (currTest.time <= document.animationTimeline.children[0].iterationTime){
-      doNextTest = true;
+  var currTest = testPacket[testIndex][0];
+  var animLength = document.animationTimeline.children[0].animationDuration;
+  if (currTest.time > animLength) currTest.time = animLength;
+  if (currTest.time <= document.animationTimeline.children[0].iterationTime){
+    for (var i = 0; i < testPacket[testIndex].length; i++){
+      currTest = testPacket[testIndex][i];
       currTest.test.step(function (){
         assert_properties(currTest.object, currTest.targets, currTest.message);
       });
@@ -236,11 +231,11 @@ function testRunner(index){
         currTest.test.done();
       }
       if(currTest.isRefTest == false) flashing(currTest);
-      index++;
-    } else doNextTest = false;
+    }
+    testIndex++;
   }
-  if (index < testStack.length){
-    window.webkitRequestAnimationFrame(function(){testRunner(index);});
+  if (testIndex < testPacket.length){
+      window.webkitRequestAnimationFrame(function(){testRunner(index);});
   } else done();
 }
 
@@ -258,11 +253,9 @@ function autoTestRunner(){
   }
   if (testIndex < testPacket.length){
     // Small buffer to let the first anim frame render.
-    if (testPacket[testIndex][0].time == 0){
-      testPacket[testIndex][0].time += 0.02;
-    }
-    document.animationTimeline.children[0].currentTime =
-        testPacket[testIndex][0].time;
+    var nextTest = testPacket[testIndex][0];
+    if (nextTest.time == 0) nextTest.time += 0.02;
+    document.animationTimeline.children[0].currentTime = nextTest.time;
     testIndex++;
     window.webkitRequestAnimationFrame(function(){ autoTestRunner(); });
   } else {
