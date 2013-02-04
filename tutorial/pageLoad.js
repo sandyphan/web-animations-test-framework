@@ -5,6 +5,21 @@ var currentSection = window.location.href.split("/").pop();
 currentSection = currentSection.split(".")[0];
 console.log(currentSection);
 
+var isUrlExist = function(url) {
+  $.ajax({
+    url: url,
+    type: 'HEAD',
+    error: function() {
+      console.log("file does not exist");
+      return "#";
+    },
+    success: function() {
+      console.log("file does exist");
+    }
+  });
+  return url;
+}
+
 // waits until all DOM elements are ready to perform
 $(document.body).ready(function() {
 
@@ -19,9 +34,26 @@ $(document.body).ready(function() {
         $(this).children().unwrap();
       });
     } else {
-      $(".content").load(currentSection + "Exercise" + exerciseNum + ".html" + " .content", function() {
-        $(this).children().unwrap();
-      });
-    };
+      var url = currentSection + "Exercise" + exerciseNum + ".html";
+      // checks if a file/link exist before adding contents
+      // into page
+      $.ajax({
+        url: url,
+        type: 'HEAD',
+        success: function() {
+          $(".content").load(url + " .content", function() {
+            $(this).children().unwrap();
+          });
+        }});
+      }
   });
 });
+
+
+
+/*var isUrlExist = function(url) {
+    var http = new XMLHttpRequest();
+    http.open('HEAD', url, false);
+    http.send();
+    return http.status!=404;
+}*/
