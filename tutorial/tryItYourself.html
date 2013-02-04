@@ -95,5 +95,10 @@ limitations under the License.
          </div>  <!-- content ending div -->
       </div> <!-- main ending div -->
     <script type="text/javascript" src="tryItYourself.js"></script>
+    <script>
+      var iframe = new Iframe();
+      iframe.addCheck("document.getElementById('a')", "{'left': '0px'}", 0);
+      iframe.addCheck("document.getElementById('a')", "{'left': '300px'}", 2);
+    </script>
   </body>
 </html>
