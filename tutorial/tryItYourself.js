@@ -37,7 +37,7 @@ var setCssHTML = function() {
 // executed when button called update is clicked
 // extract texts from the 3 text areas,
 var update = function(object, properties, times) { 
-  addIframe();
+  var iframe = new Iframe();
   console.log(document.querySelector('.display'));
    document.getElementById("display").src = document.getElementById("display").src;
   document.getElementById("display").onload =(function() {
@@ -49,7 +49,11 @@ var update = function(object, properties, times) {
     console.log(document.getElementsByTagName('script'));
   
     var scriptEle = document.createElement('script');
-    getJsVal("document.getElementById('a')", ["{'left': '0px'}", "{'left': '300px'}"], [0,2]);
+    //getJsVal("document.getElementById('a')", ["{'left': '0px'}", "{'left': '300px'}"], [0,2]);
+    console.log(iframe);
+    iframe.addCheck("document.getElementById('a')", "{'left': '0px'}", 0);
+    iframe.addCheck("document.getElementById('a')", "{'left': '300px'}", 2);
+    getJsVal(iframe);
 
     var addAnimScript = function() {
       var scriptDivs = iframeDoc.getElementsByTagName('script');
@@ -67,21 +71,30 @@ var update = function(object, properties, times) {
   });  
 }
 
-function getJsVal(object, properties, times) {
+function getJsVal(iframe) {
   jsVal = "setupTutorialTests(); \nstate='Manual'; \n" + document.getElementById('jsCode').value +"\nnew testAnimation(document.getElementById('dummy'), {left: '1000px'}, 2);";
-  for(var i = 0; i < properties.length; i++) {
-    jsVal += "\n" + "check(" + object + ", " + properties[i] + ", " + times[i] + ", " + "'hello');";
+  
+  for(var i = 0; i < iframe.checks.length; i++) {
+    jsVal += "\n" + iframe.checks[i];
   }
   jsVal += " \nrunTests();";
   jsVal = jsVal.replace("new Animation", "new testAnimation");
 }
 
-function addIframe() {
-  var iframe = document.createElement('iframe');
-  iframe.setAttribute('id', 'display');
-  iframe.setAttribute('class', 'display');
-  iframe.setAttribute('src', 'iframe-contents.html');
-  document.querySelector('.display').appendChild(iframe);
+function Iframe() {
+  this.iframe = document.createElement('iframe');
+  this.checks = [];
+
+  this.iframe.setAttribute('id', 'display');
+  this.iframe.setAttribute('class', 'display');
+  this.iframe.setAttribute('src', 'iframe-contents.html');
+  document.querySelector('.display').appendChild(this.iframe);
+
+  return this;
+}
+
+Iframe.prototype.addCheck = function(object, property, time) {
+  this.checks.push("check(" + object + ", " + property + ", " + time + ", 'default');")
 }
 
 // innerDoc the solution box toggleable*/
