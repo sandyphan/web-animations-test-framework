@@ -3,26 +3,9 @@
 // currentSection would be 'parallel'
 var currentSection = window.location.href.split("/").pop();
 currentSection = currentSection.split(".")[0];
-console.log(currentSection);
-
-var isUrlExist = function(url) {
-  $.ajax({
-    url: url,
-    type: 'HEAD',
-    error: function() {
-      console.log("file does not exist");
-      return "#";
-    },
-    success: function() {
-      console.log("file does exist");
-    }
-  });
-  return url;
-}
 
 // waits until all DOM elements are ready to perform
 $(document.body).ready(function() {
-
   // if one of the side menu is clicked
   // update page content without refreshing the whole page
   $(".sideMenu li").click(function(e) {
@@ -43,17 +26,38 @@ $(document.body).ready(function() {
         success: function() {
           $(".content").load(url + " .content", function() {
             $(this).children().unwrap();
+            loadEditor();
           });
-        }});
-      }
+        }
+      });
+    }
   });
 });
 
+// this loads the editor dynamically into page content
+var loadEditor = function() {
+  var html;
+  console.log(currentSection);
+  if (currentSection === 'parallel' || currentSection === 'sequence')
+    html = "<div id=\"a\" class=\"anim\"></div>"
+           + '\n' + "<div id=\"b\" class=\"anim\"></div>"
+           + '\n' + "<div id=\"c\" class=\"anim\"></div>";
+  else 
+    html = "<div id=\"a\" class=\"anim\"></div>";
 
-
-/*var isUrlExist = function(url) {
-    var http = new XMLHttpRequest();
-    http.open('HEAD', url, false);
-    http.send();
-    return http.status!=404;
-}*/
+  display();
+  setDefaultHTML(html);
+  var css = ".anim {"
+         +"\n" + "background-color: red;"
+         +"\n" + "border-radius: 10px;"
+         +"\n" + "width: 100px;"
+         +"\n" + "height: 50px;"
+         +"\n" + "top: 50px;"
+         +"\n" + "left: 0px;"
+         +"\n" + "position: absolute;"
+         +"\n" + "}";
+  setDefaultCSS(css);
+  setDefaultJS("");
+  var iframe = new Iframe();
+  console.log(document.querySelector("#tryIt"));
+}
