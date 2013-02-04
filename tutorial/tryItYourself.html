@@ -67,36 +67,14 @@ limitations under the License.
           </ol>
 
           <div id="tryIt">
-            <div class="heading">TRY IT YOURSELF
-              <button onclick="update()" id="update">Update</button>
-            </div>
-            <div class="code">
-              <div id="label">HTML Code</div>
-                <textarea id="htmlCode" class="code">
-<div id="a" class="test"></div>
-                </textarea>
-              <div id="label">CSS Style</div>
-              <textarea id="cssCode" class="code">
-.test {
-  background-color: red;
-  border-radius: 10px;
-  width: 100px;
-  height: 50px;
-  top: 50px;
-  left: 0px;
-  position: absolute;
-}
-               </textarea>
-              <div id="label">Javascript</div>
-                <textarea id="jsCode" class="code"></textarea>
-              </div>
-              <div class="display"></div>
             
          </div>  <!-- content ending div -->
       </div> <!-- main ending div -->
     <script type="text/javascript" src="tryItYourself.js"></script>
     <script>
+      heading();
       var iframe = new Iframe();
+      iframe.setTime(2);
       iframe.addCheck("document.getElementById('a')", "{'left': '0px'}", 0);
       iframe.addCheck("document.getElementById('a')", "{'left': '300px'}", 2);
     </script>
