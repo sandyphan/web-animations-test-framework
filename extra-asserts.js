@@ -40,6 +40,10 @@ var testTimeout = 10000;
 // How long it takes for the whole test system to timeout.
 var frameworkTimeout = 20000;
 
+// To get user pausing working correctly
+var beingPaused = 0;
+var userPaused = false;
+
 function testRecord(test, object, targets, time, message, cssStyle,
                     offsets, isRefTest){
   this.test = test;
@@ -103,6 +107,9 @@ function setupTests(timeouts){
     state = "Auto";
     runType.selectedIndex = 0;
   }
+
+  // Setup the pause animation function
+  document.getElementById("test").setAttribute("onclick", "animPause()");
   setup({ explicit_done: true, timeout: frameworkTimeout});
 }
 
@@ -263,9 +270,30 @@ function restart(){
   window.location.href = url[0] + "?" + state;
 }
 
+// Makes it easier to see whats going on in the test.
+function animPause(){
+  if (userPaused){
+    beingPaused--;
+    if (beingPaused == 0){
+      if (document.animationTimeline.children[0].iterationTime
+        < document.animationTimeline.children[0].animationDuration - 0.01){
+        parentAnimation.play();
+      } 
+      userPaused = false;
+    } 
+    document.getElementById("test").style.backgroundColor = "white";
+  } else {
+    beingPaused++;
+    parentAnimation.pause();
+    userPaused = true;
+    document.getElementById("test").style.backgroundColor = "yellow";
+  }
+}
+
 // Create elements at appropriate locations and flash the elements for
 // manual testing.
 function flashing(test) {
+  beingPaused++;
   parentAnimation.pause();
   var type = test.object.nodeName;
 
@@ -343,7 +371,8 @@ function flashing(test) {
     flash.parentNode.removeChild(flash);
     if (document.animationTimeline.children[0].iterationTime
         < document.animationTimeline.children[0].animationDuration - 0.01){
-      parentAnimation.play();
+      beingPaused--;
+      if(beingPaused == 0) parentAnimation.play();
     }
   }, pauseTime);
 }
@@ -438,5 +467,6 @@ window.setupTests = setupTests;
 window.check = check;
 window.runTests = runTests;
 window.restart = restart;
+window.animPause = animPause;
 window.setState = setState;
 })();

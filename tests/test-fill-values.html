@@ -131,11 +131,11 @@ for (var i = 0; i < containers.length; i++) {
 for (var i = 0; i < containers.length; i++) {
   var divs = document.getElementById(containers[i]).getElementsByClassName('anim');
   if(i == 0 || i == 3){
-    for(var j = 0; j < 4; j++) check(divs[j], {left:"0px"}, 2, "check end position" + i + j);
-    for(var j = 4; j < 8; j++) check(divs[j], {left:"200px"}, 2, "check end position" + i + j);
+    for(var j = 0; j < 4; j++) check(divs[j], {left:"0px"}, 3, "check end position" + i + j);
+    for(var j = 4; j < 8; j++) check(divs[j], {left:"200px"}, 3, "check end position" + i + j);
   } else {
-    for(var j = 0; j < 4; j++) check(divs[j], {left:"0px"}, 2, "check end position" + i + j);
-    for(var j = 4; j < 8; j++) check(divs[j], {left:"100px"}, 2, "check end position" + i + j);
+    for(var j = 0; j < 4; j++) check(divs[j], {left:"0px"}, 3, "check end position" + i + j);
+    for(var j = 4; j < 8; j++) check(divs[j], {left:"100px"}, 3, "check end position" + i + j);
   }
 
 }
