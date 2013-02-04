@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
 
 // get default html values
 var htmlVal;
@@ -36,7 +36,7 @@ var runCssHtml = function() {
 
 // executed when button called update is clicked
 // extract texts from the 3 text areas,
-var update = function(object, properties, times) { 
+var update = function(object, properties, times) {
   iframe.doc.contentWindow
   document.getElementById("display").src = document.getElementById("display").src;
   document.getElementById("display").onload =(function() {
@@ -44,7 +44,7 @@ var update = function(object, properties, times) {
     runCssHtml();
     iframeDoc.documentElement.getElementsByTagName("body")[0].innerHTML = htmlVal;
     iframeDoc.getElementsByTagName('style')[0].innerHTML = cssVal;
-  
+
     var scriptEle = document.createElement('script');
     getJsVal(iframe);
 
@@ -61,13 +61,13 @@ var update = function(object, properties, times) {
       }
     }
     window.onload = addAnimScript();
-  });  
+  });
 }
 
 function getJsVal(iframe) {
-  jsVal = "setupTutorialTests(); \n" +  document.getElementById('jsCode').value +"\nnew Animation(document.getElementById('dummy'), {left: '100px'}, " 
+  jsVal = "setupTutorialTests(); \n" +  document.getElementById('jsCode').value +"\nnew Animation(document.getElementById('dummy'), {left: '100px'}, "
     +iframe.time + ");";
-  
+
   for(var i = 0; i < iframe.checks.length; i++) {
     jsVal += "\n" + iframe.checks[i];
   }
@@ -84,7 +84,7 @@ function Iframe() {
 
   this.doc.setAttribute('id', 'display');
   this.doc.setAttribute('class', 'display');
-  this.doc.setAttribute('src', 'iframe-contents.html');
+  this.doc.setAttribute('src', '../iframe-contents.html');
   document.querySelector('.display').appendChild(this.doc);
 
   return this;
@@ -121,6 +121,7 @@ function TryItDisplay() {
   document.getElementById('tryIt').appendChild(display);
 
   var html = document.createElement('div');
+
   html.setAttribute('class', 'label');
   html.setAttribute('id', 'htmlLabel')
   html.innerHTML = "HTML Code";
@@ -132,6 +133,7 @@ function TryItDisplay() {
   document.getElementById('allCode').appendChild(htmlCode);
 
   var css = document.createElement('div');
+
   css.setAttribute('class', 'label');
   css.setAttribute('id', 'cssLabel')
   css.innerHTML = "CSS Style";
@@ -143,6 +145,7 @@ function TryItDisplay() {
   document.getElementById('allCode').appendChild(cssCode);
 
   var js = document.createElement('div');
+
   js.setAttribute('class', 'label');
   js.setAttribute('id', 'jsLabel')
   js.innerHTML = "Javascript";
