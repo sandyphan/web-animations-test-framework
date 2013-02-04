@@ -29,6 +29,7 @@ var pass = new Array();
 var setCssHTML = function() {
   htmlVal = "<div id='test' class='testBox'>" + document.getElementById('htmlCode').value + "\n<div id='dummy' class='test'></div>" + "</div>";
   cssVal = document.getElementById('cssCode').value +"\n" +"#dummy { display: none; }";
+  console.log(iframeDoc);
   iframeDoc.getElementsByTagName("body")[0].innerHTML = htmlVal;
   iframeDoc.getElementsByTagName('style')[0].innerHTML = cssVal;
 }
@@ -37,9 +38,10 @@ var setCssHTML = function() {
 // executed when button called update is clicked
 // extract texts from the 3 text areas,
 var update = function(object, properties, times) { 
+  iframe.doc.contentWindow
    document.getElementById("display").src = document.getElementById("display").src;
   document.getElementById("display").onload =(function() {
-    iframeDoc = document.getElementById('display').contentWindow.document;
+    iframeDoc = iframe.doc.contentDocument;
     setCssHTML();
     iframeDoc.documentElement.getElementsByTagName("body")[0].innerHTML = htmlVal;
     iframeDoc.getElementsByTagName('style')[0].innerHTML = cssVal;
@@ -64,25 +66,27 @@ var update = function(object, properties, times) {
 }
 
 function getJsVal(iframe) {
-  jsVal = "setupTutorialTests(); \nstate='Manual'; \n" + document.getElementById('jsCode').value +"\nnew testAnimation(document.getElementById('dummy'), {left: '100px'}, " 
+  jsVal = "setupTutorialTests(); \n" +  document.getElementById('jsCode').value +"\nnew Animation(document.getElementById('dummy'), {left: '100px'}, " 
     +iframe.time + ");";
   
   for(var i = 0; i < iframe.checks.length; i++) {
     jsVal += "\n" + iframe.checks[i];
   }
   jsVal += " \nrunTests();";
-  jsVal = jsVal.replace("new Animation", "new testAnimation");
+  //jsVal = jsVal.replace("new Animation", "new testAnimation");
 }
 
 function Iframe() {
-  this.iframe = document.createElement('iframe');
+  this.doc = document.createElement('iframe');
   this.checks = [];
   this.time = 5;
 
-  this.iframe.setAttribute('id', 'display');
-  this.iframe.setAttribute('class', 'display');
-  this.iframe.setAttribute('src', 'iframe-contents.html');
-  document.querySelector('.display').appendChild(this.iframe);
+  this.pass = false;
+
+  this.doc.setAttribute('id', 'display');
+  this.doc.setAttribute('class', 'display');
+  this.doc.setAttribute('src', 'iframe-contents.html');
+  document.querySelector('.display').appendChild(this.doc);
 
   return this;
 }
