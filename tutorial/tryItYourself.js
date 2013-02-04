@@ -37,7 +37,7 @@ var setCssHTML = function() {
 // executed when button called update is clicked
 // extract texts from the 3 text areas,
 var update = function(object, properties, times) { 
-  var iframe = new Iframe();
+  //var iframe = new Iframe();
   console.log(document.querySelector('.display'));
    document.getElementById("display").src = document.getElementById("display").src;
   document.getElementById("display").onload =(function() {
@@ -51,8 +51,8 @@ var update = function(object, properties, times) {
     var scriptEle = document.createElement('script');
     //getJsVal("document.getElementById('a')", ["{'left': '0px'}", "{'left': '300px'}"], [0,2]);
     console.log(iframe);
-    iframe.addCheck("document.getElementById('a')", "{'left': '0px'}", 0);
-    iframe.addCheck("document.getElementById('a')", "{'left': '300px'}", 2);
+    // iframe.addCheck("document.getElementById('a')", "{'left': '0px'}", 0);
+    // iframe.addCheck("document.getElementById('a')", "{'left': '300px'}", 2);
     getJsVal(iframe);
 
     var addAnimScript = function() {
