@@ -85,7 +85,7 @@ function Iframe() {
 
   this.doc.setAttribute('id', 'display');
   this.doc.setAttribute('class', 'display');
-  this.doc.setAttribute('src', 'iframe-contents.html');
+  this.doc.setAttribute('src', '../iframe-contents.html');
   document.querySelector('.display').appendChild(this.doc);
 
   return this;
@@ -132,6 +132,7 @@ function setDefaultHTML(defaultHTML) {
    var htmlCode = document.createElement('textarea');
    htmlCode.setAttribute('id', 'htmlCode');
    htmlCode.setAttribute('class', 'code');
+   htmlCode.setAttribute('spellcheck', 'false');
    htmlCode.innerHTML = defaultHTML;
    document.getElementById('allCode').appendChild(htmlCode);
 }
@@ -146,6 +147,7 @@ function setDefaultCSS(defaultCSS) {
    var cssCode = document.createElement('textarea');
    cssCode.setAttribute('id', 'cssCode');
    cssCode.setAttribute('class', 'code');
+   cssCode.setAttribute('spellcheck', 'false');
    cssCode.innerHTML = defaultCSS;
    document.getElementById('allCode').appendChild(cssCode);
 }
@@ -160,6 +162,7 @@ function setDefaultJS(defaultJS) {
    var jsCode = document.createElement('textarea');
    jsCode.setAttribute('id', 'jsCode');
    jsCode.setAttribute('class', 'code');
+   jsCode.setAttribute('spellcheck', 'false');
    jsCode.innerHTML = defaultJS;
    document.getElementById('allCode').appendChild(jsCode);
 }
