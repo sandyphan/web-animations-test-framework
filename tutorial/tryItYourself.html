@@ -90,77 +90,10 @@ limitations under the License.
               <div id="label">Javascript</div>
                 <textarea id="jsCode" class="code"></textarea>
               </div>
-          
-              <iframe name="display" id="display" src="iframe-contents.html"><p>Your browser does not support iframes</p></iframe>  
-            </div> 
-
-<!--        <div class="heading exercises">Exercise 2</div>
-        <p class="description">Now try move the red rectangle 500px from top for 2 seconds. Try it one time without replacing the original code you have entered, then try another time with all old javascript code replaced. What do you see?</p>
-        <br />
-
-         <div id="hideLabel" onclick="toggleSolution()">Show Solution</div>
-        <div id="toggleText"><code>new Animation(document.querySelector("#a"), {left: "300px"}, 2);</code></div> 
-
-        <div id="tryIt">
-          <div class="heading">TRY IT YOURSELF
-            <button onclick="update()" id="update">Update</button>
-          </div>
-          <div class="code">
-            <div id="label">HTML Code</div>
-            <textarea id="htmlCode" class="code">
-<html>
-  <head>
-foo fdfg df
-  </head>
-  <body>
-    <div id="a" class="test"></div>
-  </body>
-</html></textarea>
-            <div id="label">CSS Style</div>
-            <textarea id="cssCode" class="code">
-.test {
-  background-color: red;
-  border-radius: 10px;
-  width: 100px;
-  height: 50px;
-  top: 0px;
-  left: 0px;
-  position: absolute;
-}</textarea>
-            <div id="label">Javascript</div>
-            <textarea id="jsCode" class="code"></textarea>
-          </div>
-          
-          <iframe id="display"></iframe>
-        </div>
-
-        <p class="description">You might wonder why does the rectangle moves diagonally when you have 2 new Animation() commands. That is because you have made 2 animation objects at the same time and let them ran at the same time, if you want the movement in sequence, then you will have to apply a 'startDelay' to the timing as follow:</p>
-        <code>new Animation(document.querySelector("#a"), {left: "300px"}, 2.0);</code><br />
-        <code>new Animation(document.querySelector("#a"), {top: "500px"}, {startDelay: 2, duration: 2});</code>
-        <p class="description">Notice how on the second animation object, we have put 'startDelay' and 'duration' in {}, that is because we are creating a timing dictionary to apply to the animation. Any timing dictionary will have to be stored in {}. You might also notice that number '2' is gone! That is because we have apply number '2' to 'duration' which is the duration of the animation.</p>
-
-        <div></div>
-
-        <div class="heading subTitle">Timing Dictionary and Timing Functions</div>
-
-        <p class="description">In the previous section, we have learned a bit about timing dictionary. This section will explain timing dictionary details as well as introducing you to timing functions.</p>
-
-        <p class="description">Timing dictionary is just a set of timing properties putting together to be applied to the animation. There are 9 members that you can include in a timing dictionary. You do not have to include all of them. As mentioned before, timing in the animation interface is optional.</p>
-
-          <ul class="description">The following are the 9 members:
-            <li>startTime</li>
-            <li>startDelay</li>
-            <li>fillMode</li>
-            <li>iterationStart</li>
-            <li>iterationCount</li>
-            <li>iterationDuration</li>
-            <li>defaultPlaybackRate</li>
-            <li>direction</li>
-            <li>timingFunction</li>
-          </ul> -->
-
+              <div class="display"></div>
+            
          </div>  <!-- content ending div -->
-       </div> <!-- main ending div -->
+      </div> <!-- main ending div -->
     <script type="text/javascript" src="tryItYourself.js"></script>
   </body>
 </html>

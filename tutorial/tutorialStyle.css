@@ -69,17 +69,17 @@
   overflow-x: hidden;
 }
 #display {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  float: none;
+}
+.display {
   border-radius: 2px;
   width: 44%;
   height: 600px;
   clear: right;
   float: right;
-}
-.fail {
-  background-color: white;
-}
-.pass {
-  background-color: green;
 }
 #label {
   font: bold 1em Arial;
