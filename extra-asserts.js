@@ -22,8 +22,6 @@
 (function() {
 // For the results to be accessed when test is in an iframe.
 var testResults = undefined;
-// To keep track of all animations
-var animObjects = [];
 // The parGroup all animations need to be added to to achieve 'global' pause
 var parentAnimation;
 // To keep track of what the dropdown list state is.
@@ -52,12 +50,6 @@ function testRecord(test, object, targets, time, message, cssStyle,
   this.cssStyle = cssStyle;
   this.offsets = offsets;
   this.isRefTest = isRefTest;
-}
-
-function testAnimation(a, b, c, d){
-  var x = new Animation(a, b, c, d);
-  animObjects.push(x);
-  return x;
 }
 
 // Call this function before setting up any checks.
@@ -443,7 +435,6 @@ function assert_transform(object, target, message){
 //  Exposing functions to be accessed externally                             //
 ///////////////////////////////////////////////////////////////////////////////
 window.setupTests = setupTests;
-window.testAnimation = testAnimation;
 window.check = check;
 window.runTests = runTests;
 window.restart = restart;

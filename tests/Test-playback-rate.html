@@ -1,4 +1,4 @@
-<!-- 
+<!--
 Copyright 2012 Google Inc. All Rights Reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,7 +22,7 @@ Written By Sarah Heimlich
   position: relative;
   height: 50px;
   width: 50px;
-  left: 100px;  
+  left: 100px;
 }
 
 .bottom {
@@ -73,8 +73,8 @@ var topObjects = document.querySelectorAll(".top");
 var bottomObjects = document.querySelectorAll(".bottom");
 
 for (var i = 0; i < topObjects.length; i++) {
-  new testAnimation(topObjects[i], {left: ["100px", "600px"]}, {duration: 2*(i + 1), playbackRate: i + 1 });
-  new testAnimation(bottomObjects[i], {left: ["100px", "600px"]}, {duration: 2});
+  new Animation(topObjects[i], {left: ["100px", "600px"]}, {duration: 2*(i + 1), playbackRate: i + 1 });
+  new Animation(bottomObjects[i], {left: ["100px", "600px"]}, {duration: 2});
 }
 
 for (var i = 0; i < topObjects.length; i++) {

@@ -1,4 +1,4 @@
-<!-- 
+<!--
 Copyright 2012 Google Inc. All Rights Reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -47,9 +47,9 @@ limitations under the License.
 </style>
 
 <div id="test" class="testBox">
-	<div id="a" class="anim"></div> 
-	<div id="b" class="anim"></div> 
-	<div id="c" class="anim"></div> 
+	<div id="a" class="anim"></div>
+	<div id="b" class="anim"></div>
+	<div id="c" class="anim"></div>
 	<div id="d" class="anim"></div>
 </div>
 
@@ -64,10 +64,10 @@ limitations under the License.
 setupTests();
 
 var divs = document.querySelectorAll(".anim");
-new testAnimation(divs[0], {"-webkit-transform": ["translate(0px, 0px)", "translate(200px, 0px)"]}, 2);
-new testAnimation(divs[1], {"-webkit-transform": ["rotate(0deg)", "rotate(90deg)"]}, 2);
-new testAnimation(divs[2], {"-webkit-transform": ["translate(0px, 0px) rotate(0deg)", "translate(200px, 0px) rotate(90deg)"]}, 2);
-new testAnimation(divs[3], {"-webkit-transform": ["rotate(0deg) translate(0px, 0px)", "rotate(90deg) translate(200px, 0px)"]}, 2);
+new Animation(divs[0], {"-webkit-transform": ["translate(0px, 0px)", "translate(200px, 0px)"]}, 2);
+new Animation(divs[1], {"-webkit-transform": ["rotate(0deg)", "rotate(90deg)"]}, 2);
+new Animation(divs[2], {"-webkit-transform": ["translate(0px, 0px) rotate(0deg)", "translate(200px, 0px) rotate(90deg)"]}, 2);
+new Animation(divs[3], {"-webkit-transform": ["rotate(0deg) translate(0px, 0px)", "rotate(90deg) translate(200px, 0px)"]}, 2);
 
 check(divs[0], {"-webkit-transform": "translate(0px, 0px)"}, 0, "Div 0 start");
 check(divs[0], {"-webkit-transform": "translate(200px, 0px)"}, 2, "Div 0 end");

@@ -1,4 +1,4 @@
-<!-- 
+<!--
 Copyright 2012 Google Inc. All Rights Reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -28,7 +28,7 @@ Written By Sarah Heimlich
 }
 
 #bottom {
-  background-color: red;	
+  background-color: red;
 }
 
 #top {
@@ -69,10 +69,10 @@ var down = new ParGroup([], {}, leftDown);
 var topObject = document.getElementById("top");
 var bottomObject = document.getElementById("bottom");
 
-new testAnimation(topObject, {left: ["100px", "500px"]}, {duration: 1}, left);
-new testAnimation(bottomObject, {left: ["100px", "500px"]}, {duration: 1}, left);
-new testAnimation(topObject, {top: ["100px", "500px"]}, {duration: 1}, down);
-new testAnimation(bottomObject, {top: ["100px", "500px"]}, {duration: 1}, down);
+new Animation(topObject, {left: ["100px", "500px"]}, {duration: 1}, left);
+new Animation(bottomObject, {left: ["100px", "500px"]}, {duration: 1}, left);
+new Animation(topObject, {top: ["100px", "500px"]}, {duration: 1}, down);
+new Animation(bottomObject, {top: ["100px", "500px"]}, {duration: 1}, down);
 
 leftDown.play();
 check(topObject, {"left":"300px"}, 0.5, "The elements have moved left");
