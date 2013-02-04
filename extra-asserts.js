@@ -278,9 +278,9 @@ function animPause(){
       if (document.animationTimeline.children[0].iterationTime
         < document.animationTimeline.children[0].animationDuration - 0.01){
         parentAnimation.play();
-      } 
+      }
       userPaused = false;
-    } 
+    }
     document.getElementById("test").style.backgroundColor = "white";
   } else {
     beingPaused++;
