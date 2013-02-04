@@ -81,7 +81,7 @@
   clear: right;
   float: right;
 }
-#label {
+.label {
   font: bold 1em Arial;
   padding: 5px;
   margin: 2px;
