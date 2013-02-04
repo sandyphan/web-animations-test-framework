@@ -37,20 +37,14 @@ var setCssHTML = function() {
 // executed when button called update is clicked
 // extract texts from the 3 text areas,
 var update = function(object, properties, times) { 
-  console.log(iframe);
-  console.log("time = " + iframe.time);
-  console.log(document.querySelector('.display'));
    document.getElementById("display").src = document.getElementById("display").src;
   document.getElementById("display").onload =(function() {
     iframeDoc = document.getElementById('display').contentWindow.document;
     setCssHTML();
     iframeDoc.documentElement.getElementsByTagName("body")[0].innerHTML = htmlVal;
-    console.log(iframeDoc);
     iframeDoc.getElementsByTagName('style')[0].innerHTML = cssVal;
-    console.log(document.getElementsByTagName('script'));
   
     var scriptEle = document.createElement('script');
-    console.log(iframe);
     getJsVal(iframe);
 
     var addAnimScript = function() {
@@ -101,7 +95,7 @@ Iframe.prototype.setTime = function(newTime) {
   this.time = newTime;
 }
 
-function heading() {
+function display() {
   var heading = document.createElement("div");
   heading.setAttribute("class", "heading");
   heading.setAttribute('id', 'heading')
@@ -129,7 +123,7 @@ function heading() {
    htmlCode.setAttribute('id', 'htmlCode');
    htmlCode.setAttribute('class', 'code');
    htmlCode.innerHTML = "<div id='a' class='test'></div>";
-   document.getElementById('htmlLabel').appendChild(htmlCode);
+   document.getElementById('allCode').appendChild(htmlCode);
 
    var css = document.createElement('div');
    css.setAttribute('class', 'label');
@@ -149,7 +143,7 @@ function heading() {
      +"\n" + "left: 0px;"
      +"\n" + "position: absolute;"
      +"\n" + "}";
-   document.getElementById('cssLabel').appendChild(cssCode);
+   document.getElementById('allCode').appendChild(cssCode);
 
    var js = document.createElement('div');
    js.setAttribute('class', 'label');
@@ -160,7 +154,7 @@ function heading() {
    var jsCode = document.createElement('textarea');
    jsCode.setAttribute('id', 'jsCode');
    jsCode.setAttribute('class', 'code');
-   document.getElementById('jsLabel').appendChild(jsCode);
+   document.getElementById('allCode').appendChild(jsCode);
 
    var display = document.createElement('div');
    display.setAttribute('class', 'display');
