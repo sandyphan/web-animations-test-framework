@@ -23,6 +23,24 @@ limitations under the License.
     <meta name="flags" content="dom">
     <meta name="tutorial" content="Web Animations tutorials">
     <link rel="stylesheet" type="text/css" href="../tutorialStyle.css">
+    <script type="text/javascript" src="../jquery.js"></script>
+    <script type="text/javascript">
+      $(document.body).ready(function() {
+        $(".sideMenu li").click(function(e) {
+          var exerciseNum = $(this).html().split(" ")[1];
+          console.log(exerciseNum);
+          console.log(typeof exerciseNum);
+          console.log(window.location.href);
+          if (exerciseNum === "Info") {
+            
+          } else {
+            $(".content").load("basicAnimExercise" + exerciseNum + ".html" + " .content", function() {
+              $(this).children().unwrap();
+            });
+          };
+        });
+      });
+    </script>
   </head>
 
   <body>
@@ -75,12 +93,12 @@ limitations under the License.
 
     <ul class="sideMenu">
       <li id="menuLabel">Create Basic Animation</li>
-      <li><a href="createBasicAnim.html">Basic Info</a></li>
-      <li><a href="basicAnimExercise1.html">Exercise 1</a></li>
-      <li><a href="basicAnimExercise2.html">Exercise 2</a></li>
-      <li><a href="basicAnimExercise3.html">Exercise 3</a></li>
-      <li><a href="basicAnimExercise4.html">Exercise 4</a></li>
-      <li><a href="basicAnimExercise5.html">Exercise 5</a></li>
+      <li>Basic Info</li>
+      <li>Exercise 1</li>
+      <li>Exercise 2</li>
+      <li>Exercise 3</li>
+      <li>Exercise 4</li>
+      <li>Exercise 5</li>
     </ul> 
 
     <script type="text/javascript" src="../tryItYourself.js"></script>
