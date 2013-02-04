@@ -15,34 +15,34 @@
  */
  /*TODO:
   - Change the pause method for flashing so it doesn't rely on par groups.
-    This requires the ability to either globally pause or check if a 
+    This requires the ability to either globally pause or check if a
     animation is currently playing
  */
 
 (function() {
 // For the results to be accessed when test is in an iframe.
-var testResults = undefined; 
+var testResults = undefined;
 // To keep track of all animations
 var animObjects = [];
 // The parGroup all animations need to be added to to achieve 'global' pause
 var parentAnimation;
-// Holds all tests 
+// Holds all tests
 var testStack = [];
-// To keep track of what the dropdown list state is. 
+// To keep track of what the dropdown list state is.
 var runType;
-// The current run type of the animation. 
-var state = "Auto"; 
+// The current run type of the animation.
+var state = "Auto";
 // Holds which test packet we are up to.
 var testIndex = 0;
-//Each index holds all the tests that occur at the same time 
-var testPacket = []; 
+//Each index holds all the tests that occur at the same time
+var testPacket = [];
 
 // How long to show each manual check for.
 var pauseTime = 500;
 // How long it takes an individual test to timeout.
 var testTimeout = 10000;
-// How long it takes for the whole test system to timeout. 
-var frameworkTimeout = 20000; 
+// How long it takes for the whole test system to timeout.
+var frameworkTimeout = 20000;
 
 function testRecord(test, object, targets, time, message, cssStyle,
                     offsets, isRefTest){
@@ -68,9 +68,9 @@ function setupTests(timeouts){
   // Use any user stated timeouts
   for (var x in timeouts) {
     if (timeouts[x] == "frameworkTimeout") frameworkTimeout = timeouts[x];
-    else if (timeouts[x] == "testTimeout") testTimeout = timeouts[x];     
+    else if (timeouts[x] == "testTimeout") testTimeout = timeouts[x];
   }
-  
+
   // Set up padding for option bar
   var padding = document.createElement('div');
   padding.id = "padding";
@@ -101,12 +101,12 @@ function setupTests(timeouts){
 
   // Set buttons
   runType = document.getElementById("runType");
-  runType.options[runType.options.length] = 
+  runType.options[runType.options.length] =
       new Option('Auto Run', 'Auto');
-  runType.options[runType.options.length] = 
+  runType.options[runType.options.length] =
       new Option('Manual Run', 'Manual');
   setState(window.location.href.split("?")[1]);
-  
+
   // Initalse state and setup
   if (state == "Manual") runType.selectedIndex = 1;
   else {
@@ -129,7 +129,7 @@ function check(object, targets, time, message){
   var test = async_test(message);
   test.timeout_length = testTimeout;
 
-  // Store the inital css style of the animated object so it can be 
+  // Store the inital css style of the animated object so it can be
   // used for manual flashing.
   var css = object.currentStyle || getComputedStyle(object, null);
   var offsets = [];
@@ -139,11 +139,11 @@ function check(object, targets, time, message){
     var maxTime = document.animationTimeline.children[0].animationDuration;
     // Generate a test for each time you want to check the objects.
     for (var x = 0; x < maxTime/time; x++){
-      var temp = new testRecord(test, object, targets, time * x, 
+      var temp = new testRecord(test, object, targets, time * x,
           "Property " + targets + " is not satisfied", css, offsets, true);
       testStack.push(temp);
     }
-    var temp = new testRecord(test, object, targets, time * x, "Property " 
+    var temp = new testRecord(test, object, targets, time * x, "Property "
         + targets + " is not satisfied", css, offsets, "Last refTest");
     testStack.push(temp);
   } else testStack.push(new testRecord(test, object, targets, time, "Property "
@@ -187,7 +187,7 @@ function runTests(){
 }
 
 function animTimeViewer(){
-  var currTime = document.animationTimeline.children[0].iterationTime; 
+  var currTime = document.animationTimeline.children[0].iterationTime;
   if (currTime != null) currTime = currTime.toFixed(2);
   else currTime = 0.00;
   var object = document.getElementById("animViewerText");
@@ -223,10 +223,10 @@ function testRunner(index){
   if (testStack.length > 0) doNextTest = true;
   while (doNextTest && index < testStack.length){
     var currTest = testStack[index];
-    if (currTest.time > 
+    if (currTest.time >
           document.animationTimeline.children[0].animationDuration){
       currTest.time = document.animationTimeline.children[0].animationDuration;
-    } 
+    }
     if (currTest.time <= document.animationTimeline.children[0].iterationTime){
       doNextTest = true;
       currTest.test.step(function (){
@@ -234,7 +234,7 @@ function testRunner(index){
       });
       if(currTest.isRefTest == "Last refTest" || currTest.isRefTest == false){
         currTest.test.done();
-      } 
+      }
       if(currTest.isRefTest == false) flashing(currTest);
       index++;
     } else doNextTest = false;
@@ -253,15 +253,15 @@ function autoTestRunner(){
       });
       if (currTest.isRefTest == false || currTest.isRefTest == "Last refTest"){
         currTest.test.done();
-      } 
+      }
     }
   }
   if (testIndex < testPacket.length){
     // Small buffer to let the first anim frame render.
     if (testPacket[testIndex][0].time == 0){
       testPacket[testIndex][0].time += 0.02;
-    } 
-    document.animationTimeline.children[0].currentTime = 
+    }
+    document.animationTimeline.children[0].currentTime =
         testPacket[testIndex][0].time;
     testIndex++;
     window.webkitRequestAnimationFrame(function(){ autoTestRunner(); });
@@ -273,12 +273,12 @@ function autoTestRunner(){
 
 function restart(){
   // State only gets updated on init and Restart button push.
-  setState(runType.options[runType.selectedIndex].value); 
+  setState(runType.options[runType.selectedIndex].value);
   var url = window.location.href.split("?");
   window.location.href = url[0] + "?" + state;
 }
 
-// Create elements at appropriate locations and flash the elements for 
+// Create elements at appropriate locations and flash the elements for
 // manual testing.
 function flashing(test) {
   parentAnimation.pause();
@@ -293,16 +293,16 @@ function flashing(test) {
 
   if(type == "DIV"){
     // Copy the objects orginal css style
-    flash.style.cssText = test.cssStyle.cssText; 
+    flash.style.cssText = test.cssStyle.cssText;
     flash.style.position = "absolute";
   } else {
     for (var x = 0; x < test.object.attributes.length; x++){
-      flash.setAttribute(test.object.attributes[x].name, 
+      flash.setAttribute(test.object.attributes[x].name,
                          test.object.attributes[x].value);
     }
-    flash.style.position = "absolute";
+    flash.style.position = test.object.parentNode.style.position;
   }
-  
+
   var seenTop = false;
   var seenLeft = false;
   for (var propName in test.targets){
@@ -331,18 +331,18 @@ function flashing(test) {
       flash.setAttribute(prop, tar);
     }
   }
-  
+
   if (type == "DIV" && test.cssStyle.position == "relative"){
     if (!seenTop){
-      flash.style.top = (getOffset(test.object).top - 
+      flash.style.top = (getOffset(test.object).top -
                          getOffset(test.object.parentNode).top) +"px";
     }
     if (!seenLeft){
-      flash.style.left = (getOffset(test.object).left - 
+      flash.style.left = (getOffset(test.object).left -
                           getOffset(test.object.parentNode).left)+"px";
     }
   }
-  
+
   //Set up the border
   if (type == "DIV"){
     flash.style.borderColor = 'black';
@@ -353,13 +353,13 @@ function flashing(test) {
     flash.setAttribute("stroke", "black");
     flash.setAttribute("stroke-width", "5px");
   }
-  
+
   setTimeout(function() {
     flash.parentNode.removeChild(flash);
-    if (document.animationTimeline.children[0].iterationTime 
+    if (document.animationTimeline.children[0].iterationTime
         < document.animationTimeline.children[0].animationDuration - 0.01){
       parentAnimation.play();
-    }      
+    }
   }, pauseTime);
 }
 
@@ -380,16 +380,16 @@ function assert_properties(object, targets, message, epsilons){
 
   for (var propName in targets){
     if (targets[propName].nodeName != undefined){
-      var tar = (targets[propName].currentStyle || 
+      var tar = (targets[propName].currentStyle ||
                  getComputedStyle(targets[propName], null))[propName];
     } else var tar = targets[propName];
     if (isSVG){
       if (propName.indexOf("transform") == -1){
         tempOb.setAttribute(propName, tar);
-      } 
+      }
     } else tempOb.style[propName] = tar;
-  } 
-  
+  }
+
   if (isSVG){
     var compS = object.attributes;
     var tempS = tempOb.attributes;
@@ -397,7 +397,7 @@ function assert_properties(object, targets, message, epsilons){
     var compS = object.currentStyle || getComputedStyle(object, null);
     var tempS = tempOb.currentStyle || getComputedStyle(tempOb, null);
   }
-  
+
   for (var propName in targets){
     if (propName != "refTest"){
       if (isSVG && propName.indexOf("transform") != -1){
@@ -431,7 +431,7 @@ function assert_transform(object, target, message){
   var currStyle = object.attributes["style"].value;
   currStyle = currStyle.replace(/[;\s]/,"");
   // Get rid of the begining property name bit.
-  currStyle = currStyle.split(":")[1]; 
+  currStyle = currStyle.split(":")[1];
   currStyle = currStyle.split(/[()]+/);
   target = target.split(/[()]+/);
 

@@ -1,4 +1,4 @@
-<!-- 
+<!--
 Copyright 2012 Google Inc. All Rights Reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -43,9 +43,9 @@ body{
 <button id=next-button onclick="updateState(1)">Next</button>
 <button id=Auto-Run onclick="reRunTests()">Auto Run Tests</button><br>
 <div id="test-name"></div>
-<iframe id = "frame"></iframe> 
+<iframe id = "frame"></iframe>
 <div id="results"></div>
-<script> 
+<script>
 var resultsOutputted = 0;
 var currentTest = 0;
 checkForResults();
@@ -60,11 +60,11 @@ function updateState(change) {
   }
   var test = tests[currentTest];
   window.location.hash = test;
-  document.querySelector('#test-name').innerText = (currentTest + 1) + 
+  document.querySelector('#test-name').innerText = (currentTest + 1) +
       ' of ' + tests.length + ': ' + test;
   document.querySelector('iframe').src = test;
   document.querySelector('#prev-button').disabled = currentTest <= 0;
-  document.querySelector('#next-button').disabled = 
+  document.querySelector('#next-button').disabled =
       currentTest >= tests.length - 1;
 }
 
@@ -86,8 +86,8 @@ function checkForResults(){
     resultsOutputted++;
     window.frame.testResults = undefined;
     if (currentTest < tests.length-1) updateState(1);
-  } 
-  if (resultsOutputted < tests.length) 
+  }
+  if (resultsOutputted < tests.length)
       window.webkitRequestAnimationFrame(function(){ checkForResults(); });
 }
 
@@ -135,8 +135,8 @@ function showDetails(object){
         childs[x].style.display = 'block';
         changeIframe = true;
       }
-    } 
-  } 
+    }
+  }
   if (changeIframe){
     // Show the test in the iframe
     for (var x = 0; (tests[x] != object.id) && (x < tests.length); x++);
