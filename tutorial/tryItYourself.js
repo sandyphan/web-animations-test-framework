@@ -37,20 +37,14 @@ var setCssHTML = function() {
 // executed when button called update is clicked
 // extract texts from the 3 text areas,
 var update = function(object, properties, times) { 
-  console.log(iframe);
-  console.log("time = " + iframe.time);
-  console.log(document.querySelector('.display'));
    document.getElementById("display").src = document.getElementById("display").src;
   document.getElementById("display").onload =(function() {
     iframeDoc = document.getElementById('display').contentWindow.document;
     setCssHTML();
     iframeDoc.documentElement.getElementsByTagName("body")[0].innerHTML = htmlVal;
-    console.log(iframeDoc);
     iframeDoc.getElementsByTagName('style')[0].innerHTML = cssVal;
-    console.log(document.getElementsByTagName('script'));
   
     var scriptEle = document.createElement('script');
-    console.log(iframe);
     getJsVal(iframe);
 
     var addAnimScript = function() {
@@ -101,7 +95,7 @@ Iframe.prototype.setTime = function(newTime) {
   this.time = newTime;
 }
 
-function heading() {
+function display() {
   var heading = document.createElement("div");
   heading.setAttribute("class", "heading");
   heading.setAttribute('id', 'heading')
@@ -119,7 +113,13 @@ function heading() {
    code.setAttribute('id', 'allCode');
    document.getElementById("tryIt").appendChild(code);
 
-   var html = document.createElement('div');
+   var display = document.createElement('div');
+   display.setAttribute('class', 'display');
+   document.getElementById('tryIt').appendChild(display);
+}
+
+function setDefaultHTML(defaultHTML) {
+  var html = document.createElement('div');
    html.setAttribute('class', 'label');
    html.setAttribute('id', 'htmlLabel')
    html.innerHTML = "HTML Code";
@@ -128,10 +128,12 @@ function heading() {
    var htmlCode = document.createElement('textarea');
    htmlCode.setAttribute('id', 'htmlCode');
    htmlCode.setAttribute('class', 'code');
-   htmlCode.innerHTML = "<div id='a' class='test'></div>";
-   document.getElementById('htmlLabel').appendChild(htmlCode);
+   htmlCode.innerHTML = defaultHTML;
+   document.getElementById('allCode').appendChild(htmlCode);
+}
 
-   var css = document.createElement('div');
+function setDefaultCSS(defaultCSS) {
+  var css = document.createElement('div');
    css.setAttribute('class', 'label');
    css.setAttribute('id', 'cssLabel')
    css.innerHTML = "CSS Style";
@@ -140,18 +142,12 @@ function heading() {
    var cssCode = document.createElement('textarea');
    cssCode.setAttribute('id', 'cssCode');
    cssCode.setAttribute('class', 'code');
-   cssCode.innerHTML = ".test {"
-     +"\n" + "background-color: red;"
-     +"\n" + "border-radius: 10px;"
-     +"\n" + "width: 100px;"
-     +"\n" + "height: 50px;"
-     +"\n" + "top: 50px;"
-     +"\n" + "left: 0px;"
-     +"\n" + "position: absolute;"
-     +"\n" + "}";
-   document.getElementById('cssLabel').appendChild(cssCode);
+   cssCode.innerHTML = defaultCSS;
+   document.getElementById('allCode').appendChild(cssCode);
+}
 
-   var js = document.createElement('div');
+function setDefaultJS(defaultJS) {
+  var js = document.createElement('div');
    js.setAttribute('class', 'label');
    js.setAttribute('id', 'jsLabel')
    js.innerHTML = "Javascript";
@@ -160,11 +156,8 @@ function heading() {
    var jsCode = document.createElement('textarea');
    jsCode.setAttribute('id', 'jsCode');
    jsCode.setAttribute('class', 'code');
-   document.getElementById('jsLabel').appendChild(jsCode);
-
-   var display = document.createElement('div');
-   display.setAttribute('class', 'display');
-   document.getElementById('tryIt').appendChild(display);
+   jsCode.innerHTML = defaultJS;
+   document.getElementById('allCode').appendChild(jsCode);
 }
 
 // innerDoc the solution box toggleable*/
