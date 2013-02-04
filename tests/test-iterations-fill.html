@@ -34,22 +34,6 @@ limitations under the License.
   border-right: 1px solid black;
 }
 
-.a {
-  top: 0px
-}
-
-.b {
-  top: 0px;
-}
-
-.c {
-  top: 0px;
-}
-
-.d {
-  top: 0px;
-}
-
 #ca {
   top: 50px;
 }
@@ -73,31 +57,31 @@ limitations under the License.
 </style>
 <div id="test" class ="testBox">
   <div class="animContainer" id="ca">
-    <div style="width: 100px;" class="expected"><div class="anim a"></div></div>
-    <div style="width: 100px;" class="expected"><div class="anim b"></div></div>
-    <div style="width: 300px;" class="expected"><div class="anim c"></div></div>
-    <div style="width: 300px;" class="expected"><div class="anim d"></div></div>
+    <div class="anim a"></div>
+    <div class="anim b"></div>
+    <div class="anim c"></div>
+    <div class="anim d"></div>
   </div>
 
   <div class="animContainer" id="cb">
-    <div style="width: 100px;" class="expected"><div class="anim a"></div></div>
-    <div style="width: 200px;" class="expected"><div class="anim b"></div></div>
-    <div style="width: 100px;" class="expected"><div class="anim c"></div></div>
-    <div style="width: 200px;" class="expected"><div class="anim d"></div></div>
+    <div class="anim a"></div>
+    <div class="anim b"></div>
+    <div class="anim c"></div>
+    <div class="anim d"></div>
   </div>
 
   <div class="animContainer" id="cc">
-    <div style="width: 100px;" class="expected"><div class="anim a"></div></div>
-    <div style="width: 100px;" class="expected"><div class="anim b"></div></div>
-    <div style="width: 300px;" class="expected"><div class="anim c"></div></div>
-    <div style="width: 300px;" class="expected"><div class="anim d"></div></div>
+    <div class="anim a"></div>
+    <div class="anim b"></div>
+    <div class="anim c"></div>
+    <div class="anim d"></div>
   </div>
 
   <div class="animContainer" id="cd">
-    <div style="width: 100px;" class="expected"><div class="anim a"></div></div>
-    <div style="width: 200px;" class="expected"><div class="anim b"></div></div>
-    <div style="width: 100px;" class="expected"><div class="anim c"></div></div>
-    <div style="width: 200px;" class="expected"><div class="anim d"></div></div>
+    <div class="anim a"></div>
+    <div class="anim b"></div>
+    <div class="anim c"></div>
+    <div class="anim d"></div>
   </div>
 </div>
 
@@ -134,10 +118,26 @@ for (var i = 0; i < fillModes.length; i++) {
 	}
 }
 
+// Checks
 for (var i = 0; i < fillModes.length; i++) {
   var divs = document.querySelectorAll(categories[i]);
   for (var j = 0; j < divs.length; j++) {
-    check(divs[j], {left:"200px"}, 3);
+    check(divs[j], {left:"0px"}, 1, "Start position " +i+j);
+  }
+}
+
+for (var i = 0; i < fillModes.length; i++) {
+  var divs = document.querySelectorAll(categories[i]);
+  if(i == 1 || i == 3) {
+    check(divs[0], {left:"0px"}, 2, "First movement " +i+0);
+    check(divs[1], {left:"100px"}, 2, "First movement " +i+1);
+    check(divs[2], {left:"0px"}, 2, "First movement " +i+2);
+    check(divs[3], {left:"100px"}, 2, "First movement " +i+3);
+  } else {
+    check(divs[0], {left:"0px"}, 2, "First movement " +i+0);
+    check(divs[1], {left:"0px"}, 2, "First movement " +i+1);
+    check(divs[2], {left:"200px"}, 2, "First movement " +i+2);
+    check(divs[3], {left:"200px"}, 2, "First movement " +i+3);
   }
 }
 
