@@ -24,22 +24,7 @@ limitations under the License.
     <meta name="tutorial" content="Web Animations tutorials">
     <link rel="stylesheet" type="text/css" href="../tutorialStyle.css">
     <script type="text/javascript" src="../jquery.js"></script>
-    <script type="text/javascript">
-      $(document.body).ready(function() {
-        $(".sideMenu li").click(function(e) {
-          var exerciseNum = $(this).html().split(" ")[1];
-          console.log(exerciseNum);
-          console.log(typeof exerciseNum);
-          console.log(window.location.href);
-          if (exerciseNum === "Info") {
-            
-          } else {
-            $(".content").load("basicAnimExercise" + exerciseNum + ".html" + " .content", function() {
-              $(this).children().unwrap();
-            });
-          };
-        });
-      });
+    <script type="text/javascript" src="../pageLoad.js"></script>
     </script>
   </head>
 
@@ -48,7 +33,7 @@ limitations under the License.
       <li><a href="../homePage.html">Home</a></li>
       <li><a href="#">Tutorials</a>
         <ul class="subMenu">
-          <li><a href="basicAnimations/createBasicAnim.html">Basic Animations</a></li>
+          <li><a href="basicAnimations/basicAnim.html">Basic Animations</a></li>
           <li><a href="../parallel/parallel.html">Parallel Animations</a></li>
           <li><a href="../sequence/sequence.html">Sequence Animations</a></li>
           <li><a href="../timing-dictionary/timingDict.html">Timing Dictionary</a></li>
