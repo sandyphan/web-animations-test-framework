@@ -113,7 +113,13 @@ function display() {
    code.setAttribute('id', 'allCode');
    document.getElementById("tryIt").appendChild(code);
 
-   var html = document.createElement('div');
+   var display = document.createElement('div');
+   display.setAttribute('class', 'display');
+   document.getElementById('tryIt').appendChild(display);
+}
+
+function setDefaultHTML(defaultHTML) {
+  var html = document.createElement('div');
    html.setAttribute('class', 'label');
    html.setAttribute('id', 'htmlLabel')
    html.innerHTML = "HTML Code";
@@ -122,10 +128,12 @@ function display() {
    var htmlCode = document.createElement('textarea');
    htmlCode.setAttribute('id', 'htmlCode');
    htmlCode.setAttribute('class', 'code');
-   htmlCode.innerHTML = "<div id='a' class='test'></div>";
+   htmlCode.innerHTML = defaultHTML;
    document.getElementById('allCode').appendChild(htmlCode);
+}
 
-   var css = document.createElement('div');
+function setDefaultCSS(defaultCSS) {
+  var css = document.createElement('div');
    css.setAttribute('class', 'label');
    css.setAttribute('id', 'cssLabel')
    css.innerHTML = "CSS Style";
@@ -134,18 +142,12 @@ function display() {
    var cssCode = document.createElement('textarea');
    cssCode.setAttribute('id', 'cssCode');
    cssCode.setAttribute('class', 'code');
-   cssCode.innerHTML = ".test {"
-     +"\n" + "background-color: red;"
-     +"\n" + "border-radius: 10px;"
-     +"\n" + "width: 100px;"
-     +"\n" + "height: 50px;"
-     +"\n" + "top: 50px;"
-     +"\n" + "left: 0px;"
-     +"\n" + "position: absolute;"
-     +"\n" + "}";
+   cssCode.innerHTML = defaultCSS;
    document.getElementById('allCode').appendChild(cssCode);
+}
 
-   var js = document.createElement('div');
+function setDefaultJS(defaultJS) {
+  var js = document.createElement('div');
    js.setAttribute('class', 'label');
    js.setAttribute('id', 'jsLabel')
    js.innerHTML = "Javascript";
@@ -154,11 +156,8 @@ function display() {
    var jsCode = document.createElement('textarea');
    jsCode.setAttribute('id', 'jsCode');
    jsCode.setAttribute('class', 'code');
+   jsCode.innerHTML = defaultJS;
    document.getElementById('allCode').appendChild(jsCode);
-
-   var display = document.createElement('div');
-   display.setAttribute('class', 'display');
-   document.getElementById('tryIt').appendChild(display);
 }
 
 // innerDoc the solution box toggleable*/

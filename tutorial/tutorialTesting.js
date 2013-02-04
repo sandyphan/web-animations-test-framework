@@ -31,6 +31,7 @@ function async_test(func, name, properties) {
   done = function() {
     console.log("done!");
     console.log(pass);
+    
   }
   return this;
 }
@@ -60,16 +61,14 @@ function add_completion_callback(anything) {
 }
 
 
-function endTests(time) {
-  setTimeout(function() {
-    for(var j = 0; j < pass.length; j++) {
-      if (!pass[j]) {
-        console.log("fail");
-        return;
-      }
+function endTests() {
+  for(var j = 0; j < pass.length; j++) {
+    if (!pass[j]) {
+      console.log("fail");
+      return;
     }
-    console.log("PASS");
-    var object = document.getElementById('display');
-    object.className = "pass"
-  }, time+50)
+  }
+  console.log(document);
+  var object = document.getElementById('display');
+  object.className = "pass"
 }
