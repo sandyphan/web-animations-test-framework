@@ -139,11 +139,12 @@ a:visited {
   top: 12%;
   z-index: 0;
 }
-.sideMenu a:hover {
+.sideMenu li:hover {
   background-color: #E6E6E6;
   color: #222;
+  cursor: pointer
 }
-.sideMenu a {
+.sideMenu li {
   display: block;
   width: 80%;
   background-color: #737373;
