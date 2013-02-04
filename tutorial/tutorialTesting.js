@@ -1,4 +1,7 @@
 var pass;
+var numTests;
+var allDone;
+var completedTests;
 
 function setupTutorialTests() {
   setState("Manual");
@@ -6,7 +9,10 @@ function setupTutorialTests() {
   timeOfAnimation.id = "animViewerText";
   timeOfAnimation.innerHTML = "Current animation time: 0.00";
   document.body.appendChild(timeOfAnimation);
-  pass = [];
+  pass = true;
+  numTests = 0;
+  completedTests = 0;
+  allDone = false;
 }
 
 function async_test(func, name, properties) {
@@ -20,18 +26,24 @@ function async_test(func, name, properties) {
   this.message = null;
 
   var this_obj = this;
-  this.steps = [];
 
+  numTests++;
+  done = false;
 
   step = function(func, this_obj) {
-    console.log(func);
     func();
+    if (!pass) {
+        console.log("FAIL :(");
+        allDone = true;
+    }
   } 
 
   done = function() {
-    console.log("done!");
-    console.log(pass);
-    
+    completedTests++;
+    if(completedTests == numTests && !allDone) {
+        console.log("PASS :D");
+        allDone = true;
+    }
   }
   return this;
 }
@@ -39,17 +51,11 @@ function async_test(func, name, properties) {
     
 
 function assert_equals(actual, expected, description) {
-    consloe.log("in assert_equals");
-    console.log(actual == expected);
-  pass.push(actual == expected);
+  pass = (actual == expected);
 }
 
 function assert_approx_equals(actual, expected, epsilon, description) {
-    console.log("In approx equals");
-    console.log("actual = " +actual);
-    console.log("expected = " +expected);
-    
-  pass.push(expected + (epsilon / 2) > actual && expected - (epsilon / 2) < actual );
+  pass = (expected + (epsilon / 2) > actual && expected - (epsilon / 2) < actual );
 }
 
 function setup(func_or_properties, maybe_properties) {
@@ -57,7 +63,6 @@ function setup(func_or_properties, maybe_properties) {
 }
 
 function add_completion_callback(anything) {
-  
 }
 
 
