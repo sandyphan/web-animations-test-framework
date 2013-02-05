@@ -16,59 +16,58 @@
 
 
 // get default html values
-var htmlVal;
-var cssVal;
-var jsVal;
+//var htmlVal;
+//var cssVal;
+//var jsVal;
 
 // elements such as animation divs and its associated style
 // is appended into the body of iframe as well as any associating
 // js scripts
-var runCssHtml = function() {
-  htmlVal = "<div id='test' class='testBox'>" + document.getElementById('htmlCode').value + "\n<div id='dummy' class='test'></div>" + "</div>";
-  cssVal = document.getElementById('cssCode').value +"\n" +"#dummy { display: none; }";
-  iframeDoc.getElementsByTagName("body")[0].innerHTML = htmlVal;
-  iframeDoc.getElementsByTagName('style')[0].innerHTML = cssVal;
-}
 
 
 // executed when button called update is clicked
 // extract texts from the 3 text areas,
 var update = function() {
+
+  var addCssHtml = function() {
+    var htmlVal = "<div id='test' class='testBox'>" + document.getElementById('htmlCode').value + "\n<div id='dummy' class='test'></div>" + "</div>";
+    var cssVal = document.getElementById('cssCode').value +"\n" +"#dummy { display: none; }";
+    iframeDoc.getElementsByTagName("body")[0].innerHTML = htmlVal;
+    iframeDoc.getElementsByTagName('style')[0].innerHTML = cssVal;
+  }
+
+  function getJsVal() {
+  var jsVal = "setupTutorialTests(); \n" +  document.getElementById('jsCode').value +"\nnew Animation(document.getElementById('dummy'), {left: '100px'}, "
+    +display.iframe.time + ");";
+
+  for(var i = 0; i < display.iframe.checks.length; i++) {
+    jsVal += "\n" + display.iframe.checks[i];
+  }
+  jsVal += " \nrunTests();";
+  return jsVal;
+}
+
+  var addAnimScript = function() {
+    var scriptEle = document.createElement('script');
+    var jsVal = getJsVal();
+    var scriptDivs = iframeDoc.getElementsByTagName('script');
+    if (scriptDivs[scriptDivs.length]) {
+      var oldScript = frames['display'].document.getElementsByTagName('script')[scriptDivs.length];
+      scriptEle.innerHTML = '\n' + jsVal + '\n';
+      iframeDoc.getElementsByTagName('body')[0].replaceChild(scriptEle, oldScript);
+    } else {
+      scriptEle.innerHTML = jsVal;
+      par = iframeDoc.getElementsByTagName('body')[0];
+      par.appendChild(scriptEle);
+    }
+  }
+
   display.doc.getElementById("display").src = document.getElementById("display").src;
   display.doc.getElementById("display").onload =(function() {
     iframeDoc = display.iframe.doc.contentDocument;
-    runCssHtml();
-    iframeDoc.documentElement.getElementsByTagName("body")[0].innerHTML = htmlVal;
-    iframeDoc.getElementsByTagName('style')[0].innerHTML = cssVal;
-
-    var scriptEle = document.createElement('script');
-    getJsVal(display.iframe);
-
-    var addAnimScript = function() {
-      var scriptDivs = iframeDoc.getElementsByTagName('script');
-      if (scriptDivs[scriptDivs.length]) {
-        var oldScript = frames['display'].document.getElementsByTagName('script')[scriptDivs.length];
-        scriptEle.innerHTML = '\n' + jsVal + '\n';
-        iframeDoc.getElementsByTagName('body')[0].replaceChild(scriptEle, oldScript);
-      } else {
-        scriptEle.innerHTML = jsVal;
-        par = iframeDoc.getElementsByTagName('body')[0];
-        par.appendChild(scriptEle);
-      }
-    }
-    window.onload = addAnimScript();
+    addCssHtml();
+    addAnimScript();
   });
-}
-
-function getJsVal(iframe) {
-  jsVal = "setupTutorialTests(); \n" +  document.getElementById('jsCode').value +"\nnew Animation(document.getElementById('dummy'), {left: '100px'}, "
-    +iframe.time + ");";
-
-  for(var i = 0; i < iframe.checks.length; i++) {
-    jsVal += "\n" + iframe.checks[i];
-  }
-  jsVal += " \nrunTests();";
- 
 }
 
 function Iframe() {
