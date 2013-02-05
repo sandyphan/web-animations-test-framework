@@ -126,18 +126,29 @@ for (var i = 0; i < fillModes.length; i++) {
   }
 }
 
+var buf = 0.02
 for (var i = 0; i < fillModes.length; i++) {
   var divs = document.querySelectorAll(categories[i]);
-  if(i == 1 || i == 3) {
-    check(divs[0], {left:"0px"}, 2, "First movement " +i+0);
-    check(divs[1], {left:"100px"}, 2, "First movement " +i+1);
-    check(divs[2], {left:"0px"}, 2, "First movement " +i+2);
-    check(divs[3], {left:"100px"}, 2, "First movement " +i+3);
-  } else {
-    check(divs[0], {left:"0px"}, 2, "First movement " +i+0);
-    check(divs[1], {left:"0px"}, 2, "First movement " +i+1);
-    check(divs[2], {left:"200px"}, 2, "First movement " +i+2);
-    check(divs[3], {left:"200px"}, 2, "First movement " +i+3);
+  if(i == 0) {
+    check(divs[0], {left:"0px"}, 2 + buf, "First movement " +i+0);
+    check(divs[1], {left:"0px"}, 2 + buf, "First movement " +i+1);
+    check(divs[2], {left:"0px"}, 2 + buf, "First movement " +i+2);
+    check(divs[3], {left:"0px"}, 2 + buf, "First movement " +i+3);
+  } else if(i == 1){
+    check(divs[0], {left:"100px"}, 2 + buf, "First movement " +i+0);
+    check(divs[1], {left:"0px"}, 2 + buf, "First movement " +i+1);
+    check(divs[2], {left:"100px"}, 2 + buf, "First movement " +i+2);
+    check(divs[3], {left:"0px"}, 2 + buf, "First movement " +i+3);
+  } else if(i == 2){
+    check(divs[0], {left:"0px"}, 2 + buf, "First movement " +i+0);
+    check(divs[1], {left:"200px"}, 2 + buf, "First movement " +i+1);
+    check(divs[2], {left:"0px"}, 2 + buf, "First movement " +i+2);
+    check(divs[3], {left:"200px"}, 2 + buf, "First movement " +i+3);
+  } else if(i == 3){
+    check(divs[0], {left:"100px"}, 2 + buf, "First movement " +i+0);
+    check(divs[1], {left:"200px"}, 2 + buf, "First movement " +i+1);
+    check(divs[2], {left:"100px"}, 2 + buf, "First movement " +i+2);
+    check(divs[3], {left:"200px"}, 2 + buf, "First movement " +i+3);
   }
 }
 
