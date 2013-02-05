@@ -155,6 +155,12 @@ function TryItDisplay() {
   jsCode.setAttribute('class', 'code');
   document.getElementById('allCode').appendChild(jsCode);
 
+  var heading = document.createElement("div");
+  heading.setAttribute("class", "heading fail");
+  heading.setAttribute('id', 'passOrFail')
+  heading.innerHTML = "YOU PASSED";
+  document.getElementById("tryIt").appendChild(heading);
+
   this.doc = document;
 }
 
@@ -180,11 +186,11 @@ TryItDisplay.prototype.setDefaultJS = function(newJS) {
 }
 
 TryItDisplay.prototype.pass = function() {
-  var heading = document.createElement("div");
-  heading.setAttribute("class", "heading");
-  heading.setAttribute('id', 'heading')
-  heading.innerHTML = "YOU PASSED";
-  document.getElementById("tryIt").appendChild(heading);
+  display.doc.getElementById("passOrFail").className = "heading pass";  
+}
+
+TryItDisplay.prototype.fail = function() {
+  display.doc.getElementById("passOrFail").className = "heading fail";  
 }
 
 // innerDoc the solution box toggleable*/
