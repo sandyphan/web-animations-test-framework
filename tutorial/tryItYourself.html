@@ -69,20 +69,26 @@ limitations under the License.
           <div id="tryIt"></div>  <!-- content ending div -->
       </div> <!-- main ending div -->
     <script type="text/javascript" src="tryItYourself.js"></script>
+    <script src='tutorialTesting.js'></script>
+    <script src='../../web-animations-js/web-animation.js'></script>
+    <script src='tryItYourself.js'></script>
+    <script src='../extra-asserts.js'></script>
+    <link href='../animation-test-style.css'>
     <script>
       var display = new TryItDisplay();
       display.setDefaultHTML("<div id='a' class='test'></div>");
       css = ".test {"
-     +"\n" + "background-color: red;"
-     +"\n" + "border-radius: 10px;"
-     +"\n" + "width: 100px;"
-     +"\n" + "height: 50px;"
-     +"\n" + "top: 50px;"
-     +"\n" + "left: 0px;"
-     +"\n" + "position: absolute;"
-     +"\n" + "}";
-     display.setDefaultCSS(css);
+        +"\n" + "background-color: red;"
+        +"\n" + "border-radius: 10px;"
+        +"\n" + "width: 100px;"
+        +"\n" + "height: 50px;"
+        +"\n" + "top: 50px;"
+        +"\n" + "left: 0px;"
+        +"\n" + "position: absolute;"
+        +"\n" + "}";
+      display.setDefaultCSS(css);
       var iframe = new Iframe();
+      //setupTutorialTests();
       iframe.setTime(2);
       iframe.addCheck("document.getElementById('a')", "{'left': '0px'}", 0);
       iframe.addCheck("document.getElementById('a')", "{'left': '300px'}", 2);
