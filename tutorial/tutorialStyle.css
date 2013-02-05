@@ -334,10 +334,11 @@ a:visited {
   border-radius: 10px;
   padding: 20px;
   margin: 5px;
-  font: bold 1.2em Arial;
-  height: 50px;
+  font: bold 50pt Arial;
+  height: 1em;
   clear: both;
+  text-align: center;
 }
 .fail {
-  display: none;
+  visibility: hidden;
 }

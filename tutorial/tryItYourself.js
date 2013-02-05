@@ -158,7 +158,7 @@ function TryItDisplay() {
   var heading = document.createElement("div");
   heading.setAttribute("class", "heading fail");
   heading.setAttribute('id', 'passOrFail')
-  heading.innerHTML = "YOU PASSED";
+  heading.innerHTML = "YOU PASSED!";
   document.getElementById("tryIt").appendChild(heading);
 
   this.doc = document;
