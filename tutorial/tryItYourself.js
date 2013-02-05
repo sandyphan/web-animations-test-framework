@@ -33,9 +33,7 @@ var runCssHtml = function() {
 
 // executed when button called update is clicked
 // extract texts from the 3 text areas,
-var update = function(display) {
-  console.log(display.doc);
-  //console.log(b);
+var update = function() {
   display.doc.getElementById("display").src = document.getElementById("display").src;
   display.doc.getElementById("display").onload =(function() {
     iframeDoc = display.iframe.doc.contentDocument;
@@ -88,16 +86,16 @@ function Iframe() {
   return this;
 }
 
-Iframe.prototype.addCheck = function(object, property, time) {
-  this.checks.push("check(" + object + ", " + property + ", " + time + ", 'default');")
+TryItDisplay.prototype.addCheck = function(object, property, time) {
+  this.iframe.checks.push("check(" + object + ", " + property + ", " + time + ", 'default');")
 }
 
-Iframe.prototype.setTime = function(newTime) {
-  this.time = newTime;
+TryItDisplay.prototype.setTime = function(newTime) {
+  this.iframe.time = newTime;
 }
 
-function TryItDisplay(name) {
-  this.name = name;
+function TryItDisplay() {
+  display = this;
 
   this.doc = document;
   console.log(this.name);
@@ -106,7 +104,7 @@ function TryItDisplay(name) {
   this.iframe = new Iframe();
 }
 
-function createTryItDisplay(myself) {
+function createTryItDisplay() {
   var heading = document.createElement("div");
   heading.setAttribute("class", "heading");
   heading.setAttribute('id', 'heading')
@@ -114,8 +112,7 @@ function createTryItDisplay(myself) {
   document.getElementById("tryIt").appendChild(heading);
 
   var button = document.createElement('button');
-  console.log(myself);
-  button.setAttribute('onclick', 'update(' + myself + ')');
+  button.setAttribute('onclick', 'update(display)');
   button.setAttribute('id', 'update');
   button.innerHTML = "Update";
   document.getElementById('heading').appendChild(button);
