@@ -54,17 +54,17 @@
 }
 #htmlCode {
   width: 99%;
-  height: 200px;
+  height: 28%;
   
 }
 #jsCode {
   width: 99%;
-  height: 200px;
+  height: 28%;
   overflow-x: hidden;
 }
 #cssCode {
   width: 99%;
-  height: 200px;
+  height: 28%;
   float: left;
   overflow-x: hidden;
 }
@@ -83,8 +83,8 @@
 }
 .label {
   font: bold 1em Arial;
-  padding: 5px;
-  margin: 2px;
+  padding: 1%;
+  height: 2%;
   float: left;
   clear: both;
 }
