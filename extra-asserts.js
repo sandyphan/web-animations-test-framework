@@ -279,8 +279,8 @@ function animPause(){
         < document.animationTimeline.children[0].animationDuration - 0.01){
         parentAnimation.play();
       }
-      userPaused = false;
     }
+    userPaused = false;
     document.getElementById("test").style.backgroundColor = "white";
   } else {
     beingPaused++;
@@ -367,12 +367,22 @@ function flashing(test) {
     flash.setAttribute("stroke-width", "5px");
   }
 
+  flashCleanUp(flash);
+}
+
+function flashCleanUp(victim){
+  console.log("trying to clean up flash " + userPaused);
   setTimeout(function() {
-    flash.parentNode.removeChild(flash);
-    if (document.animationTimeline.children[0].iterationTime
-        < document.animationTimeline.children[0].animationDuration - 0.01){
-      beingPaused--;
-      if(beingPaused == 0) parentAnimation.play();
+    if(userPaused){
+      // Since the user has paused, keep any displayed divs up and set new timeout
+      flashCleanUp(victim);
+    } else {
+      victim.parentNode.removeChild(victim);
+      if (document.animationTimeline.children[0].iterationTime
+          < document.animationTimeline.children[0].animationDuration - 0.01){
+        beingPaused--;
+        if(beingPaused == 0) parentAnimation.play();
+      }
     }
   }, pauseTime);
 }

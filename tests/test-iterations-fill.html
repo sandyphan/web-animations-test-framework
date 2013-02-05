@@ -126,20 +126,52 @@ for (var i = 0; i < fillModes.length; i++) {
   }
 }
 
+var ca = [];
+var cb = [];
+var cc = [];
+var cd = [];
 for (var i = 0; i < fillModes.length; i++) {
   var divs = document.querySelectorAll(categories[i]);
-  if(i == 1 || i == 3) {
-    check(divs[0], {left:"0px"}, 2, "First movement " +i+0);
-    check(divs[1], {left:"100px"}, 2, "First movement " +i+1);
-    check(divs[2], {left:"0px"}, 2, "First movement " +i+2);
-    check(divs[3], {left:"100px"}, 2, "First movement " +i+3);
-  } else {
-    check(divs[0], {left:"0px"}, 2, "First movement " +i+0);
-    check(divs[1], {left:"0px"}, 2, "First movement " +i+1);
-    check(divs[2], {left:"200px"}, 2, "First movement " +i+2);
-    check(divs[3], {left:"200px"}, 2, "First movement " +i+3);
-  }
+  ca.push(divs[0]);
+  cb.push(divs[1]);
+  cc.push(divs[2]);
+  cd.push(divs[3]);
 }
 
+locCheck(ca, 2, "First iteration CA ", 0);
+locCheck(cb, 2, "First iteration CB ", 1);
+locCheck(cc, 2, "First iteration CC ", 0);
+locCheck(cd, 2, "First iteration CD ", 1);
+
+locCheck(ca, 5, "Second iteration CA ", 1);
+locCheck(cb, 5, "Second iteration CB ", 0);
+locCheck(cc, 5, "Second iteration CC ", 1);
+locCheck(cd, 5, "Second iteration CD ", 0);
+
+locCheck(ca, 9, "Third iteration CA ", 1);
+locCheck(cb, 9, "Third iteration CB ", 0);
+locCheck(cc, 9, "Third iteration CC ", 0);
+locCheck(cd, 9, "Third iteration CD ", 1);
+
+locCheck(ca, 14, "Final position CA ", 1);
+locCheck(cb, 14, "Final position CB ", 0);
+locCheck(cc, 14, "Final position CC ", 1);
+locCheck(cd, 14, "Final position CD ", 0);
+
 runTests();
+
+function locCheck(divs, time, testMessage, pattern){
+  var checkTime = time + 0.02;
+  if(pattern == 0) {
+    check(divs[0], {left:"0px"}, checkTime, testMessage +0);
+    check(divs[1], {left:"100px"}, checkTime, testMessage +1);
+    check(divs[2], {left:"0px"}, checkTime, testMessage +2);
+    check(divs[3], {left:"100px"}, checkTime, testMessage +3);
+  } else {
+    check(divs[0], {left:"0px"}, checkTime, testMessage +0);
+    check(divs[1], {left:"0px"}, checkTime, testMessage +1);
+    check(divs[2], {left:"200px"}, checkTime, testMessage +2);
+    check(divs[3], {left:"200px"}, checkTime, testMessage +3);
+  }
+}
 </script>

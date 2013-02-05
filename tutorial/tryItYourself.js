@@ -37,7 +37,6 @@ var runCssHtml = function() {
 // executed when button called update is clicked
 // extract texts from the 3 text areas,
 var update = function(object, properties, times) {
-  iframe.doc.contentWindow
   document.getElementById("display").src = document.getElementById("display").src;
   document.getElementById("display").onload =(function() {
     iframeDoc = iframe.doc.contentDocument;
@@ -84,7 +83,7 @@ function Iframe() {
 
   this.doc.setAttribute('id', 'display');
   this.doc.setAttribute('class', 'display');
-  this.doc.setAttribute('src', '../iframe-contents.html');
+  this.doc.setAttribute('src', 'iframe-contents.html');
   document.querySelector('.display').appendChild(this.doc);
 
   return this;
@@ -156,6 +155,12 @@ function TryItDisplay() {
   jsCode.setAttribute('class', 'code');
   document.getElementById('allCode').appendChild(jsCode);
 
+  var heading = document.createElement("div");
+  heading.setAttribute("class", "heading fail");
+  heading.setAttribute('id', 'passOrFail')
+  heading.innerHTML = "YOU PASSED!";
+  document.getElementById("tryIt").appendChild(heading);
+
   this.doc = document;
 }
 
@@ -178,6 +183,14 @@ TryItDisplay.prototype.setDefaultJS = function(newJS) {
 
   var jsCode = this.doc.getElementById('jsCode');
   jsCode.innerHTML = newJS;
+}
+
+TryItDisplay.prototype.pass = function() {
+  display.doc.getElementById("passOrFail").className = "heading pass";  
+}
+
+TryItDisplay.prototype.fail = function() {
+  display.doc.getElementById("passOrFail").className = "heading fail";  
 }
 
 // innerDoc the solution box toggleable*/

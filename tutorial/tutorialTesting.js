@@ -34,6 +34,7 @@ function async_test(func, name, properties) {
     func();
     if (!pass) {
         console.log("FAIL :(");
+        parent.display.fail();
         allDone = true;
     }
   } 
@@ -43,6 +44,7 @@ function async_test(func, name, properties) {
     if(completedTests == numTests && !allDone) {
         console.log("PASS :D");
         allDone = true;
+        parent.display.pass();
     }
   }
   return this;
