@@ -1,32 +1,36 @@
 // get the name of current page the user is at
 // e.g. if the main page of the section is called parallel
 // currentSection would be 'parallel'
-var currentSection = window.location.href.split("/").pop();
-currentSection = currentSection.split(".")[0];
+var currentSection = window.location.href.split('/').pop();
+currentSection = currentSection.split('.')[0];
+var iframe;
 
 // waits until all DOM elements are ready to perform
 $(document.body).ready(function() {
   // if one of the side menu is clicked
   // update page content without refreshing the whole page
-  $(".sideMenu li").click(function(e) {
-    var exerciseNum = $(this).html().split(" ")[1];
-    if ($(this).attr("id") === "menuLabel") {
+  $('.sideMenu li').click(function(e) {
+    var exerciseNum = $(this).html().split(' ')[1];
+    if ($(this).attr('id') === 'menuLabel') {
       return;
     } else if (parseInt(exerciseNum) !== exerciseNum && isNaN(exerciseNum)) {
-      $(".content").load(currentSection + ".html" + " .content", function() {
+      $('.content').load(currentSection + '.html' + ' .content', function() {
         $(this).children().unwrap();
       });
     } else {
-      var url = currentSection + "Exercise" + exerciseNum + ".html";
+      var url = currentSection + 'Exercise' + exerciseNum + '.html';
       // checks if a file/link exist before adding contents
       // into page
+      // after contents are loaded, load editor
       $.ajax({
         url: url,
         type: 'HEAD',
         success: function() {
-          $(".content").load(url + " .content", function() {
+          $('.content').load(url + ' .content', function() {
             $(this).children().unwrap();
-            loadEditor();
+            var animNum = findText();
+            console.log(animNum);
+            loadEditor(animNum);
           });
         }
       });
@@ -35,29 +39,50 @@ $(document.body).ready(function() {
 });
 
 // this loads the editor dynamically into page content
-var loadEditor = function() {
-  var html;
-  console.log(currentSection);
-  if (currentSection === 'parallel' || currentSection === 'sequence')
-    html = "<div id=\"a\" class=\"anim\"></div>"
-           + '\n' + "<div id=\"b\" class=\"anim\"></div>"
-           + '\n' + "<div id=\"c\" class=\"anim\"></div>";
-  else 
-    html = "<div id=\"a\" class=\"anim\"></div>";
+var loadEditor = function(animNum) {
+  var html = "", currentId = 'a';
 
-  display();
-  setDefaultHTML(html);
-  var css = ".anim {"
-         +"\n" + "background-color: red;"
-         +"\n" + "border-radius: 10px;"
-         +"\n" + "width: 100px;"
-         +"\n" + "height: 50px;"
-         +"\n" + "top: 50px;"
-         +"\n" + "left: 0px;"
-         +"\n" + "position: absolute;"
-         +"\n" + "}";
-  setDefaultCSS(css);
-  setDefaultJS("");
-  var iframe = new Iframe();
-  console.log(document.querySelector("#tryIt"));
+  // generate a number of animation divs according to
+  // the requirements of the exercise
+  // such as in sequence section
+  for (var i = 0; i < animNum; i++) {
+    html += '<div id=\"' + currentId + '\" class=\"anim\"></div>' + '\n';
+    currentId = nextId(currentId);
+  }
+
+  // create a new editor object
+  var editor = new TryItDisplay();
+  editor.setDefaultHTML(html);
+
+  // common css for all divs
+  var css = '.anim {'
+         +'\n' + 'background-color: red;'
+         +'\n' + 'border-radius: 10px;'
+         +'\n' + 'width: 100px;'
+         +'\n' + 'height: 50px;'
+         +'\n' + 'top: 0px;'
+         +'\n' + 'left: 0px;'
+         +'\n' + 'position: relative;'
+         +'\n' + 'border: 1px solid black;'
+         +'\n' + '}';
+  editor.setDefaultCSS(css);
+  update();
+}
+
+// check if the exercise needs more than 1
+// animation divs
+// by default returns 1
+var findText = function() {
+  var content = $('p').text();
+  if (content.match('3 different'))
+    return 3;
+  else if (content.match('4 different'))
+    return 4;
+  else
+    return 1;
+}
+
+// generate a, b, c, d... as to put in as id
+var nextId = function(currentId) {
+  return String.fromCharCode(currentId.charCodeAt() + 1);
 }
