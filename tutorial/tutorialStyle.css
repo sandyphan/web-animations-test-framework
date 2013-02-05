@@ -329,3 +329,16 @@ a:visited {
 .properties-table-title td {
   font-weight: bold;
 }
+.pass {
+  background-color: #AFA;
+  border-radius: 10px;
+  padding: 20px;
+  margin: 5px;
+  font: bold 50pt Arial;
+  height: 1em;
+  clear: both;
+  text-align: center;
+}
+.fail {
+  visibility: hidden;
+}
