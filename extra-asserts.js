@@ -121,7 +121,7 @@ function setState(newState){
 // Adds each test to a list to be processed when runTests is called.
 function check(object, targets, time, message){
   if(testPacket.length == 0) reparent();
-
+  if (time == 0) time += 0.02; // The animation isn't clean at 0 secs
   // Create new async test
   var test = async_test(message);
   test.timeout_length = testTimeout;
@@ -253,7 +253,6 @@ function autoTestRunner(){
   if (testIndex < testPacket.length){
     // Small buffer to let the first anim frame render.
     var nextTest = testPacket[testIndex][0];
-    if (nextTest.time == 0) nextTest.time += 0.02;
     document.animationTimeline.children[0].currentTime = nextTest.time;
     testIndex++;
     window.webkitRequestAnimationFrame(function(){ autoTestRunner(); });
@@ -371,7 +370,6 @@ function flashing(test) {
 }
 
 function flashCleanUp(victim){
-  console.log("trying to clean up flash " + userPaused);
   setTimeout(function() {
     if(userPaused){
       // Since the user has paused, keep any displayed divs up and set new timeout
@@ -400,6 +398,8 @@ function assert_properties(object, targets, message, epsilons){
   var isSVG = (object.nodeName != "DIV");
   var tempOb = document.createElement(object.nodeName);
   tempOb.style.position = "absolute";
+  tempOb.id = "find me";
+  if(!isSVG) tempOb.innerHTML = object.innerHTML;
   object.parentNode.appendChild(tempOb);
 
   for (var propName in targets){
@@ -421,7 +421,7 @@ function assert_properties(object, targets, message, epsilons){
     var compS = object.currentStyle || getComputedStyle(object, null);
     var tempS = tempOb.currentStyle || getComputedStyle(tempOb, null);
   }
-
+  console.log("popp0");
   for (var propName in targets){
     if (propName != "refTest"){
       if (isSVG && propName.indexOf("transform") != -1){
@@ -435,19 +435,26 @@ function assert_properties(object, targets, message, epsilons){
           var c = compS[propName];
         }
 
-        t = t.replace(/[^0-9,.]/g, "");
-        t = t.split(",");
-        c = c.replace(/[^0-9,.]/g, "");
-        c = c.split(",");
-
+        t = t.replace(/[^0-9.\s]/g, "").split(" ");
+        c = c.replace(/[^0-9.\s]/g, "").split(" ");
         for (var x in t){
-          assert_approx_equals(Number(c[x]), Number(t[x]), 10, message +
-                               " " + x);
+          //assert_approx_equals(Number(c[x]), Number(t[x]), 12, message +
+                               //" " + x);
+          callAssert(Number(c[x]), Number(t[x]), 12, message + " " + x);
         }
+        console.log("im here");
       }
+
     }
   }
+  console.log("popp1");
+  if(!isSVG) tempOb.innerHTML = "";
+
   tempOb.remove();
+}
+
+function callAssert(c, t, espsilon, message){
+  assert_approx_equals(c, t, espsilon, message);
 }
 
 // Deals with the svg transforms special case.

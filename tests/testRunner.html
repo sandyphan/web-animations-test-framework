@@ -27,7 +27,9 @@ var tests = [
   'test-grouped-anim-func-w3c.html',
   'test-repetition-w3c.html',
   'test-svg-animation-w3c.html',
-  'test-fill-values.html'
+  'test-fill-values.html',
+  'test-iterations-fill.html',
+  'test-color-names.html'
 ];
 </script>
 <style>
@@ -104,10 +106,10 @@ function logResults (results){
 
   var newResultsDiv = document.createElement('div');
   if (grade == "pass"){
-    newTestDiv.style.backgroundColor = "LimeGreen";
+    newTestDiv.style.backgroundColor = "YellowGreen";
     newResultsDiv.style.backgroundColor = "LightGreen";
   } else {
-    newTestDiv.style.backgroundColor = "LightCoral";
+    newTestDiv.style.backgroundColor = "OrangeRed";
     newResultsDiv.style.backgroundColor = "LightPink";
   }
   document.getElementById("results").appendChild(newTestDiv);
