@@ -96,14 +96,17 @@ Iframe.prototype.setTime = function(newTime) {
   this.time = newTime;
 }
 
-function TryItDisplay() {
-  createTryItDisplay();
+function TryItDisplay(name) {
+  this.name = name;
 
   this.doc = document;
+  console.log(this.name);
+  createTryItDisplay(this.name);
+
   this.iframe = new Iframe();
 }
 
-function createTryItDisplay() {
+function createTryItDisplay(myself) {
   var heading = document.createElement("div");
   heading.setAttribute("class", "heading");
   heading.setAttribute('id', 'heading')
@@ -111,7 +114,8 @@ function createTryItDisplay() {
   document.getElementById("tryIt").appendChild(heading);
 
   var button = document.createElement('button');
-  button.setAttribute('onclick', 'update(display)');
+  console.log(myself);
+  button.setAttribute('onclick', 'update(' + myself + ')');
   button.setAttribute('id', 'update');
   button.innerHTML = "Update";
   document.getElementById('heading').appendChild(button);
