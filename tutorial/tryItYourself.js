@@ -83,7 +83,7 @@ function Iframe() {
 
   this.doc.setAttribute('id', 'display');
   this.doc.setAttribute('class', 'display');
-  this.doc.setAttribute('src', '../iframe-contents.html');
+  this.doc.setAttribute('src', 'iframe-contents.html');
   document.querySelector('.display').appendChild(this.doc);
 
   return this;
