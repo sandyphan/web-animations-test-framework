@@ -43,6 +43,7 @@ function async_test(func, name, properties) {
     if(completedTests == numTests && !allDone) {
         console.log("PASS :D");
         allDone = true;
+        console.log(parent.display.pass());
     }
   }
   return this;

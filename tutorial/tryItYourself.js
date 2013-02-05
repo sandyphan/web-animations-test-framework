@@ -37,7 +37,6 @@ var runCssHtml = function() {
 // executed when button called update is clicked
 // extract texts from the 3 text areas,
 var update = function(object, properties, times) { 
-  iframe.doc.contentWindow
   document.getElementById("display").src = document.getElementById("display").src;
   document.getElementById("display").onload =(function() {
     iframeDoc = iframe.doc.contentDocument;
@@ -175,6 +174,14 @@ TryItDisplay.prototype.setDefaultJS = function(newJS) {
 
   var jsCode = this.doc.getElementById('jsCode');
   jsCode.innerHTML = newJS;
+}
+
+TryItDisplay.prototype.pass = function() {
+  var heading = document.createElement("div");
+  heading.setAttribute("class", "heading");
+  heading.setAttribute('id', 'heading')
+  heading.innerHTML = "YOU PASSED";
+  document.getElementById("tryIt").appendChild(heading);
 }
 
 // innerDoc the solution box toggleable*/
