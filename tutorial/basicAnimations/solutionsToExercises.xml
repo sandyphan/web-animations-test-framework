@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+
+<solution>
+  <exercise1>
+    <object>document.getElementById('a')</object>
+    <property>{'left': '0px'}</property>
+    <time>0</time>
+    <object>document.getElementById('a')</object>
+    <property>{'left': '300px'}</property>
+    <time>2</time>
+  </exercise1>
+
+  <exercise2>
+    <object>document.getElementById('a')</object>
+    <property>{'top': '0px'}</property>
+    <time>0</time>
+    <object>document.getElementById('a')</object>
+    <property>{'top': '500px'}</property>
+    <time>2</time>
+  </exercise2>
+</solution>

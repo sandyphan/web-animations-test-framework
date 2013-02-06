@@ -3,14 +3,14 @@
 // currentSection would be 'parallel'
 var currentSection = window.location.href.split('/').pop();
 currentSection = currentSection.split('.')[0];
-var iframe;
+var iframe, exerciseNum;
 
 // waits until all DOM elements are ready to perform
 $(document.body).ready(function() {
   // if one of the side menu is clicked
   // update page content without refreshing the whole page
   $('.sideMenu li').click(function(e) {
-    var exerciseNum = $(this).html().split(' ')[1];
+    exerciseNum = $(this).html().split(' ')[1];
     if ($(this).attr('id') === 'menuLabel') {
       return;
     } else if (parseInt(exerciseNum) !== exerciseNum && isNaN(exerciseNum)) {
@@ -29,7 +29,6 @@ $(document.body).ready(function() {
           $('.content').load(url + ' .content', function() {
             $(this).children().unwrap();
             var animNum = findText();
-            console.log(animNum);
             loadEditor(animNum);
           });
         }
@@ -66,7 +65,8 @@ var loadEditor = function(animNum) {
          +'\n' + 'border: 1px solid black;'
          +'\n' + '}';
   editor.setDefaultCSS(css);
-  update();
+  editor.update();
+  loadSolution(exerciseNum);
 }
 
 // check if the exercise needs more than 1
@@ -74,7 +74,7 @@ var loadEditor = function(animNum) {
 // by default returns 1
 var findText = function() {
   var content = $('p').text();
-  if (content.match('3 different'))
+  if (content.match('3 + different'))
     return 3;
   else if (content.match('4 different'))
     return 4;
@@ -85,4 +85,16 @@ var findText = function() {
 // generate a, b, c, d... as to put in as id
 var nextId = function(currentId) {
   return String.fromCharCode(currentId.charCodeAt() + 1);
+}
+
+var loadSolution = function(exerciseNum) {
+  var xmlDoc = loadXMLDoc("solutionsToExercises.xml");
+  var solution = xmlDoc.getElementsByTagName("exercise" + exerciseNum);
+  console.log("exercise" + exerciseNum);
+  console.log(solution);
+  var objects = $(solution).find("object");
+  var property = $(solution).find("property");
+  var time = $(solution).find("time");
+  console.log(objects);
+  console.log(property);
 }
