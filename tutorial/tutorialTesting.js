@@ -1,3 +1,4 @@
+(function() {
 function setupTutorialTests() {
   setState("Manual");
   var timeOfAnimation = document.createElement('div');
@@ -31,16 +32,16 @@ function async_test(func, name, properties) {
     }
   }
   return this;
-}
-
-    
+}   
 
 function assert_equals(actual, expected, description) {
   pass = (actual == expected);
 }
 
 function assert_approx_equals(actual, expected, epsilon, description) {
-  pass = (expected + (epsilon / 2) > actual && expected - (epsilon / 2) < actual );
+  var lowerBound = expected - (epsilon / 2) < actual;
+  var upperBound = expected + (epsilon / 2) > actual;
+  pass = (lowerBound && upperBound);
 }
 
 function setup(func_or_properties, maybe_properties) {
@@ -49,3 +50,12 @@ function setup(func_or_properties, maybe_properties) {
 
 function add_completion_callback(anything) {
 }
+
+window.setupTutorialTests = setupTutorialTests;
+window.async_test = async_test;
+window.done = done;
+window.assert_equals = assert_equals;
+window.assert_approx_equals = assert_approx_equals;
+window.setup = setup;
+window.add_completion_callback = add_completion_callback;
+})();

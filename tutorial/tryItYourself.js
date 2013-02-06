@@ -111,26 +111,32 @@ TryItDisplay.prototype.setDefaultJS = function(newJS) {
 }
 
 TryItDisplay.prototype.pass = function() {
-  display.doc.getElementById("passOrFail").className = "heading pass";  
+  display.doc.getElementById("passOrFail").className = "heading pass";
 }
 
 TryItDisplay.prototype.fail = function() {
-  display.doc.getElementById("passOrFail").className = "heading fail";  
+  display.doc.getElementById("passOrFail").className = "heading fail";
 }
 
 TryItDisplay.prototype.update = function() {
 
   var addCssHtml = function() {
-    var htmlVal = "<div id='test' class='testBox'>" + document.getElementById('htmlCode').value + "\n<div id='dummy' class='test'></div>" + "</div>";
-    var cssVal = document.getElementById('cssCode').value +"\n" +"#dummy { display: none; }";
+    var htmlVal = "<div id='test' class='testBox'>" 
+        + document.getElementById('htmlCode').value 
+        + "\n" +"<div id='dummy' class='test'></div>"
+        + "\n" + "</div>";
+    var cssVal = document.getElementById('cssCode').value 
+        +"\n" +"#dummy { display: none; }";
     iframeDoc.getElementsByTagName("body")[0].innerHTML = htmlVal;
     iframeDoc.getElementsByTagName('style')[0].innerHTML = cssVal;
   }
 
   function getJsVal() {
     console.log(display.iframe);
-    var jsVal = "setupTutorialTests(); \n" +  document.getElementById('jsCode').value +"\nnew Animation(document.getElementById('dummy'), {left: '100px'}, "
-      +display.iframe.time + ");";
+    var jsVal = "setupTutorialTests(); \n" 
+        +  document.getElementById('jsCode').value + "\n"
+        + "new Animation(document.getElementById('dummy'), {left: '100px'}, "
+        + display.iframe.time + ");";
 
     for(var i = 0; i < display.iframe.checks.length; i++) {
       jsVal += "\n" + display.iframe.checks[i];
@@ -144,7 +150,7 @@ TryItDisplay.prototype.update = function() {
     var jsVal = getJsVal();
     var scriptDivs = iframeDoc.getElementsByTagName('script');
     if (scriptDivs[scriptDivs.length]) {
-      var oldScript = frames['display'].document.getElementsByTagName('script')[scriptDivs.length];
+      var oldScript = scriptDivs[scriptDivs.length];
       scriptEle.innerHTML = '\n' + jsVal + '\n';
       iframeDoc.getElementsByTagName('body')[0].replaceChild(scriptEle, oldScript);
     } else {
@@ -154,7 +160,7 @@ TryItDisplay.prototype.update = function() {
     }
   }
 
-  display.doc.getElementById("display").src = document.getElementById("display").src;
+  document.getElementById("display").src = document.getElementById("display").src;
   display.doc.getElementById("display").onload =(function() {
     iframeDoc = display.iframe.doc.contentDocument;
     addCssHtml();
