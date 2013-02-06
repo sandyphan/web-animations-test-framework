@@ -66,7 +66,17 @@ var loadEditor = function(animNum) {
          +'\n' + '}';
   editor.setDefaultCSS(css);
   editor.update();
-  loadSolution(exerciseNum);
+
+  // load solutions for exercises store in xml files
+  // add the solutions into tests
+  var solution = loadSolution(exerciseNum);
+  console.log(solution);
+  for (var i = 0; i < solution.objects.length; i++) {
+    var obj = solution.objects[i].childNodes[0].nodeValue;
+    var prop = solution.property[i].childNodes[0].nodeValue;
+    var time = solution.timeProp[i].childNodes[0].nodeValue;
+    editor.addCheck(obj, prop, time);
+  }
 }
 
 // check if the exercise needs more than 1
@@ -90,11 +100,11 @@ var nextId = function(currentId) {
 var loadSolution = function(exerciseNum) {
   var xmlDoc = loadXMLDoc("solutionsToExercises.xml");
   var solution = xmlDoc.getElementsByTagName("exercise" + exerciseNum);
-  console.log("exercise" + exerciseNum);
-  console.log(solution);
-  var objects = $(solution).find("object");
-  var property = $(solution).find("property");
-  var time = $(solution).find("time");
-  console.log(objects);
-  console.log(property);
+/*  console.log("exercise" + exerciseNum);
+  console.log(solution);*/
+  solution.objects = $(solution).find("object");
+  solution.property = $(solution).find("property");
+  solution.timeProp = $(solution).find("time");
+
+  return solution;
 }
