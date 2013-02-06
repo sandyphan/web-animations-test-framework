@@ -1,18 +1,23 @@
+(function() {
+var pass;
+var completedTests;
+var allDone;
+var numTests;
+
 function setupTutorialTests() {
   setState("Manual");
   var timeOfAnimation = document.createElement('div');
   timeOfAnimation.id = "animViewerText";
   timeOfAnimation.innerHTML = "Current animation time: 0.00";
   document.body.appendChild(timeOfAnimation);
-  pass = true;
   numTests = 0;
   completedTests = 0;
   allDone = false;
+  pass = true;
 }
 
 function async_test(func, name, properties) {
   numTests++;
-
   step = function(func, this_obj) {
     func();
     if (!pass) {
@@ -34,10 +39,12 @@ function async_test(func, name, properties) {
 }   
 
 function assert_equals(actual, expected, description) {
+  console.log("in equals");
   pass = (actual == expected);
 }
 
 function assert_approx_equals(actual, expected, epsilon, description) {
+  console.log("in approx equals");
   var lowerBound = expected - (epsilon / 2) < actual;
   var upperBound = expected + (epsilon / 2) > actual;
   pass = (lowerBound && upperBound);
@@ -49,3 +56,15 @@ function setup(func_or_properties, maybe_properties) {
 
 function add_completion_callback(anything) {
 }
+
+///////////////////////////////////////////////////////////////////////////////
+//  Exposing functions to be accessed externally                             //
+///////////////////////////////////////////////////////////////////////////////
+
+window.setupTutorialTests = setupTutorialTests;
+window.async_test = async_test;
+window.assert_approx_equals = assert_approx_equals;
+window.assert_equals = assert_equals;
+window.setup = setup;
+window.add_completion_callback = add_completion_callback;
+})();
