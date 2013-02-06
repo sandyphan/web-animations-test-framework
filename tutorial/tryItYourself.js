@@ -19,7 +19,7 @@
 
   this.doc = document;
   console.log(this.name);
-  createTryItDisplay(this.name);
+  createTryItDisplay();
 
   this.iframe = new Iframe();
 }
