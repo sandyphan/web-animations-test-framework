@@ -4,6 +4,7 @@ var completedTests;
 var allDone;
 var numTests;
 
+// Call to initialize the testing environment.
 function setupTutorialTests() {
   setState("Manual");
   var timeOfAnimation = document.createElement('div');
@@ -16,6 +17,7 @@ function setupTutorialTests() {
   pass = true;
 }
 
+// Create an async_test that emulates testharness.js.
 function async_test(func, name, properties) {
   numTests++;
   step = function(func, this_obj) {
@@ -50,10 +52,7 @@ function assert_approx_equals(actual, expected, epsilon, description) {
   pass = (lowerBound && upperBound);
 }
 
-function setup(func_or_properties, maybe_properties) {
-        
-}
-
+// Required function for extra-asserts.js.
 function add_completion_callback(anything) {
 }
 
@@ -65,6 +64,5 @@ window.setupTutorialTests = setupTutorialTests;
 window.async_test = async_test;
 window.assert_approx_equals = assert_approx_equals;
 window.assert_equals = assert_equals;
-window.setup = setup;
 window.add_completion_callback = add_completion_callback;
 })();
