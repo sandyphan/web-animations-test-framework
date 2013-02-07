@@ -121,7 +121,6 @@ function setState(newState){
 // Adds each test to a list to be processed when runTests is called.
 function check(object, targets, time, message){
   if(testPacket.length == 0) reparent();
-  if (time == 0) time += 0.02; // The animation isn't clean at 0 secs
   // Create new async test
   var test = async_test(message);
   test.timeout_length = testTimeout;
@@ -223,9 +222,7 @@ function testRunner(index){
   if (currTest.time <= document.animationTimeline.children[0].iterationTime){
     for (var i = 0; i < testPacket[testIndex].length; i++){
       currTest = testPacket[testIndex][i];
-      currTest.test.step(function (){
-        assert_properties(currTest.object, currTest.targets, currTest.message);
-      });
+      assert_properties(currTest);
       if(currTest.isRefTest == "Last refTest" || currTest.isRefTest == false){
         currTest.test.done();
       }
@@ -242,16 +239,13 @@ function autoTestRunner(){
   if (testIndex != 0 && testIndex < testPacket.length + 1){
     for (var x in testPacket[testIndex - 1]){
       var currTest = testPacket[testIndex - 1][x];
-      currTest.test.step(function (){
-        assert_properties(currTest.object, currTest.targets, currTest.message);
-      });
+      assert_properties(currTest);
       if (currTest.isRefTest == false || currTest.isRefTest == "Last refTest"){
         currTest.test.done();
       }
     }
   }
   if (testIndex < testPacket.length){
-    // Small buffer to let the first anim frame render.
     var nextTest = testPacket[testIndex][0];
     document.animationTimeline.children[0].currentTime = nextTest.time;
     testIndex++;
@@ -307,6 +301,7 @@ function flashing(test) {
     // Copy the objects orginal css style
     flash.style.cssText = test.cssStyle.cssText;
     flash.style.position = "absolute";
+    flash.innerHTML = test.object.innerHTML;
   } else {
     for (var x = 0; x < test.object.attributes.length; x++){
       flash.setAttribute(test.object.attributes[x].name,
@@ -393,13 +388,15 @@ add_completion_callback(function (allRes, status) {
 ///////////////////////////////////////////////////////////////////////////////
 //  All asserts below here                                                   //
 ///////////////////////////////////////////////////////////////////////////////
+function assert_properties(test){
+  var object = test.object;
+  var targets = test.targets;
+  var message = test.message;
 
-function assert_properties(object, targets, message, epsilons){
   var isSVG = (object.nodeName != "DIV");
   var tempOb = document.createElement(object.nodeName);
   tempOb.style.position = "absolute";
   tempOb.id = "find me";
-  if(!isSVG) tempOb.innerHTML = object.innerHTML;
   object.parentNode.appendChild(tempOb);
 
   for (var propName in targets){
@@ -421,7 +418,6 @@ function assert_properties(object, targets, message, epsilons){
     var compS = object.currentStyle || getComputedStyle(object, null);
     var tempS = tempOb.currentStyle || getComputedStyle(tempOb, null);
   }
-  console.log("popp0");
   for (var propName in targets){
     if (propName != "refTest"){
       if (isSVG && propName.indexOf("transform") != -1){
@@ -434,27 +430,23 @@ function assert_properties(object, targets, message, epsilons){
           var t = tempS[propName];
           var c = compS[propName];
         }
-
+        console.log(t);
+        console.log(c);
         t = t.replace(/[^0-9.\s]/g, "").split(" ");
         c = c.replace(/[^0-9.\s]/g, "").split(" ");
+        console.log(t);
+        console.log(c);
         for (var x in t){
-          //assert_approx_equals(Number(c[x]), Number(t[x]), 12, message +
-                               //" " + x);
-          callAssert(Number(c[x]), Number(t[x]), 12, message + " " + x);
+          test.test.step(function (){
+            assert_approx_equals(Number(c[x]), Number(t[x]), 12, message +
+                                 " " + x);
+          });
         }
-        console.log("im here");
       }
 
     }
   }
-  console.log("popp1");
-  if(!isSVG) tempOb.innerHTML = "";
-
   tempOb.remove();
-}
-
-function callAssert(c, t, espsilon, message){
-  assert_approx_equals(c, t, espsilon, message);
 }
 
 // Deals with the svg transforms special case.

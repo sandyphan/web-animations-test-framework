@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- /*Features: Just the menu bars and the page structure
+
+ /**
+ * Features: Just the menu bars and the page structure
  */
 
 (function() {
-// To keep track of what the dropdown list state is.
-var runType;
-// The current run type of the animation.
-var state = "Auto";
+// Boolean flag for in the program is running in automatiic mode
+var runInAutoMode = true;
 
 // How long it takes an individual test to timeout.
 var testTimeout = 10000;
@@ -30,7 +30,7 @@ var frameworkTimeout = 20000;
 // Call this function before setting up any checks.
 // It generates the testing buttons and log and the testharness setup.
 function setupTests(timeouts){
-  // Use any user stated timeouts
+  // Use any user supplied timeouts
   for (var x in timeouts) {
     if (timeouts[x] == "frameworkTimeout") frameworkTimeout = timeouts[x];
     else if (timeouts[x] == "testTimeout") testTimeout = timeouts[x];
@@ -39,7 +39,6 @@ function setupTests(timeouts){
   // Set up padding for option bar
   var padding = document.createElement('div');
   padding.id = "padding";
-  padding.style.height = "30px";
   document.body.appendChild(padding);
 
   // Generate options bar
@@ -61,25 +60,20 @@ function setupTests(timeouts){
   document.getElementById("options").appendChild(log);
 
   // Set buttons
-  runType = document.getElementById("runType");
-  runType.options[runType.options.length] =
-      new Option('Auto Run', 'Auto');
-  runType.options[runType.options.length] =
-      new Option('Manual Run', 'Manual');
+  select.options[select.options.length] =
+      new Option('Manual Run', 'false');
+  select.options[select.options.length] =
+      new Option('Auto Run', 'true');
   setState(window.location.href.split("?")[1]);
 
-  // Initalse state and setup
-  if (state == "Manual") runType.selectedIndex = 1;
-  else {
-    state = "Auto";
-    runType.selectedIndex = 0;
-  }
+  // Set the inital selected drop down list item
+  select.selectedIndex = runInAutoMode;
   setup({ explicit_done: true, timeout: frameworkTimeout});
 }
 
-// Allows tutorial harness to edit state
+// Allows tutorial harness to edit runInAutoMode
 function setState(newState){
-  state = newState;
+  runInAutoMode = (newState == "true");
 }
 
 // Adds each test to a list to be processed when runTests is called.
@@ -92,9 +86,10 @@ function runTests(){
 
 function restart(){
   // State only gets updated on init and Restart button push.
+  var runType = document.getElementById("runType");
   setState(runType.options[runType.selectedIndex].value);
   var url = window.location.href.split("?");
-  window.location.href = url[0] + "?" + state;
+  window.location.href = url[0] + "?" + runInAutoMode;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
