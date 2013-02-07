@@ -14,90 +14,20 @@
  * limitations under the License.
  */
 
+// Constructor for TryItDisplay object.
+//This will also create the display.
+ function TryItDisplay() {
+  display = this;
 
-// get default html values
-var htmlVal;
-var cssVal;
-var jsVal;
-var pass = new Array();
-//var i = 0;
-//var iframeDoc;
+  this.doc = document;
+  console.log(this.name);
+  createTryItDisplay();
 
-// elements such as animation divs and its associated style
-// is appended into the body of iframe as well as any associating
-// js scripts
-var runCssHtml = function() {
-  htmlVal = "<div id='test' class='testBox'>" + document.getElementById('htmlCode').value + "\n<div id='dummy' class='test'></div>" + "</div>";
-  cssVal = document.getElementById('cssCode').value +"\n" +"#dummy { display: none; }";
-  iframeDoc.getElementsByTagName("body")[0].innerHTML = htmlVal;
-  iframeDoc.getElementsByTagName('style')[0].innerHTML = cssVal;
+  this.iframe = new Iframe();
 }
 
-
-// executed when button called update is clicked
-// extract texts from the 3 text areas,
-var update = function(object, properties, times) {
-  document.getElementById("display").src = document.getElementById("display").src;
-  document.getElementById("display").onload =(function() {
-    iframeDoc = iframe.doc.contentDocument;
-    runCssHtml();
-    iframeDoc.documentElement.getElementsByTagName("body")[0].innerHTML = htmlVal;
-    iframeDoc.getElementsByTagName('style')[0].innerHTML = cssVal;
-
-    var scriptEle = document.createElement('script');
-    getJsVal(iframe);
-
-    var addAnimScript = function() {
-      var scriptDivs = iframeDoc.getElementsByTagName('script');
-      if (scriptDivs[scriptDivs.length]) {
-        var oldScript = frames['display'].document.getElementsByTagName('script')[scriptDivs.length];
-        scriptEle.innerHTML = '\n' + jsVal + '\n';
-        iframeDoc.getElementsByTagName('body')[0].replaceChild(scriptEle, oldScript);
-      } else {
-        scriptEle.innerHTML = jsVal;
-        par = iframeDoc.getElementsByTagName('body')[0];
-        par.appendChild(scriptEle);
-      }
-    }
-    window.onload = addAnimScript();
-  });
-}
-
-function getJsVal(iframe) {
-  jsVal = "setupTutorialTests(); \n" +  document.getElementById('jsCode').value +"\nnew Animation(document.getElementById('dummy'), {left: '100px'}, "
-    +iframe.time + ");";
-
-  for(var i = 0; i < iframe.checks.length; i++) {
-    jsVal += "\n" + iframe.checks[i];
-  }
-  jsVal += " \nrunTests();";
-  //jsVal = jsVal.replace("new Animation", "new testAnimation");
-}
-
-function Iframe() {
-  this.doc = document.createElement('iframe');
-  this.checks = [];
-  this.time = 5;
-
-  this.pass = false;
-
-  this.doc.setAttribute('id', 'display');
-  this.doc.setAttribute('class', 'display');
-  this.doc.setAttribute('src', '../iframe-contents.html');
-  document.querySelector('.display').appendChild(this.doc);
-
-  return this;
-}
-
-Iframe.prototype.addCheck = function(object, property, time) {
-  this.checks.push("check(" + object + ", " + property + ", " + time + ", 'default');")
-}
-
-Iframe.prototype.setTime = function(newTime) {
-  this.time = newTime;
-}
-
-function TryItDisplay() {
+// Function that creates the input and output for the TryItYourself object.
+function createTryItDisplay() {
   var heading = document.createElement("div");
   heading.setAttribute("class", "heading");
   heading.setAttribute('id', 'heading')
@@ -105,7 +35,7 @@ function TryItDisplay() {
   document.getElementById("tryIt").appendChild(heading);
 
   var button = document.createElement('button');
-  button.setAttribute('onclick', 'update()');
+  button.setAttribute('onclick', 'display.update()');
   button.setAttribute('id', 'update');
   button.innerHTML = "Update";
   document.getElementById('heading').appendChild(button);
@@ -155,36 +85,122 @@ function TryItDisplay() {
   jsCode.setAttribute('class', 'code');
   document.getElementById('allCode').appendChild(jsCode);
 
-  this.doc = document;
+  var heading = document.createElement("div");
+  heading.setAttribute("class", "heading fail");
+  heading.setAttribute('id', 'passOrFail')
+  heading.innerHTML = "YOU PASSED!";
+  document.getElementById("tryIt").appendChild(heading);
 }
 
 TryItDisplay.prototype.setDefaultHTML = function(newHTML) {
   newHTML = newHTML ? newHTML : "";
-
   var htmlCode = this.doc.getElementById('htmlCode');
   htmlCode.innerHTML = newHTML;
 }
 
 TryItDisplay.prototype.setDefaultCSS = function(newCSS) {
   newCSS = newCSS ? newCSS : "";
-
   var cssCode = this.doc.getElementById('cssCode');
   cssCode.innerHTML = newCSS;
 }
 
 TryItDisplay.prototype.setDefaultJS = function(newJS) {
   newJS = newJS ? newJS : "";
-
   var jsCode = this.doc.getElementById('jsCode');
   jsCode.innerHTML = newJS;
 }
 
+TryItDisplay.prototype.addCheck = function(object, property, time) {
+  this.iframe.checks.push("check(" 
+      + object + ", " + property + ", " + time + ", 'default');");
+}
+
+// Set the default end time for the animation clock.
+// Note: this will be overwritten if the user creates an animation longer than
+// the time set here.
+TryItDisplay.prototype.setTime = function(newTime) {
+  this.iframe.time = newTime;
+}
+
+// Update takes the information currently in the HTML, CSS, and JS input boxes
+// and displays it in the iframe.
+TryItDisplay.prototype.update = function() {
+  // Add the CSS and HTML into the iframe.
+  var addCssHtml = function() {
+    var htmlVal = "<div id='test' class='testBox'>" 
+        + document.getElementById('htmlCode').value 
+        + "\n" +"<div id='dummy' class='test'></div>"
+        + "\n" + "</div>";
+    var cssVal = document.getElementById('cssCode').value 
+        +"\n" +"#dummy { display: none; }";
+    iframeDoc.getElementsByTagName("body")[0].innerHTML = htmlVal;
+    iframeDoc.getElementsByTagName('style')[0].innerHTML = cssVal;
+  }
+
+  // Get the user provided Javascript value, and append additional information
+  // to run the tests properly.
+  function getJsVal() {
+    console.log(display.iframe);
+    var jsVal = "setupTutorialTests(); \n" 
+        +  document.getElementById('jsCode').value + "\n"
+        + "new Animation(document.getElementById('dummy'), {left: '100px'}, "
+        + display.iframe.time + ");";
+
+    for(var i = 0; i < display.iframe.checks.length; i++) {
+      jsVal += "\n" + display.iframe.checks[i];
+    }
+    jsVal += " \nrunTests();";
+    return jsVal;
+  }
+
+  // Add the Javascript value to the iframe.
+  var addAnimScript = function() {
+    var scriptEle = document.createElement('script');
+    var jsVal = getJsVal();
+    var scriptDivs = iframeDoc.getElementsByTagName('script');
+    if (scriptDivs[scriptDivs.length]) {
+      var oldScript = scriptDivs[scriptDivs.length];
+      scriptEle.innerHTML = '\n' + jsVal + '\n';
+      iframeDoc.getElementsByTagName('body')[0].replaceChild(scriptEle, oldScript);
+    } else {
+      scriptEle.innerHTML = jsVal;
+      par = iframeDoc.getElementsByTagName('body')[0];
+      par.appendChild(scriptEle);
+    }
+  }
+
+  document.getElementById("display").src = document.getElementById("display").src;
+  display.doc.getElementById("display").onload =(function() {
+    iframeDoc = display.iframe.doc.contentDocument;
+    addCssHtml();
+    addAnimScript();
+  });
+}
+
+// Function to call once the user passes the tutorial.
 TryItDisplay.prototype.pass = function() {
-  var heading = document.createElement("div");
-  heading.setAttribute("class", "heading");
-  heading.setAttribute('id', 'heading')
-  heading.innerHTML = "YOU PASSED";
-  document.getElementById("tryIt").appendChild(heading);
+  display.doc.getElementById("passOrFail").className = "heading pass";
+}
+
+// Function to call if the user fails the tutorial.
+TryItDisplay.prototype.fail = function() {
+  display.doc.getElementById("passOrFail").className = "heading fail";
+}
+
+// Constructor for the Iframe object.
+function Iframe() {
+  this.doc = document.createElement('iframe');
+  this.checks = [];
+  this.time = 5;
+
+  this.pass = false;
+
+  this.doc.setAttribute('id', 'display');
+  this.doc.setAttribute('class', 'display');
+  this.doc.setAttribute('src', 'iframe-contents.html');
+  document.querySelector('.display').appendChild(this.doc);
+
+  return this;
 }
 
 // innerDoc the solution box toggleable*/

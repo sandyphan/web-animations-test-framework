@@ -25,7 +25,7 @@ limitations under the License.
     <link rel="stylesheet" type="text/css" href="tutorialStyle.css">
   </head>
 
-  <body  onload="update()">
+  <body  onload="foo.update()">
     <div id="main">
 
       <div id="title">Web Animations Tutorial</div>
@@ -75,8 +75,9 @@ limitations under the License.
     <script src='../extra-asserts.js'></script>
     <link href='../animation-test-style.css'>
     <script>
-      var display = new TryItDisplay();
-      display.setDefaultHTML("<div id='a' class='test'></div>");
+      
+      var foo = new TryItDisplay();
+      foo.setDefaultHTML("<div id='a' class='test'></div>");
       css = ".test {"
         +"\n" + "background-color: red;"
         +"\n" + "border-radius: 10px;"
@@ -86,12 +87,10 @@ limitations under the License.
         +"\n" + "left: 0px;"
         +"\n" + "position: absolute;"
         +"\n" + "}";
-      display.setDefaultCSS(css);
-      var iframe = new Iframe();
-      //setupTutorialTests();
-      iframe.setTime(2);
-      iframe.addCheck("document.getElementById('a')", "{'left': '0px'}", 0);
-      iframe.addCheck("document.getElementById('a')", "{'left': '300px'}", 2);
+      foo.setDefaultCSS(css);
+      foo.setTime(2);
+      foo.addCheck("document.getElementById('a')", "{'left': '0px'}", 0);
+      foo.addCheck("document.getElementById('a')", "{'left': '300px'}", 2);
     </script>
   </body>
 </html>
