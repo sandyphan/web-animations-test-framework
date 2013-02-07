@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+// Constructor for TryItDisplay object.
+//This will also create the display.
  function TryItDisplay() {
   display = this;
 
@@ -24,6 +26,7 @@
   this.iframe = new Iframe();
 }
 
+// Function that creates the input and output for the TryItYourself object.
 function createTryItDisplay() {
   var heading = document.createElement("div");
   heading.setAttribute("class", "heading");
@@ -91,35 +94,38 @@ function createTryItDisplay() {
 
 TryItDisplay.prototype.setDefaultHTML = function(newHTML) {
   newHTML = newHTML ? newHTML : "";
-
   var htmlCode = this.doc.getElementById('htmlCode');
   htmlCode.innerHTML = newHTML;
 }
 
 TryItDisplay.prototype.setDefaultCSS = function(newCSS) {
   newCSS = newCSS ? newCSS : "";
-
   var cssCode = this.doc.getElementById('cssCode');
   cssCode.innerHTML = newCSS;
 }
 
 TryItDisplay.prototype.setDefaultJS = function(newJS) {
   newJS = newJS ? newJS : "";
-
   var jsCode = this.doc.getElementById('jsCode');
   jsCode.innerHTML = newJS;
 }
 
-TryItDisplay.prototype.pass = function() {
-  display.doc.getElementById("passOrFail").className = "heading pass";
+TryItDisplay.prototype.addCheck = function(object, property, time) {
+  this.iframe.checks.push("check(" 
+      + object + ", " + property + ", " + time + ", 'default');");
 }
 
-TryItDisplay.prototype.fail = function() {
-  display.doc.getElementById("passOrFail").className = "heading fail";
+// Set the default end time for the animation clock.
+// Note: this will be overwritten if the user creates an animation longer than
+// the time set here.
+TryItDisplay.prototype.setTime = function(newTime) {
+  this.iframe.time = newTime;
 }
 
+// Update takes the information currently in the HTML, CSS, and JS input boxes
+// and displays it in the iframe.
 TryItDisplay.prototype.update = function() {
-
+  // Add the CSS and HTML into the iframe.
   var addCssHtml = function() {
     var htmlVal = "<div id='test' class='testBox'>" 
         + document.getElementById('htmlCode').value 
@@ -131,6 +137,8 @@ TryItDisplay.prototype.update = function() {
     iframeDoc.getElementsByTagName('style')[0].innerHTML = cssVal;
   }
 
+  // Get the user provided Javascript value, and append additional information
+  // to run the tests properly.
   function getJsVal() {
     console.log(display.iframe);
     var jsVal = "setupTutorialTests(); \n" 
@@ -145,6 +153,7 @@ TryItDisplay.prototype.update = function() {
     return jsVal;
   }
 
+  // Add the Javascript value to the iframe.
   var addAnimScript = function() {
     var scriptEle = document.createElement('script');
     var jsVal = getJsVal();
@@ -168,6 +177,17 @@ TryItDisplay.prototype.update = function() {
   });
 }
 
+// Function to call once the user passes the tutorial.
+TryItDisplay.prototype.pass = function() {
+  display.doc.getElementById("passOrFail").className = "heading pass";
+}
+
+// Function to call if the user fails the tutorial.
+TryItDisplay.prototype.fail = function() {
+  display.doc.getElementById("passOrFail").className = "heading fail";
+}
+
+// Constructor for the Iframe object.
 function Iframe() {
   this.doc = document.createElement('iframe');
   this.checks = [];
@@ -181,14 +201,6 @@ function Iframe() {
   document.querySelector('.display').appendChild(this.doc);
 
   return this;
-}
-
-TryItDisplay.prototype.addCheck = function(object, property, time) {
-  this.iframe.checks.push("check(" + object + ", " + property + ", " + time + ", 'default');")
-}
-
-TryItDisplay.prototype.setTime = function(newTime) {
-  this.iframe.time = newTime;
 }
 
 // innerDoc the solution box toggleable*/
