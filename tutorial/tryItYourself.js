@@ -168,6 +168,14 @@ TryItDisplay.prototype.update = function() {
   });
 }
 
+TryItDisplay.prototype.addCheck = function(object, property, time) {
+  this.iframe.checks.push("check(" + object + ", " + property + ", " + time + ", 'default');")
+}
+
+TryItDisplay.prototype.setTime = function(newTime) {
+  this.iframe.time = newTime;
+}
+
 function Iframe() {
   this.doc = document.createElement('iframe');
   this.checks = [];
@@ -181,14 +189,6 @@ function Iframe() {
   document.querySelector('.display').appendChild(this.doc);
 
   return this;
-}
-
-TryItDisplay.prototype.addCheck = function(object, property, time) {
-  this.iframe.checks.push("check(" + object + ", " + property + ", " + time + ", 'default');")
-}
-
-TryItDisplay.prototype.setTime = function(newTime) {
-  this.iframe.time = newTime;
 }
 
 // innerDoc the solution box toggleable*/
