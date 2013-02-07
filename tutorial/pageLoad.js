@@ -13,9 +13,9 @@ $(document.body).ready(function() {
     exerciseNum = $(this).html().split(' ')[1];
     if ($(this).attr('id') === 'menuLabel') {
       return;
-    } else if (parseInt(exerciseNum) !== exerciseNum && isNaN(exerciseNum)) {
+    } else if (isNumber(exerciseNum) == false) {
       $('.content').load(currentSection + '.html' + ' .content', function() {
-        $(this).children().unwrap();
+        $(this).children().unwrap();s
       });
     } else {
       var url = currentSection + 'Exercise' + exerciseNum + '.html';
@@ -28,7 +28,7 @@ $(document.body).ready(function() {
         success: function() {
           $('.content').load(url + ' .content', function() {
             $(this).children().unwrap();
-            var animNum = findText();
+            var animNum = findDivNum();
             loadEditor(animNum);
           });
         }
@@ -61,35 +61,45 @@ var loadEditor = function(animNum) {
          +'\n' + 'height: 50px;'
          +'\n' + 'top: 0px;'
          +'\n' + 'left: 0px;'
-         +'\n' + 'position: relative;'
+         +'\n' + 'position: absolute;'
          +'\n' + 'border: 1px solid black;'
          +'\n' + '}';
   editor.setDefaultCSS(css);
   editor.update();
 
-  // load solutions for exercises store in xml files
+  // load solutions for exercises store in json files
   // add the solutions into tests
-  var solution = loadSolution(exerciseNum);
-  console.log(solution);
-  for (var i = 0; i < solution.objects.length; i++) {
-    var obj = solution.objects[i].childNodes[0].nodeValue;
-    var prop = solution.property[i].childNodes[0].nodeValue;
-    var time = solution.timeProp[i].childNodes[0].nodeValue;
-    editor.addCheck(obj, prop, time);
-  }
+  loadTest(exerciseNum, editor);
+/*  console.log(tests);
+  console.log('im second');
+  for (var i = 0; i < tests.length; i++) {
+    var elem = tests[0].element;
+    var p = tests[0].property;
+    var t = tests[0].timeProp;
+    editor.addCheck(elem, p, t);
+  }*/
+}
+
+var isNumber = function(str) {
+  str = parseInt(str);
+  if (isNaN(str))
+    return false;
+  return true;
 }
 
 // check if the exercise needs more than 1
 // animation divs
 // by default returns 1
-var findText = function() {
+var findDivNum = function() {
   var content = $('p').text();
-  if (content.match('3 + different'))
-    return 3;
-  else if (content.match('4 different'))
-    return 4;
-  else
-    return 1;
+  var match = content.match(/\b(\d+) different animation\b | \b(\d+) children\b/);
+
+  if (match) {
+    if (isNumber(match[0])) {
+      return parseInt(match[0]);
+    }
+  }
+  return 1;
 }
 
 // generate a, b, c, d... as to put in as id
@@ -97,14 +107,33 @@ var nextId = function(currentId) {
   return String.fromCharCode(currentId.charCodeAt() + 1);
 }
 
-var loadSolution = function(exerciseNum) {
+// load solution from xml files and store them
+// into an object
+// loadXMLDoc is a function from the external script
+// loadXMLDoc.js
+/*var loadSolution = function(exerciseNum) {
   var xmlDoc = loadXMLDoc("solutionsToExercises.xml");
   var solution = xmlDoc.getElementsByTagName("exercise" + exerciseNum);
-/*  console.log("exercise" + exerciseNum);
-  console.log(solution);*/
+
   solution.objects = $(solution).find("object");
   solution.property = $(solution).find("property");
-  solution.timeProp = $(solution).find("time");
+  solution.timeProp = $(solution).find("time");s
 
   return solution;
+}
+*/
+
+// load solutions using json
+var loadTest = function(exerciseNum, editor) {
+  var exercise = "exercise" + exerciseNum;
+  var tests;
+  $.getJSON("../solutionsToExercises.json", function(data) {
+    console.log(data[currentSection][0]);
+    tests = data[currentSection][0][exercise];
+    console.log('im first');
+    console.log(tests);
+    for (var i = 0; i < tests.length; i++) {
+      editor.addCheck(tests[i].element, tests[i].property, tests[i].timeProp);
+    }
+  });  
 }
