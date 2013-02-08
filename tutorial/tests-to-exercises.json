@@ -1,0 +1,472 @@
+{"basic-animation": [{
+  "exercise1": [{
+  	"element": "document.getElementById('a')",
+	"property": "{'left': '0px'}",
+	"timeProp": 0
+  }, {
+	"element": "document.getElementById('a')",
+	"property": "{'left': '300px'}",
+	"timeProp": 2
+  }],
+  "exercise2": [{
+  	"element": "document.getElementById('a')",
+	"property": "{'top': '0px'}",
+	"timeProp": 0
+  }, {
+	"element": "document.getElementById('a')",
+	"property": "{'top': '500px'}",
+	"timeProp": 2
+  }],
+  "exercise3": [{
+  	"element": "document.getElementById('a')",
+	"property": "{'top': '0px'}",
+	"timeProp": 0
+  }, {
+  	"element": "document.getElementById('a')",
+  	"property": "{'left': '0px'}",
+	"timeProp": 0
+  }, {
+	"element": "document.getElementById('a')",
+	"property": "{'top': '500px'}",
+	"timeProp": 2
+  }, {
+	"element": "document.getElementById('a')",
+	"property": "{'left': '300px'}",
+	"timeProp": 2
+  }],
+  "exercise4": [{
+  	"element": "document.getElementById('a')",
+	"property": "{'top': '0px'}",
+	"timeProp": 0
+  }, {
+  	"element": "document.getElementById('a')",
+  	"property": "{'left': '0px'}",
+	"timeProp": 0
+  }, {
+	"element": "document.getElementById('a')",
+	"property": "{'top': '0px'}",
+	"timeProp": 2
+  }, {
+	"element": "document.getElementById('a')",
+	"property": "{'left': '400px'}",
+	"timeProp": 2
+  }, {
+	"element": "document.getElementById('a')",
+	"property": "{'top': '200px'}",
+	"timeProp": 4
+  }, {
+	"element": "document.getElementById('a')",
+	"property": "{'left': '400px'}",
+	"timeProp": 4
+  }, {
+	"element": "document.getElementById('a')",
+	"property": "{'top': '200px'}",
+	"timeProp": 6
+  }, {
+	"element": "document.getElementById('a')",
+	"property": "{'left': '0px'}",
+	"timeProp": 6
+  }, {
+	"element": "document.getElementById('a')",
+	"property": "{'top': '0px'}",
+	"timeProp": 8
+  }, {
+	"element": "document.getElementById('a')",
+	"property": "{'left': '0px'}",
+	"timeProp": 8
+  }],
+  "exercise5": [{
+  	"element": "document.getElementById('a')",
+	"property": "{'background-color': 'red'}",
+	"timeProp": 0
+  }, {
+	"element": "document.getElementById('a')",
+	"property": "{'background-color': 'green'}",
+	"timeProp": 2.5
+  }, {
+	"element": "document.getElementById('a')",
+	"property": "{'background-color': 'lightsteelblue'}",
+	"timeProp": 5
+  }, {
+	"element": "document.getElementById('a')",
+	"property": "{'background-color': 'green'}",
+	"timeProp": 7.5
+  }, {
+	"element": "document.getElementById('a')",
+	"property": "{'background-color': 'red'}",
+	"timeProp": 10
+  }]
+}],
+
+"parallel": [{
+  "exercise1": [{
+  	"element": "document.getElementById('a')",
+  	"property": "{'top': '0px'}",
+	"timeProp": 0
+  }, {
+  	"element": "document.getElementById('b')",
+  	"property": "{'top': '0px'}",
+	"timeProp": 0
+  }, {
+  	"element": "document.getElementById('c')",
+  	"property": "{'top': '0px'}",
+	"timeProp": 0
+  }, {
+  	"element": "document.getElementById('a')",
+  	"property": "{'top': '300px'}",
+	"timeProp": 5
+  }, {
+  	"element": "document.getElementById('b')",
+  	"property": "{'top': '500px'}",
+	"timeProp": 5
+  }, {
+  	"element": "document.getElementById('c')",
+  	"property": "{'top': '700px'}",
+	"timeProp": 5
+  }],
+  "exercise2": [{
+  	"element": "document.getElementById('a')",
+  	"property": "{'top': '0px'}",
+	"timeProp": 0
+  }, {
+  	"element": "document.getElementById('a')",
+  	"property": "{'background-color': 'red'}",
+	"timeProp": 0
+  }, {
+  	"element": "document.getElementById('a')",
+  	"property": "{'background-color': 'green'}",
+	"timeProp": 2.5
+  }, {
+  	"element": "document.getElementById('a')",
+  	"property": "{'background-color': 'red'}",
+	"timeProp": 5
+  }, {
+  	"element": "document.getElementById('a')",
+  	"property": "{'top': '500px'}",
+	"timeProp": 4.99
+  }, {
+  	"element": "document.getElementById('a')",
+  	"property": "{'top': '0px'}",
+	"timeProp": 5.001
+  }, {
+  	"element": "document.getElementById('a')",
+  	"property": "{'background-color': 'green'}",
+	"timeProp": 7.5
+  }, {
+  	"element": "document.getElementById('a')",
+  	"property": "{'background-color': 'red'}",
+	"timeProp": 10
+  }, {
+  	"element": "document.getElementById('a')",
+  	"property": "{'top': '500px'}",
+	"timeProp": 10
+  }],
+  "exercise3": [{
+  	"element": "document.getElementById('a')",
+  	"property": "{'top': '0px'}",
+	"timeProp": 0
+  }, {
+  	"element": "document.getElementById('a')",
+  	"property": "{'left': '0px'}",
+	"timeProp": 0
+  }, {
+  	"element": "document.getElementById('a')",
+  	"property": "{'top': '0px'}",
+	"timeProp": 5
+  }, {
+  	"element": "document.getElementById('a')",
+  	"property": "{'left': '300px'}",
+	"timeProp": 5
+  }, {
+  	"element": "document.getElementById('a')",
+  	"property": "{'top': '400px'}",
+	"timeProp": 10
+  }, {
+  	"element": "document.getElementById('a')",
+  	"property": "{'left': '300px'}",
+	"timeProp": 10
+  }, {
+  	"element": "document.getElementById('a')",
+  	"property": "{'top': '400px'}",
+	"timeProp": 15
+  }, {
+  	"element": "document.getElementById('a')",
+  	"property": "{'left': '0px'}",
+	"timeProp": 15
+  }, {
+  	"element": "document.getElementById('a')",
+  	"property": "{'top': '0px'}",
+	"timeProp": 20
+  }, {
+  	"element": "document.getElementById('a')",
+  	"property": "{'left': '0px'}",
+	"timeProp": 20
+  }, {
+  	"element": "document.getElementById('a')",
+  	"property": "{'top': '0px'}",
+	"timeProp": 25
+  }, {
+  	"element": "document.getElementById('a')",
+  	"property": "{'left': '300px'}",
+	"timeProp": 25
+  }, {
+  	"element": "document.getElementById('a')",
+  	"property": "{'top': '400px'}",
+	"timeProp": 30
+  }, {
+  	"element": "document.getElementById('a')",
+  	"property": "{'left': '300px'}",
+	"timeProp": 30
+  }, {
+  	"element": "document.getElementById('a')",
+  	"property": "{'top': '400px'}",
+	"timeProp": 35
+  }, {
+  	"element": "document.getElementById('a')",
+  	"property": "{'left': '0px'}",
+	"timeProp": 35
+  }, {
+  	"element": "document.getElementById('a')",
+  	"property": "{'top': '0px'}",
+	"timeProp": 40
+  }, {
+  	"element": "document.getElementById('a')",
+  	"property": "{'left': '0px'}",
+	"timeProp": 40
+  }]
+}],
+
+"sequence": [{
+  "exercise1": [{
+  	"element": "document.getElementById('a')",
+	"property": "{'left': '0px'}",
+	"timeProp": 0
+  }, {
+  	"element": "document.getElementById('a')",
+	"property": "{'top': '0px'}",
+	"timeProp": 0
+  }, {
+  	"element": "document.getElementById('a')",
+	"property": "{'top': '300px'}",
+	"timeProp": 3
+  }, {
+  	"element": "document.getElementById('a')",
+	"property": "{'left': '300px'}",
+	"timeProp": 3
+  }, {
+  	"element": "document.getElementById('a')",
+	"property": "{'top': '0px'}",
+	"timeProp": 6
+  }, {
+  	"element": "document.getElementById('a')",
+	"property": "{'left': '600px'}",
+	"timeProp": 6
+  }, {
+  	"element": "document.getElementById('a')",
+	"property": "{'top': '0px'}",
+	"timeProp": 9
+  }, {
+  	"element": "document.getElementById('a')",
+	"property": "{'top': '0px'}",
+	"timeProp": 9
+  }],
+  "exercise2": [{
+  	"element": "document.getElementById('a')",
+	"property": "{'left': '0px'}",
+	"timeProp": 0
+  }, {
+  	"element": "document.getElementById('b')",
+	"property": "{'left': '0px'}",
+	"timeProp": 0
+  }, {
+  	"element": "document.getElementById('c')",
+	"property": "{'left': '0px'}",
+	"timeProp": 0
+  }, {
+  	"element": "document.getElementById('a')",
+	"property": "{'left': '400px'}",
+	"timeProp": 5
+  }, {
+  	"element": "document.getElementById('b')",
+	"property": "{'left': '200px'}",
+	"timeProp": 3
+  }, {
+  	"element": "document.getElementById('b')",
+	"property": "{'left': '500px'}",
+	"timeProp": 8
+  }, {
+  	"element": "document.getElementById('c')",
+	"property": "{'left': '0px'}",
+	"timeProp": 10
+  }, {
+  	"element": "document.getElementById('c')",
+	"property": "{'left': '300px'}",
+	"timeProp": 14.98
+  }, {
+  	"element": "document.getElementById('a')",
+	"property": "{'left': '0px'}",
+	"timeProp": 15
+  }, {
+  	"element": "document.getElementById('b')",
+	"property": "{'left': '0px'}",
+	"timeProp": 15
+  }, {
+  	"element": "document.getElementById('c')",
+	"property": "{'left': '0px'}",
+	"timeProp": 15
+  }, {
+  	"element": "document.getElementById('a')",
+	"property": "{'left': '400px'}",
+	"timeProp": 20
+  }, {
+  	"element": "document.getElementById('b')",
+	"property": "{'left': '200px'}",
+	"timeProp": 18
+  }, {
+  	"element": "document.getElementById('b')",
+	"property": "{'left': '500px'}",
+	"timeProp": 23
+  }, {
+  	"element": "document.getElementById('c')",
+	"property": "{'left': '0px'}",
+	"timeProp": 25
+  }, {
+  	"element": "document.getElementById('c')",
+	"property": "{'left': '300px'}",
+	"timeProp": 30
+  }]
+}],
+
+"timing-dictionary": [{
+  "exercise1": [{
+  	
+  }, {
+
+  }],
+  "exercise2": [{
+  	"element": "document.getElementById('a')",
+	"property": "{'top': '0px'}",
+	"timeProp": 0
+  }, {
+	"element": "document.getElementById('a')",
+	"property": "{'left': '0px'}",
+	"timeProp": 0
+  }, {
+  	"element": "document.getElementById('a')",
+	"property": "{'top': '0px'}",
+	"timeProp": 2
+  }, {
+	"element": "document.getElementById('a')",
+	"property": "{'left': '0px'}",
+	"timeProp": 2
+  }, {
+  	"element": "document.getElementById('a')",
+	"property": "{'top': '400px'}",
+	"timeProp": 7
+  }, {
+	"element": "document.getElementById('a')",
+	"property": "{'left': '300px'}",
+	"timeProp": 7
+  }],
+  "exercise3": [{
+
+  }],
+  "exercise4": [{
+  	"element": "document.getElementById('a')",
+	"property": "{'top': '0px'}",
+	"timeProp": 0
+  }, {
+  	"element": "document.getElementById('a')",
+  	"property": "{'left': '0px'}",
+	"timeProp": 0
+  }, {
+	"element": "document.getElementById('a')",
+	"property": "{'top': '400px'}",
+	"timeProp": 4.98
+  }, {
+	"element": "document.getElementById('a')",
+	"property": "{'left': '300px'}",
+	"timeProp": 4.98
+  }, {
+	"element": "document.getElementById('a')",
+	"property": "{'top': '0px'}",
+	"timeProp": 5
+  }, {
+	"element": "document.getElementById('a')",
+	"property": "{'left': '0px'}",
+	"timeProp": 5
+  }, {
+	"element": "document.getElementById('a')",
+	"property": "{'top': '400px'}",
+	"timeProp": 9.99
+  }, {
+	"element": "document.getElementById('a')",
+	"property": "{'left': '300px'}",
+	"timeProp": 9.99
+  }, {
+	"element": "document.getElementById('a')",
+	"property": "{'top': '0px'}",
+	"timeProp": 10
+  }, {
+	"element": "document.getElementById('a')",
+	"property": "{'left': '0px'}",
+	"timeProp": 10
+  }, {
+	"element": "document.getElementById('a')",
+	"property": "{'top': '400px'}",
+	"timeProp": 15
+  }, {
+	"element": "document.getElementById('a')",
+	"property": "{'left': '300px'}",
+	"timeProp": 15
+  }],
+  "exercise5": [{
+
+  }],
+  "exercise6": [{
+	"element": "document.getElementById('a')",
+	"property": "{'left': '300px'}",
+	"timeProp": 0
+  }, {
+	"element": "document.getElementById('a')",
+	"property": "{'top': '300px'}",
+	"timeProp": 0
+  }, {
+	"element": "document.getElementById('a')",
+	"property": "{'left': '0px'}",
+	"timeProp": 5
+  }, {
+	"element": "document.getElementById('a')",
+	"property": "{'top': '0px'}",
+	"timeProp": 5
+  }, {
+	"element": "document.getElementById('a')",
+	"property": "{'left': '300px'}",
+	"timeProp": 10
+  }, {
+	"element": "document.getElementById('a')",
+	"property": "{'top': '300px'}",
+	"timeProp": 10
+  }, {
+	"element": "document.getElementById('a')",
+	"property": "{'left': '0px'}",
+	"timeProp": 15
+  }, {
+	"element": "document.getElementById('a')",
+	"property": "{'top': '0px'}",
+	"timeProp": 15
+  }, {
+	"element": "document.getElementById('a')",
+	"property": "{'left': '300px'}",
+	"timeProp": 20
+  }, {
+	"element": "document.getElementById('a')",
+	"property": "{'top': '300px'}",
+	"timeProp": 20
+  }]
+}],
+
+"timing-function": [{
+
+}]
+}
