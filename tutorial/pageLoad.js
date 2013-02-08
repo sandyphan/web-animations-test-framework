@@ -146,10 +146,7 @@ var loadTest = function(exerciseNum, editor) {
   console.log('loading tests');
   $.getJSON("../tests-to-exercises.json")
     .success(function(data) {
-      console.log('succesfully load');
-      console.log(data);
-      // tests = data[currentSection][0][exercise];
-      console.log(tests);
+       tests = data[currentSection][0][exercise];
       for (var i = 0; i < tests.length; i++) {
         editor.addCheck(tests[i].element, tests[i].property, tests[i].timeProp);
       }
