@@ -22,15 +22,14 @@ limitations under the License.
 <title>Create Basic Animation</title>
 <meta name="flags" content="dom">
 <meta name="tutorial" content="Web Animations tutorials">
-<link rel="stylesheet" type="text/css" href="../tutorialStyle.css">
+<link rel="stylesheet" type="text/css" href="../tutorial-style.css">
 <script type="text/javascript" src="../jquery.js"></script>
-<script type="text/javascript" src="../loadXMLDoc.js"></script>
-<script type="text/javascript" src="../pageLoad.js"></script>
+<script type="text/javascript" src="../page-load.js"></script>
 
 
 
 <ul class="topMenu">
-  <li><a href="../homePage.html">Home</a></li>
+  <li><a href="../home-page.html">Home</a></li>
   <li><a href="#">Tutorials</a>
     <ul class="subMenu">
       <li><a href="basic-animation.html">Basic Animations</a></li>
@@ -59,45 +58,47 @@ limitations under the License.
   <div class="content">
 
     <p class="description">Web animations is to have a flash or GIF 
-      animation intergrated onto the web page. Normal web animations 
-      still require the use of plugins such as Java Applets, Shockwave,
-       Adobe Flash. In this tutorial, we will be showing you how to 
-       create animations using javascript without the need of 
-       installing plugins.</p>
+    animation intergrated onto the web page. Normal web animations 
+    still require the use of plugins such as Java Applets, Shockwave, 
+    Adobe Flash. In this tutorial, we will be showing you how to 
+    create animations using javascript without the need of 
+    installing plugins.</p>
 
     <br />
 
     <div class="heading subTitle">Create a new basic animation</div>
 
     <p class="description">To create animations on objects such 
-      as moving left, right, up, down, change colours, etc, use 
-      the following interface:</p>
+    as moving left, right, up, down, change colours, etc, use 
+    the following interface:</p>
 
     <code class="codeSamples">new Animation(element, 
-      {effect(s)}, {optional: timed items});</code>
+    {effect(s)}, {optional: timed items});</code>
 
     <ul>
-      <li><p class="description">'new Animation' creates an animation object,
-       'element' is the DOM object or animation target that we want to
-        animate and it is a compulsory component and can be nullable.
-         For instance, 'element' can be a 'div' with, a 'p' (paragraph).</p>
-       </li>
+      <li><p class="description">'new Animation' creates an animation object, 
+      'element' is the DOM object or animation target that we want to 
+      animate and it is a compulsory component and can be nullable. 
+      For instance, 'element' can be a 'div' with, a 'p' (paragraph).</p>
+      </li>
 
-      <li><p class="description">'effects' defines the types of effects
-       in animation such as move left, or right, or change colours, or 
-       change opacity, etc. 'effects' is also a compulsory component as 
-       well as nullable. This parameter can be of AnimationEffect object 
-       or CustomAnimationEffect object. These effects will be shared with 
-       any other animation objects referring to the same AnimationEffect 
-       or CustomAnimationEffect object. In the case this component being 
-       null, the animation will have a null effect.</p></li>
+      <li><p class="description">'effects' defines the types of effects 
+      in animation such as move left, or right, or change colours, or 
+      change opacity, etc. 'effects' is also a compulsory component as 
+      well as nullable. This parameter can be of AnimationEffect object 
+      or CustomAnimationEffect object. These effects will be shared with 
+      any other animation objects referring to the same AnimationEffect 
+      or CustomAnimationEffect object. In the case this component being 
+      null, the animation will have a null effect.</p>
+     </li>
 
       <li><p class="description">'timed items' can be of type double or 
-        timing dictionary and is nullable and optional component. When 
-        this parameter is double, then it specifies the duartion of a 
-        single iteration of the animation. If it is null, then the default 
-        value for iteration duration would be zero is specified in the 
-        Timing Dictionary.</p></li>
+      timing dictionary and is nullable and optional component. When 
+      this parameter is double, then it specifies the duartion of a 
+      single iteration of the animation. If it is null, then the default 
+      value for iteration duration would be zero is specified in the 
+      Timing Dictionary.</p>
+      </li>
 
     </ul>
 
@@ -116,4 +117,4 @@ limitations under the License.
   <li>Exercise 5</li>
 </ul> 
 
-<script type="text/javascript" src="../tryItYourself.js"></script>
+<script type="text/javascript" src="../try-it-yourself.js"></script>

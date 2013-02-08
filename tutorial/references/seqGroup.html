@@ -59,6 +59,7 @@ limitations under the License.
 
         <p class="description">Sequence group has properties very similar to parallel groups. The following are the properties of sequence group:</p>
 
+<<<<<<< HEAD
         <ol class="description">
           <li>A new sequence group object is created</li>
           <li>It will establish a temporary timing dictionary based on the following:</li>
@@ -87,6 +88,63 @@ limitations under the License.
 
     <div class="line-separator"></div>
     </div> <!-- main ending div -->
+=======
+    <table class="properties-table">
+      <tr class="properties-table-title">
+        <td>Parameter</td>
+        <td>Type</td>
+        <td>Nullable</td>
+        <td>Optional</td>
+        <td>Description</td>
+      </tr>
+      <tr>
+        <td class="keywords">children</td>
+        <td class="datatype">sequence of timed items</td>
+        <td>Yes</td>
+        <td>No</td>
+        <td>A sequence/list of timed items to add as children of this group.
+        </td>
+      </tr>
+      <tr>
+        <td class="keywords">timing</td>
+        <td class="datatype">double or TimingDictionary</td>
+        <td>Yes</td>
+        <td>Yes</td>
+        <td>The timing properties of the sequence group
+          <br />
+          <ul>
+            <li>If parameter is a <span class="datatype">double</span>:
+              <ul style="list-style-type: none;">
+                <li>create a new timing dictionary object with all 
+                properties set to their default values.</li>
+                <li><span class="keywords">iterationDuration</span> is set to 
+                the input double value.</li>
+              </ul>
+            </li>
+          </ul>
+          <br />
+          <ul>
+            <li>If parameter is a <span class="datatype">
+              TimingDictionary</span>:
+              <ul style="list-style-type: none;">
+                <li>Then <span class="keywords">timing dictionary</span> 
+                is set to the input timing.</li>
+              </ul>
+            </li>
+          </ul>
+          <br />
+          <ul>
+            <li>If parameter is a <span class="datatype">nul</span>:
+              <ul style="list-style-type: none;">
+                <li>create a new timing dictionary object with all properties 
+                set to their default values.</li>
+              </ul>
+            </li>
+          </ul>
+        </td>
+      </tr>
+    </table>
+>>>>>>> da1ccc5... fix css link, made tables for properties and disabled unavailable links in references
 
     <script type="text/javascript" src="../tryItYourself.js"></script>
   </body>
