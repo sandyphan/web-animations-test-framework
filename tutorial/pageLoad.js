@@ -1,3 +1,19 @@
+/*
+ * Copyright 2013 Google Inc. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 // get the name of current page the user is at
 // e.g. if the main page of the section is called parallel
 // currentSection would be 'parallel'
@@ -5,22 +21,22 @@ var currentSection = window.location.href.split('/').pop();
 currentSection = currentSection.split('.')[0];
 var iframe, exerciseNum;
 
+console.log(currentSection);
+
 // waits until all DOM elements are ready to perform
-$(document.body).ready(function() {
-  // if one of the side menu is clicked
-  // update page content without refreshing the whole page
+$(document.body).ready(function() {   
+  // if one of the side menu is clicked   
+  //update page content without refreshing the whole page   
   $('.sideMenu li').click(function(e) {
     exerciseNum = $(this).html().split(' ')[1];
-    if ($(this).attr('id') === 'menuLabel') {
-      return;
-    } else if (isNumber(exerciseNum) == false) {
-      $('.content').load(currentSection + '.html' + ' .content', function() {
-        $(this).children().unwrap();s
+    if (isNumber(exerciseNum) == false) {
+      $('.content').load(currentSection +'.html' + ' .content', function() {
+        $(this).children().unwrap();
       });
     } else {
-      var url = currentSection + 'Exercise' + exerciseNum + '.html';
+      var url = currentSection + '-exercise-' + exerciseNum +'.html';
       // checks if a file/link exist before adding contents
-      // into page
+      //into page
       // after contents are loaded, load editor
       $.ajax({
         url: url,
@@ -127,13 +143,19 @@ var nextId = function(currentId) {
 var loadTest = function(exerciseNum, editor) {
   var exercise = "exercise" + exerciseNum;
   var tests;
-  $.getJSON("../solutionsToExercises.json", function(data) {
-    console.log(data[currentSection][0]);
-    tests = data[currentSection][0][exercise];
-    console.log('im first');
-    console.log(tests);
-    for (var i = 0; i < tests.length; i++) {
-      editor.addCheck(tests[i].element, tests[i].property, tests[i].timeProp);
-    }
-  });  
+  console.log('loading tests');
+  $.getJSON("../tests-to-exercises.json")
+    .success(function(data) {
+      console.log('succesfully load');
+      console.log(data);
+      // tests = data[currentSection][0][exercise];
+      console.log(tests);
+      for (var i = 0; i < tests.length; i++) {
+        editor.addCheck(tests[i].element, tests[i].property, tests[i].timeProp);
+      }
+    })
+    .error(function(data, status, xhr) {
+      console.log('Error: ' + status );
+      console.log('xhr: ' + xhr);
+    });
 }
