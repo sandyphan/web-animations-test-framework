@@ -34,7 +34,7 @@ specific language governing permissions and limitations under the License.
   "300px"}, 2);</code>
 
   <div id="hideLabel" onclick="toggleSolution()">Show Solution</div> 
-  <div <id="toggleText" class="codeSamples">
+  <div id="toggleText" class="codeSamples">
     <code>new Animation(document.querySelector("#a"), {left: "300px"}, 2);</code>
   </div>
 
@@ -42,17 +42,19 @@ specific language governing permissions and limitations under the License.
 
   <ol class="description">
     <li><code>'new Animation()'</code> creates a new animation object.</li>
-    <li><code>'document.querySelector("#a")'</code> is a DOM method which 
+    <li>
+      <code>'document.querySelector("#a")'</code> is a DOM method which 
       gets the element with id equals to 'a' from the HTML file. You 
       can always use <code>'document.getElementById("a")'</code> which 
       would result the same thing. Since we have defined its class 
       name as well, we can also select it using 
-      <code>'document.querySelector(".test")'.</code></li>
+      <code>'document.querySelector(".test")'.</code>
+    </li>
     <li><code>'{left: "300px"}'</code> is the effects of the animation. 
-      In this case we are letting it move to 300px from left.</li>
+    In this case we are letting it move to 300px from left.</li>
     <li><code>'2'</code> will set the duration of the animation to 
-      2 seconds. The bigger the number, the slower the animation 
-      speed and vice versa.</li>
+    2 seconds. The bigger the number, the slower the animation 
+    speed and vice versa.</li>
     </ol>
 
 </div>  <!-- content ending div -->
