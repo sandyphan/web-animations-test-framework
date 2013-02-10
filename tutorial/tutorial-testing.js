@@ -33,42 +33,41 @@ function setupTutorialTests() {
   pass = true;
 }
 
-// Create an async_test that emulates testharness.js.
+// This function mimics the async_test function in testharness.js so that
+// extra-asserts.js will run as intended for a tutorial.
 function async_test(func, name, properties) {
   numTests++;
-  step = function(func, this_obj) {
+  step = function(func) {
     func();
     if (!pass) {
-        console.log("FAIL :(");
-        parent.display.fail();
-        allDone = true;
-    }
-  } 
+      parent.TryItDisplay.fail();
+      allDone = true;
+    };
+  };
 
   done = function() {
     completedTests++;
-    if(completedTests == numTests && !allDone) {
-        console.log("PASS :D");
-        allDone = true;
-        parent.display.pass();
-    }
-  }
+    if (completedTests == numTests && !allDone) {
+      allDone = true;
+      parent.TryItDisplay.pass();
+    };
+  };
   return this;
 }   
 
 function assert_equals(actual, expected, description) {
-  console.log("in equals");
   pass = (actual == expected);
 }
 
 function assert_approx_equals(actual, expected, epsilon, description) {
-  console.log("in approx equals");
   var lowerBound = expected - (epsilon / 2) < actual;
   var upperBound = expected + (epsilon / 2) > actual;
   pass = (lowerBound && upperBound);
 }
 
-// Required function for extra-asserts.js.
+// This function is required to do nothing for tutorial testing,
+// but extra-asserts calls it and thus without this function, 
+// extra-asserts.js will cause the page to crash.
 function add_completion_callback(anything) {
 }
 
