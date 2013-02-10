@@ -192,7 +192,7 @@ function Iframe() {
 
   this.doc.setAttribute('id', 'display');
   this.doc.setAttribute('class', 'display');
-  this.doc.setAttribute('src', 'iframe-contents.html');
+  this.doc.setAttribute('src', '../iframe-contents.html');
 }
 
 Iframe.prototype.getDom = function() {

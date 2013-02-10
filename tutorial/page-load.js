@@ -21,7 +21,6 @@ var currentSection = window.location.href.split('/').pop();
 currentSection = currentSection.split('.')[0];
 var iframe, exerciseNum;
 
-console.log(currentSection);
 
 // waits until all DOM elements are ready to perform
 $(document.body).ready(function() {   
@@ -51,6 +50,7 @@ $(document.body).ready(function() {
       });
     }
   });
+  load_json_content();
 });
 
 // this loads the editor dynamically into page content
@@ -66,8 +66,8 @@ var loadEditor = function(animNum) {
   }
 
   // create a new editor object
-  var editor = new TryItDisplay();
-  editor.setDefaultHTML(html);
+  var editor = new TryItDisplay(document.getElementById("tryIt"));
+  editor.setDefaultHtml(html);
 
   // common css for all divs
   var css = '.anim {'
@@ -77,23 +77,15 @@ var loadEditor = function(animNum) {
          +'\n' + 'height: 50px;'
          +'\n' + 'top: 0px;'
          +'\n' + 'left: 0px;'
-         +'\n' + 'position: absolute;'
+         +'\n' + 'position: relative;'
          +'\n' + 'border: 1px solid black;'
          +'\n' + '}';
-  editor.setDefaultCSS(css);
+  editor.setDefaultCss(css);
   editor.update();
 
   // load solutions for exercises store in json files
   // add the solutions into tests
   loadTest(exerciseNum, editor);
-/*  console.log(tests);
-  console.log('im second');
-  for (var i = 0; i < tests.length; i++) {
-    var elem = tests[0].element;
-    var p = tests[0].property;
-    var t = tests[0].timeProp;
-    editor.addCheck(elem, p, t);
-  }*/
 }
 
 var isNumber = function(str) {
@@ -108,7 +100,7 @@ var isNumber = function(str) {
 // by default returns 1
 var findDivNum = function() {
   var content = $('p').text();
-  var match = content.match(/\b(\d+) different animation\b | \b(\d+) children\b/);
+  var match = content.match(/\b(\d+) different animations\b | \b(\d+) children\b | \b(\d+) different items\b/);
 
   if (match) {
     if (isNumber(match[0])) {
@@ -123,22 +115,6 @@ var nextId = function(currentId) {
   return String.fromCharCode(currentId.charCodeAt() + 1);
 }
 
-// load solution from xml files and store them
-// into an object
-// loadXMLDoc is a function from the external script
-// loadXMLDoc.js
-/*var loadSolution = function(exerciseNum) {
-  var xmlDoc = loadXMLDoc("solutionsToExercises.xml");
-  var solution = xmlDoc.getElementsByTagName("exercise" + exerciseNum);
-
-  solution.objects = $(solution).find("object");
-  solution.property = $(solution).find("property");
-  solution.timeProp = $(solution).find("time");s
-
-  return solution;
-}
-*/
-
 // load solutions using json
 var loadTest = function(exerciseNum, editor) {
   var exercise = "exercise" + exerciseNum;
@@ -150,6 +126,17 @@ var loadTest = function(exerciseNum, editor) {
       for (var i = 0; i < tests.length; i++) {
         editor.addCheck(tests[i].element, tests[i].property, tests[i].timeProp);
       }
+    })
+    .error(function(data, status, xhr) {
+      console.log('Error: ' + status );
+      console.log('xhr: ' + xhr);
+    });
+}
+
+var load_json_content = function() {
+  $.getJSON(currentSection + ".json")
+    .success(function(data) {
+      console.log(data["sequence-exercise-1"]);
     })
     .error(function(data, status, xhr) {
       console.log('Error: ' + status );
