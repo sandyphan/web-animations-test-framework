@@ -104,7 +104,7 @@ TryItDisplay.prototype.addCheck = function(object, property, time) {
 // Set the default end time for the animation clock.
 // Note: this will be overwritten if the user creates an animation longer than
 // the time set here.
-TryItDisplay.prototype.setTime = function(newTime) {
+TryItDisplay.prototype.setDefaultAnimationEndTime = function(newTime) {
   this.iframe.time = newTime;
 }
 
