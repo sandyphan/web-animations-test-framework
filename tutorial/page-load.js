@@ -89,7 +89,7 @@ var loadReferences = function() {
 
 // this loads the editor dynamically into page content
 var loadEditor = function(animNum) {
-  var html = "", currentId = 'a';
+  var html = '', currentId = 'a';
 
   // generate a number of animation divs according to
   // the requirements of the exercise
@@ -105,15 +105,15 @@ var loadEditor = function(animNum) {
 
   // common css for all divs
   var css = '.anim {'
-         +'\n' + 'background-color: red;'
-         +'\n' + 'border-radius: 10px;'
-         +'\n' + 'width: 100px;'
-         +'\n' + 'height: 50px;'
-         +'\n' + 'top: 0px;'
-         +'\n' + 'left: 0px;'
-         +'\n' + 'position: relative;'
-         +'\n' + 'border: 1px solid black;'
-         +'\n' + '}';
+    +'\n' + 'background-color: red;'
+    +'\n' + 'border-radius: 10px;'
+    +'\n' + 'width: 100px;'
+    +'\n' + 'height: 50px;'
+    +'\n' + 'top: 0px;'
+    +'\n' + 'left: 0px;'
+    +'\n' + 'position: relative;'
+    +'\n' + 'border: 1px solid black;'
+    +'\n' + '}';
   editor.setDefaultCss(css);
   editor.update();
 
