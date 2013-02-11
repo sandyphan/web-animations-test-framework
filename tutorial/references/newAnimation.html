@@ -32,58 +32,70 @@ limitations under the License.
 
   <p class="description">With the followng properties:</p>
 
-  <ul class="description">
-    <li><span class="keywords">new Animation:</span>
-      <ul style="list-style-type: none;">
-        <li>Creates a new animation object: animation</li>
-        <li>Establish a temporary timing dictionary based on the 
-        following:</li>
-          <ul>
-            <li>If input timing is a <span class="datatype">
-            TimingDictionary</span> object:
-              <ul style="list-style-type: none;">
-                <li>Let timing dictionary refer to timing.</li>
-              </ul>
-            </li>
-            <li>If input timing is a <span class="datatype">double</span>:
-              <ul style="list-style-type: none;">
-                <li>Create a new timing dictionary object with all 
-                properties set to default values and <span class="keywords">
-                iterationDuration</span> set to timing.</li>
-              </ul>
-            </li>
-            <li>If input timing is <span class="datatype">
-            null/undefined</span> object:
-              <ul style="list-style-type: none;">
-                <li>Create a new timing dictionary object with all 
-                properties set to default values.</li>
-              </ul>
-            </li>
-          </ul>
-        <li>Assign animation effects as follow:</li>
-          <ul>
-            <li>If effect is an <span class="datatype">AnimationEffect
-            </span> object or a <span class="datatype">CustomAnimationEffect
-            </span> object:
-              <ul style="list-style-type: none;">
-                <li>Assign <span class="keywords">animation.effect</span> 
-                to effect.</li>
-              </ul>
-            </li>
-            <li>If effect is <span class="datatype">null</span>:
-              <ul style="list-style-type: none;">
-                <li>Set <span class="keywords">animation.effect</span> 
-                to <span class="datatype">null</span></li>
-              </ul>
-            </li>
-            <li>***TODO: Require more reading:
-              <ul style="list-style-type: none;">
-                <li>not finalise</li>
-              </ul>
-            </li>
-          </ul>
-      </ul>
-    </li>
-  </ul>
+  <table class="properties-table">
+    <tr class="properties-table-title">
+      <td>Parameter</td>
+      <td>Type</td>
+      <td>Nullable</td>
+      <td>Optional</td>
+      <td>Description</td>
+    </tr>
+    <tr>
+      <td class="keywords">element</td>
+      <td class="datatype">Animation Target</td>
+      <td>Yes</td>
+      <td>No</td>
+      <td>The target element in which animations will apply onto.</td>
+    </tr>
+    <tr>
+      <td class="keywords">effect</td>
+      <td class="datatype">object</td>
+      <td>Yes</td>
+      <td>No</td>
+      <td>
+        <p>The effects to be apply onto the newly created Animation object.</p>
+        <p>If this parameter is null, the newly created Animation object will have
+        no effects apply onto it.</p>
+      </td>
+    </tr>
+    <tr>
+      <td class="keywords">timing</td>
+      <td class="datatype">double or TimingDictionary</td>
+      <td>Yes</td>
+      <td>Yes</td>
+      <td>The timing properties of the sequence group
+        <br />
+        <ul>
+          <li>If parameter is a <span class="datatype">double</span>:
+            <ul style="list-style-type: none;">
+              <li>create a new timing dictionary object with all 
+              properties set to their default values.</li>
+              <li><span class="keywords">iterationDuration</span> is set to 
+              the input double value.</li>
+            </ul>
+          </li>
+        </ul>
+        <br />
+        <ul>
+          <li>If parameter is a <span class="datatype">
+            TimingDictionary</span>:
+            <ul style="list-style-type: none;">
+              <li>Then <span class="keywords">timing dictionary</span> 
+              is set to the input timing.</li>
+            </ul>
+          </li>
+        </ul>
+        <br />
+        <ul>
+          <li>If parameter is a <span class="datatype">nul</span>:
+            <ul style="list-style-type: none;">
+              <li>create a new timing dictionary object with all properties 
+              set to their default values.</li>
+            </ul>
+          </li>
+        </ul>
+      </td>
+    </tr>
+  </table>
 
 </div>  <!-- content ending div -->
