@@ -16,46 +16,59 @@ limitations under the License.
 -->
 
 <!DOCTYPE html>
-<html>
-  <head>
-    <link rel="author" title="Sandy Phan, Sarah Heimlich", href="mailto:sandyphan@google.com, sarahheimlich@google.com">
-    <title>Web Animations Tutorial</title>
-    <meta name="flags" content="dom">
-    <meta name="tutorial" content="Web Animations tutorials">
-    <link rel="stylesheet" type="text/css" href="tutorial-style.css">
-  </head>
-  <body>
-    <ul class="topMenu">
-      <li><a href="home-page.html">Home</a></li>
-      <li><a href="#">Tutorials</a>
-        <ul class="subMenu">
-          <li><a href="basic-animations/basic-animation.html">Basic Animations</a></li>
-          <li><a href="parallel/parallel.html">Parallel Animations</a></li>
-          <li><a href="sequence/sequence.html">Sequence Animations</a></li>
-          <li><a href="timing-dictionary/timing-dictionary.html">Timing Dictionary</a></li>
-          <li><a href="timing-functions/timing-function.html">Timing Functions</a></li>
-        </ul>
-      </li>        
-      <li><a href="references/references.html">References</a></li>
-      <li><a href="about.html">About</a></li>
+
+<link rel="author" title="Sandy Phan, Sarah Heimlich", 
+  href="mailto:sandyphan@google.com, sarahheimlich@google.com">
+<title>Web Animations Tutorial</title>
+<meta name="flags" content="dom">
+<meta name="tutorial" content="Web Animations tutorials">
+<link rel="stylesheet" type="text/css" href="tutorial-style.css">
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="page-load.js"></script>
+
+<ul class="topMenu">
+  <li><a href="home-page.html">Home</a></li>
+  <li><a href="#">Tutorials</a>
+    <ul class="subMenu">
+      <li>
+        <a href="basic-animations/basic-animation.html">Basic Animations</a>
+      </li>
+      <li><a href="parallel/parallel.html">Parallel Animations</a></li>
+      <li><a href="sequence/sequence.html">Sequence Animations</a></li>
+      <li>
+        <a href="timing-dictionary/timing-dictionary.html">Timing Dictionary</a>
+      </li>
+      <li>
+        <a href="timing-functions/timing-function.html">Timing Functions</a>
+      </li>
     </ul>
-    <div id="main">
-      <div id="title">Web Animations Tutorial</div>
+  </li>        
+  <li><a href="references/references.html">References</a></li>
+  <li><a href="about.html">About</a></li>
+</ul>
+<div id="main">
+  <div id="title">Web Animations Tutorial</div>
 
-      <div class="line-separator"></div>
+  <div class="line-separator"></div>
 
-      <div class="content">
-        <p class="description">This site has the following tutorials:</p>
-        <ul class="description">
-          <a href="basic-animations/basic-animation.html"><li>Create basic animation</li></a>
-          <a href="parallel/parallel.html"><li>Parallel animation groups</li></a>
-          <a href="sequence/sequence.html"><li>Sequential animation groups</li></a>
-          <a href="timing-dictionary/timing-dictionary.html"><li>Adding timing dictionary</li></a>
-          <a href="timing-functions/timing-function.html"><li>Adding timing functions</li></a>
-        </ul>
-        <iframe class="demos" src="../../web-animations-js/test-harness.html">Your browser does not support iframes</iframe>
-      </div> <!-- content div ending -->
-      <div class="line-separator"></div>
-    </div> <!-- main div ending -->
-  </body>
-</html>
+  <div class="content">
+    <p class="description">This site has the following tutorials:</p>
+    <ul class="description">
+      <a href="basic-animations/basic-animation.html">
+        <li>Create basic animation</li>
+      </a>
+      <a href="parallel/parallel.html"><li>Parallel animation groups</li></a>
+      <a href="sequence/sequence.html"><li>Sequential animation groups</li></a>
+      <a href="timing-dictionary/timing-dictionary.html">
+        <li>Adding timing dictionary</li>
+      </a>
+      <a href="timing-functions/timing-function.html">
+        <li>Adding timing functions</li>
+      </a>
+    </ul>
+    <iframe class="demos" src="../../web-animations-js/test-harness.html">
+      Your browser does not support iframes
+    </iframe>
+  </div> <!-- content div ending -->
+  <div class="line-separator"></div>
+</div> <!-- main div ending -->
