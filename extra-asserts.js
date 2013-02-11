@@ -34,7 +34,7 @@ var testIndex = 0;
 var testPacket = [];
 
 // How long to show each manual check for.
-var pauseTime = 500;
+var pauseTime = 1000;
 // How long it takes an individual test to timeout.
 var testTimeout = 10000;
 // How long it takes for the whole test system to timeout.
@@ -76,6 +76,10 @@ function setupTests(timeouts){
   optionBar.id = "options";
   var select = document.createElement("select");
   select.setAttribute("id", "runType");
+  var hideFlash = document.createElement("button");
+  hideFlash.setAttribute("type", "button");
+  hideFlash.setAttribute("onclick", "toggleFlash()");
+  hideFlash.innerHTML = "Toggle Flash";
   var button = document.createElement("button");
   button.setAttribute("type", "button");
   button.setAttribute("onclick", "restart()");
@@ -86,6 +90,7 @@ function setupTests(timeouts){
   document.body.appendChild(optionBar);
   document.getElementById("options").appendChild(select);
   document.getElementById("options").appendChild(button);
+  document.getElementById("options").appendChild(hideFlash);
   document.getElementById("options").appendChild(timeOfAnimation);
 
   // Generate the log div
@@ -175,7 +180,7 @@ function runTests(){
   sortTests();
   if (state == "Manual"){
     // This causes no tests to start until 1 frame is rendered.
-    window.webkitRequestAnimationFrame(function(){ testRunner(); });
+    testRunner();
   } else {
     parentAnimation.pause();
     autoTestRunner();
@@ -302,7 +307,9 @@ function flashing(test) {
     flash.style.cssText = test.cssStyle.cssText;
     flash.style.position = "absolute";
     flash.innerHTML = test.object.innerHTML;
+    flash.className = "flash";
   } else {
+    flash.setAttribute("class", "flash");
     for (var x = 0; x < test.object.attributes.length; x++){
       flash.setAttribute(test.object.attributes[x].name,
                          test.object.attributes[x].value);
@@ -380,6 +387,37 @@ function flashCleanUp(victim){
   }, pauseTime);
 }
 
+function toggleFlash(){
+  var elements = document.getElementsByClassName("flash");
+  console.log(elements);
+  var type = elements[0].nodeName;
+
+  if(elements.length > 0){
+    if(type == "DIV"){
+      if (elements[0].style.display == 'block'){
+        for (var x = 0; x < elements.length; x++){
+          elements[x].style.display = 'none';
+        }
+      } else {
+        for (var x = 0; x < elements.length; x++){
+          elements[x].style.display = 'block';
+        }
+      }
+    } else {
+      console.log(elements[0].attributes);
+      if (elements[0].attributes.fillOpacity == 1){
+        for (var x = 0; x < elements.length; x++){
+          elements[x].setAttribute("fill-opacity", 0);
+        }
+      } else {
+        for (var x = 0; x < elements.length; x++){
+          elements[x].setAttribute("fill-opacity", 1);
+        }
+      }
+    }
+  }
+}
+
 add_completion_callback(function (allRes, status) {
     testResults = allRes;
     window.testResults = testResults;
@@ -392,11 +430,12 @@ function assert_properties(test){
   var object = test.object;
   var targets = test.targets;
   var message = test.message;
+  var time = document.animationTimeline.children[0].iterationTime;
+  if (time == null) time = 0;
 
   var isSVG = (object.nodeName != "DIV");
   var tempOb = document.createElement(object.nodeName);
   tempOb.style.position = "absolute";
-  tempOb.id = "find me";
   object.parentNode.appendChild(tempOb);
 
   for (var propName in targets){
@@ -424,29 +463,24 @@ function assert_properties(test){
         assert_transform(object, targets[propName], message);
       } else {
         if (isSVG){
-          var t = tempS[propName].value;
-          var c = compS[propName].value;
+          var tar = tempS[propName].value;
+          var curr = compS[propName].value;
         } else {
-          var t = tempS[propName];
-          var c = compS[propName];
+          var tar = tempS[propName];
+          var curr = compS[propName];
         }
-        console.log(t);
-        console.log(c);
-        t = t.replace(/[^0-9.\s]/g, "").split(" ");
-        c = c.replace(/[^0-9.\s]/g, "").split(" ");
-        console.log(t);
-        console.log(c);
+        var t = tar.replace(/[^0-9.\s]/g, "").split(" ");
+        var c = curr.replace(/[^0-9.\s]/g, "").split(" ");
         for (var x in t){
           test.test.step(function (){
-            assert_approx_equals(Number(c[x]), Number(t[x]), 12, message +
-                                 " " + x);
+            assert_approx_equals(Number(c[x]), Number(t[x]), 12, "At time " + time + ", " + propName +
+                " is not correct. Target: " + tar + " Current state: " + curr);
           });
         }
       }
-
     }
   }
-  tempOb.remove();
+  tempOb.parentNode.removeChild(tempOb);
 }
 
 // Deals with the svg transforms special case.
@@ -476,6 +510,7 @@ window.setupTests = setupTests;
 window.check = check;
 window.runTests = runTests;
 window.restart = restart;
+window.toggleFlash = toggleFlash;
 window.animPause = animPause;
 window.setState = setState;
 })();
