@@ -1,3 +1,4 @@
+
 /**
  * Copyright 2013 Google Inc. All Rights Reserved.
  *
@@ -146,7 +147,7 @@ a:visited {
 }
 .sideMenu li {
   display: block;
-  width: 81%;
+  width: 61%;
   background-color: #737373;
   padding: 20px;
   color: #CCC;
@@ -159,7 +160,7 @@ a:visited {
 }
 #menuLabel {
   background-color: #222;
-  width: 81%;
+  width: 61%;
   padding: 20px;
   color: #DDD;
 }
