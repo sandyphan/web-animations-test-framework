@@ -21,6 +21,8 @@ limitations under the License.
 
 <div class="content">
 
+  <div id="animNum">1</div>
+
 	<div class="heading subTitle">Parallel Animation Group</div>
 
   <div class="heading exercises">Exercise 2 - Parent in Children</div>
@@ -52,10 +54,9 @@ limitations under the License.
   <div id="hideLabel" onclick="toggleSolution()">Show Solution</div>
   <div id="toggleText" class="codeSamples">
     <code>
-          new Animation(document.querySelector("#a"), {top: "500px"}, 5, 
-          new ParGroup([], {duration: 5, iterationCount: 2})); <br />
-          new Animation(document.querySelector("#a"), {"background-color": 
-          ["red", "green", "red"]}, 5.0, new ParGroup([], 
+          new Animation(document.querySelector("#a"), 
+          {top: "500px", "background-color": 
+          ["red", "green", "red"]}, 5, new ParGroup([], 
           {duration: 5, iterationCount: 2}));
     </code>
   </div>
