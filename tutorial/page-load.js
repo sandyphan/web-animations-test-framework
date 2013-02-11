@@ -14,28 +14,40 @@
  * limitations under the License.
  */
 
-// get the name of current page the user is at
-// e.g. if the main page of the section is called parallel
-// currentSection would be 'parallel'
+/*
+ * Get the current topic of tutorial the user is in
+ * E.g. If the user is currently at basic-animation.html
+ * currentSection will equals to basic-animation.
+ * This variable is used to determine the name of a file.
+ * E.g. To get the name of the exercise 1 of basic-animation
+ * would add currentSection to '-exercise-' and the number 
+ * in the <li> being clicked
+ */
 var currentSection = window.location.href.split('/').pop();
 currentSection = currentSection.split('.')[0];
 var iframe, exerciseNum;
 
-
 // waits until all DOM elements are ready to perform
-$(document.body).ready(function() {   
-  // if one of the side menu is clicked   
-  //update page content without refreshing the whole page   
+$(document.body).ready(function() {
+
+  // if one of the side menu is clicked
+  // update page content without refreshing the whole page.
   $('.sideMenu li').click(function(e) {
+    // get the exercise number from the <li> being clicked.
+    // e.g. 'Exercise 1' would return 1
+    // Though 'Basic Info' would return 'Info'.
     exerciseNum = $(this).html().split(' ')[1];
-    if (isNumber(exerciseNum) == false) {
-      $('.content').load(currentSection +'.html' + ' .content', function() {
+
+    // determines if the input string is actually a number
+    // if it is not then load the info page of the section
+    if (parseInt(exerciseNum) !== exerciseNum && isNaN(exerciseNum)) {
+      $('.content').load(currentSection + '.html' + ' .content', function() {
         $(this).children().unwrap();
       });
     } else {
-      var url = currentSection + '-exercise-' + exerciseNum +'.html';
+      var url = currentSection + '-exercise-' + exerciseNum + '.html';
       // checks if a file/link exist before adding contents
-      //into page
+      // into page
       // after contents are loaded, load editor
       $.ajax({
         url: url,
@@ -50,7 +62,7 @@ $(document.body).ready(function() {
       });
     }
   });
-  load_json_content();
+  // load_json_content();
 });
 
 // this loads the editor dynamically into page content
@@ -122,7 +134,8 @@ var loadTest = function(exerciseNum, editor) {
   console.log('loading tests');
   $.getJSON("../tests-to-exercises.json")
     .success(function(data) {
-       tests = data[currentSection][0][exercise];
+      console.log(data[currentSection]);
+      tests = data[currentSection][0][exercise];
       for (var i = 0; i < tests.length; i++) {
         editor.addCheck(tests[i].element, tests[i].property, tests[i].timeProp);
       }
@@ -133,13 +146,19 @@ var loadTest = function(exerciseNum, editor) {
     });
 }
 
+/*
 var load_json_content = function() {
   $.getJSON(currentSection + ".json")
     .success(function(data) {
       console.log(data["sequence-exercise-1"]);
+      $.each(data, function() {
+        $.each(this, function(k, v)) {
+          console.log(k + " " + v);
+        }
+      })
     })
     .error(function(data, status, xhr) {
       console.log('Error: ' + status );
       console.log('xhr: ' + xhr);
     });
-}
+} */
