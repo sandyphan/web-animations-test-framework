@@ -61,11 +61,15 @@ limitations under the License.
   height: 700px;
   background: red;
 }
+
+.testBox {
+	height: 700px;
+}
 </style>
 
-<div id=expectation></div>
+<div id="expectation"></div>
 
-<div>
+<div id="test" class ="testBox">
 	<div id="a" class="anim"></div>
 	<div id="b" class="anim"></div>
 	<div id="c" class="anim"></div>
@@ -75,8 +79,15 @@ limitations under the License.
 	<div id="g" class="anim"></div>
 </div>
 
-<script src="web-animation.js"></script>
+<script src="../../web-animations-js/web-animation.js"></script>
+<script src="../testharness/testharness.js"></script>
+<script src='../testharness/testharnessreport.js'></script>
+<script src='../extra-asserts.js'></script>
+<link rel='stylesheet' href='../testharness/testharness.css'>
+<link rel='stylesheet' type="text/css" href="../animation-test-style.css">
+
 <script>
+setupTests();
 
 new Animation(document.querySelector("#a"), {left: ["100px", "200px"]}, {startDelay: 1, duration: 1});
 new Animation(document.querySelector("#b"), {left: "200px"}, {startDelay: 1, duration: 1});
@@ -86,5 +97,10 @@ new Animation(document.querySelector("#e"), {left: [{offset: 0, value: "100px"},
 new Animation(document.querySelector("#f"), {left: [{offset: 0, value: "200px"}, {offset: 0.25, value: "100px"}, {offset: 1, value: "200px"}]}, {duration: 2});
 new Animation(document.querySelector("#g"), {left: [{offset: 0.25, value: "200px"}, {offset: 0.5, value: "100px"}, {offset: 0.75, value: "200px"}], operation: "add"}, {duration: 2});
 
+var divs = document.getElementsByClassName("anim");
+for(var i = 0; i < divs.length; i++) {
+	check(divs[i], {left: "200px"}, 2, "The " + i + "th div end position.");
+}
 
+runTests();
 </script>
