@@ -1,0 +1,100 @@
+<!--
+Copyright 2012 Google Inc. All Rights Reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<style>
+iframe {
+  width: 800px;
+  height: 600px;
+}
+body{
+  font-family: Comic Sans MS, Monospace;
+}
+.textBox {
+  width:800px;
+  height:200px;
+}
+</style>
+
+<input type="text" id="iframeSrc">
+<button id="load-button" onclick="loadFile()">Load</button><br>
+<iframe id = "frame"></iframe>
+<div id="userOptions">
+  <input type="text" id="interval"> Interval <br>
+  Objects and properties
+  <button id="generate-button" onclick="getSettings()">Generate</button><br>
+  <textarea id = "obProp" class = textBox></textarea> <br>
+</div>
+<div> Outputted Checks </div>
+<div id = "checks"></div>
+
+<script>
+function ToCheck(object, initSelctor, properties){
+  this.object = object;
+  this.object = initSelctor;
+  this.properties = properties;
+}
+
+function loadFile(){
+  var file = document.getElementById("iframeSrc").value;
+  document.getElementById("frame").src = file;
+}
+
+function getSettings(){
+  var interval = Number(document.getElementById("interval").value);
+  var obProp = document.getElementById("obProp").value;
+  var checkStack = process(obProp);
+  console.log(checkStack);
+  generate(interval, checkStack);
+}
+
+function process(rawString){
+  // Put all checks into checkStack
+  var checkStack = [];
+  rawString = rawString.split("\n");
+
+  for (var x in rawString){
+    rawString[x] = rawString[x].replace(/\s/g, "");
+    rawString[x] = rawString[x].split(",");
+    var object = window.frame.document.querySelectorAll(rawString[x][0]);
+    var prop = [];
+    for (var i = 1; i < rawString[x].length; i++){
+      prop.push(rawString[x][i]);
+    }
+    checkStack.push(new ToCheck(object, rawString[x][0], prop));
+  }
+  return checkStack;
+}
+
+function generate(interval, checks){
+
+}
+
+function produceChecks(checks){
+  for (var x in checks){
+    if(checks[x].object.length > 1){
+
+    } else {
+
+    }
+  }
+}
+
+function printCheck(object, properties, time, testName){
+  var newCheck = "check(" + object + "," + properties + "," + time +
+      "," + testName + ");";
+  var ouput = document.getElementById("checks");
+  ouput.innerHTML += newCheck;
+}
+</script>
