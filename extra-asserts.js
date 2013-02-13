@@ -270,21 +270,23 @@ function restart(){
 
 // Makes it easier to see whats going on in the test.
 function animPause(){
-  if (userPaused){
-    beingPaused--;
-    if (beingPaused == 0){
-      if (document.animationTimeline.children[0].iterationTime
-        < document.animationTimeline.children[0].animationDuration - 0.01){
-        parentAnimation.play();
+  if(state == "Manual"){
+    if (userPaused){
+      beingPaused--;
+      if (beingPaused == 0){
+        if (document.animationTimeline.children[0].iterationTime
+          < document.animationTimeline.children[0].animationDuration - 0.01){
+          parentAnimation.play();
+        }
       }
+      userPaused = false;
+      document.getElementById("test").style.backgroundColor = "white";
+    } else {
+      beingPaused++;
+      parentAnimation.pause();
+      userPaused = true;
+      document.getElementById("test").style.backgroundColor = "yellow";
     }
-    userPaused = false;
-    document.getElementById("test").style.backgroundColor = "white";
-  } else {
-    beingPaused++;
-    parentAnimation.pause();
-    userPaused = true;
-    document.getElementById("test").style.backgroundColor = "yellow";
   }
 }
 
