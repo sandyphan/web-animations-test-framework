@@ -12,6 +12,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * Written by Sandy Phan.
  */
 
 /*
@@ -25,7 +27,7 @@
  */
 var currentSection = window.location.href.split('/').pop();
 currentSection = currentSection.split('.')[0];
-var iframe, exerciseNum;
+var exerciseNum;
 
 // waits until all DOM elements are ready to perform
 $(document.body).ready(function() {
@@ -58,15 +60,14 @@ $(document.body).ready(function() {
           success: function() {
             $('.content').load(url + ' .content', function() {
               $(this).children().unwrap();
-              var animNum = findDivNum();
-              loadEditor(animNum);
+              loadEditor();
             });
           }
         });
       }
     });
   }
-  // load_json_content();
+  load_json_content();
 });
 
 var loadReferences = function() {
@@ -88,12 +89,14 @@ var loadReferences = function() {
 }
 
 // this loads the editor dynamically into page content
-var loadEditor = function(animNum) {
+var loadEditor = function() {
   var html = '', currentId = 'a';
 
-  // generate a number of animation divs according to
+  var animNum = findDivNum();
+  // Generate a number of animation divs according to
   // the requirements of the exercise
-  // such as in sequence section
+  // such as in sequence section.
+  // This is specific for Web Animation Tutorials.
   for (var i = 0; i < animNum; i++) {
     html += '<div id=\"' + currentId + '\" class=\"anim\"></div>' + '\n';
     currentId = nextId(currentId);
@@ -104,16 +107,16 @@ var loadEditor = function(animNum) {
   editor.setDefaultHtml(html);
 
   // common css for all divs
-  var css = '.anim {'
-    +'\n' + 'background-color: red;'
-    +'\n' + 'border-radius: 10px;'
-    +'\n' + 'width: 100px;'
-    +'\n' + 'height: 50px;'
-    +'\n' + 'top: 0px;'
-    +'\n' + 'left: 0px;'
-    +'\n' + 'position: relative;'
-    +'\n' + 'border: 1px solid black;'
-    +'\n' + '}';
+  var css = '.anim {' + 
+    '\n' + 'background-color: red;' + 
+    '\n' + 'border-radius: 10px;' + 
+    '\n' + 'width: 100px;' + 
+    '\n' + 'height: 50px;' + 
+    '\n' + 'top: 0px;' + 
+    '\n' + 'left: 0px;' + 
+    '\n' + 'position: relative;' + 
+    '\n' + 'border: 1px solid black;' + 
+    '\n' + '}';
   editor.setDefaultCss(css);
   editor.update();
 
@@ -133,10 +136,8 @@ var isNumber = function(str) {
 // animation divs
 // by default returns 1
 var findDivNum = function() {
-  console.log('im looking number of divs');
   var value = document.getElementById('animNum').innerHTML;
   value = parseInt(value);
-  console.log(value);
   return value;
 }
 
@@ -149,7 +150,6 @@ var nextId = function(currentId) {
 var loadTest = function(exerciseNum, editor) {
   var exercise = "exercise" + exerciseNum;
   var tests;
-  console.log('loading tests');
   $.getJSON("../tests-to-exercises.json")
     .success(function(data) {
       tests = data[currentSection][0][exercise];
@@ -163,19 +163,39 @@ var loadTest = function(exerciseNum, editor) {
     });
 }
 
-/*
+
 var load_json_content = function() {
+  console.log('loading json content');
+  
   $.getJSON(currentSection + ".json")
     .success(function(data) {
-      console.log(data["sequence-exercise-1"]);
-      $.each(data, function() {
-        $.each(this, function(k, v)) {
-          console.log(k + " " + v);
-        }
-      })
+      var obj = data["sequence-exercise-1"];
+      for (var i = 0; i < obj.length; i++) {
+        traverse_json_object(obj[i], '');
+      }
+      console.log(obj);
     })
     .error(function(data, status, xhr) {
       console.log('Error: ' + status );
       console.log('xhr: ' + xhr);
     });
-} */
+}
+
+var traverse_json_object = function(obj, className) {
+  var name = className;
+  for (var prop in obj) {
+    if (obj.hasOwnProperty(prop)) {
+      name += prop + ' ';
+      console.log(name);
+      if (isObject(obj[prop])) {
+        traverse_json_object(obj[prop], name);
+      }
+      console.log(prop + ': ' + obj[prop]);
+      
+    }
+  }
+}
+
+var isObject = function(data) {
+  return (typeof data === 'object');
+}

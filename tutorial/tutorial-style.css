@@ -206,7 +206,6 @@ a:visited {
   list-style-type: none;
   float: left;
   position: absolute;
-  z-index: 5;
   top: 0;
   left: 0;
   margin: 0;
@@ -237,22 +236,19 @@ a:visited {
   position: absolute;
   left: -9999px;
   font-size: 0.8em;
-  z-index: 990;
+  top: 100%;
 }
 .topMenu .subMenu li {
   padding-top: 1px;
   float: none;
-  z-index: 1;
 }
 .topMenu .subMenu a {
   white-space: nowrap;
   background-color: rgba(34,34,34, 0.1);
   color: #222;
-  z-index: 1;
 }
 .topMenu li:hover .subMenu {
   left: -40px;
-  z-index: 1;
 }
 .topMenu .subMenu li:hover a {
   background-color: rgba(34,34,34,0.9);
