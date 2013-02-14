@@ -1,0 +1,82 @@
+{
+  "sequence": [{
+    "intro description": "Web animations is to have a flash or GIF animation intergrated onto the web page. Normal web animations still require the use of plugins such as Java Applets, Shockwave, Adobe Flash. In this tutorial, we will be showing you how to create animations using javascript without the need of installing plugins.",
+    "heading": {
+      "subTitle": "Sequential Animation Group"
+    },
+    "description": [{
+      "1": "The interface for sequential animation group is:",
+      "2": "You can see that the interfaces are very similar, even the properties of the children and timing are the same as well. That is, both children and timing are nullable but only timing is optional."
+    }],
+    "codeSamples": "new SeqGroup([children], {timing/timing functions});",
+    "separator": ""
+  }],
+
+  "sequence-exercise-1": [{
+    "animNum": 1,
+    "heading": {
+      "subTitle": "Sequential Animation Group",
+      "exercises": "Exercise 1 - Make a Sequential Group"
+    },
+    "description": {
+      "1": "Similar to parallel animation groups, there are a few ways to include children into the sequential groups.",
+      "2": "In this exercise, use the old method - first create all necessary animations then include them into the group.",
+      "3": "Create 3 animations that runs sequentially, the first animation runs diagonally 300px from left and 300px from top, the second animation runs diagonally 600px from left and 0px from top, then the third animation moves back to the start position. Each animation should take 3 seconds to run.",
+      "note": "Note: this exercise should only need one animation div, so do not make more divs. Do not add any start delay."
+    },
+    "hideLabel": "Show Solution",
+    "toggleText": "var A = new Animation(document.querySelector('#a'), {left: '300px', top: '300px'}, 3); <br /> var B = new Animation(document.querySelector('#a'), {left: '600px', top: '0px'}, 3); <br /> var C = new Animation(document.querySelector('#a'), {left: '0px', top: '0px'}, 3); <br /> var seq = new SeqGroup([A, B, C]);",
+    "tryIt": "",
+    "separator": ""
+  }],
+
+  "sequence-exercise-2": [{
+    "animNum": 3,
+    "heading": {
+      "subTitle": "Sequential Animation Group",
+      "exercises": "Exercise 2 - Overlapping (Challenge)"
+    },
+    "description": {
+      "1": "Let's have some play around with start delay in sequence groups.",
+      "2": "In this exercise, create 3 different animations using 3 different animation divs, make the first and second animation overlap by 2 seconds and make the third animation waits 2 seconds after the first and second animation has finished running."
+    },
+    "ul": {
+      "1": "The first animation moves 400px from left",
+      "2": "Start position of the second animation div should be at 200px from left",
+      "3": "Let the second animation move to 500px from left",
+      "4": "Let the third animation start at 100px from top",
+      "5": "The third animation should move to 300px from left",
+      "6": "All 3 animations should run for 5 seconds",
+      "7": "The whole cycle should be repeated twice."
+    },
+    "hideLabel": "Show Solution",
+    "toggleText codeSamples": "var A = new Animation(document.querySelector('#a'), {left: '400px'}, 5); <br /> var B = new Animation(document.querySelector('#b'), {left: ['200px', '500px']}, {startDelay: -2, duration: 5}); <br /> var C = new Animation(document.querySelector('#c'), {left: '300px'}, {startDelay: 2, duration: 5}); <br /> var seq = new SeqGroup([A, B, C], {iterationCount: 2}); <br />",
+    "tryIt": "",
+    "separator": ""
+  }],
+
+  "sequence-exercise-3": [{
+    "animNum": 4,
+    "heading": {
+      "subTitle": "Sequential Animation Group",
+      "exercises": "Exercise 3 - More Challenges"
+    },
+    "description": {
+      "1": "Now you know how to use both parallel and sequential animation groups. Let's get started on some harder exercises.",
+      "2": "For this exercise, create 4 animations to 4 different animation divs. Divide the animations evenly into 2 groups where the first group contains the 1st and 2nd elements. The second group should wait until the first group has finished running to run. The elements of the first group should move 300px and 400px from left respectively. The group should run for 3 seconds and repeat twice. The second group should move 300px and 400px from left respectively where the 2nd element in the group will have to wait half way to start. That is each element should run for 4 seconds and the 2nd element will wait for 2 seconds to run. The second group should also repeat itself 3 times. In addition, the first group will change colours from red to green then back to red, the second group will change colours from blue to yellow then to blue."
+    },
+    "ul": {
+      "1": "Create 4 animations.",
+      "2": "Create 2 groups, group the 1st and 2nd elements into the first and the rest into the second.",
+      "3": "Animate the first group such that it repeats twice. Elements in this group should run in parallel.",
+      "4": "Animate the second group such that one runs half way to anther and repeats itself 3 times. Elements should run in sequence.",
+      "5": "The third animation should move to 300px from left",
+      "6": "First group changes colour from red to green then to red.",
+      "7": "Second group changes colour from blue to yellow then to blue."
+    },
+    "hideLabel": "Show Solution",
+    "toggleText codeSamples": "var A = new Animation(document.querySelector('#a'), {left: '300px', 'background-color': ['red', 'green', 'red']}, 3); <br /> var B = new Animation(document.querySelector('#b'), {left: '400px', 'background-color': ['red', 'green', 'red']}, 3); <br /> var group1 = new ParGroup([A, B], {iterationCount: 2}); <br /> var C = new Animation(document.querySelector('#c'), {left: '300px', 'background-color': ['blue', 'yellow', 'blue']}, 4); <br /> var D = new Animation(document.querySelector('#d'), {left: '400px', 'background-color': ['blue', 'yellow', 'blue']}, {startDelay: -2, duration: 4}); <br /> var group2 = new SeqGroup([C, D], {iterationCount: 3}); new SeqGroup([group1, group2]);",
+    "tryIt": "",
+    "separator": ""
+  }]
+}

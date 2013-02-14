@@ -1,0 +1,59 @@
+{
+  "basic-animation": [{
+    "intro description": "Web animations is to have a flash or GIF animation intergrated onto the web page. Normal web animations still require the use of plugins such as Java Applets, Shockwave, Adobe Flash. In this tutorial, we will be showing you how to create animations using javascript without the need of installing plugins.",
+    "heading": {
+      "subTitle": "Create a new basic animation"
+    },
+    "codeSamples": "new Animation(element, {effect(s)}, {optional: timed items});",
+    "ul": [{
+      "1": "'new Animation' creates an animation object, 'element' is the DOM object or animation target that we want to animate and it is a compulsory component and can be nullable. For instance, 'element' can be a 'div' with, a 'p' (paragraph).",
+      "2": "'effects' defines the types of effects in animation such as move left, or right, or change colours, or change opacity, etc. 'effects' is also a compulsory component as well as nullable. This parameter can be of AnimationEffect object or CustomAnimationEffect object. These effects will be shared with any other animation objects referring to the same AnimationEffect or CustomAnimationEffect object. In the case this component being null, the animation will have a null effect.",
+      "3": "'timed items' can be of type double or timing dictionary and is nullable and optional component. When this parameter is double, then it specifies the duartion of a single iteration of the animation. If it is null, then the default value for iteration duration would be zero is specified in the Timing Dictionary."
+    }]
+  }],
+
+  "basic-animation-exercise-1": [{
+    "animNum": 1,
+    "heading": {
+      "subTitle": "Sequential Animation Group",
+      "exercises": "Exercise 1 - Make a Sequential Group"
+    },
+    
+  }],
+
+  "basic-animation-exercise-2": [{
+    "animNum": 3,
+    "heading": {
+      "subTitle": "Sequential Animation Group",
+      "exercises": "Exercise 2 - Overlapping (Challenge)"
+    },
+    
+  }],
+
+  "basic-animation-exercise-3": [{
+    "animNum": 4,
+    "heading": {
+      "subTitle": "Sequential Animation Group",
+      "exercises": "Exercise 3 - More Challenges"
+    },
+    
+  }],
+
+  "basic-animation-exercise-4": [{
+    "animNum": 4,
+    "heading": {
+      "subTitle": "Sequential Animation Group",
+      "exercises": "Exercise 3 - More Challenges"
+    },
+    
+  }],
+
+  "basic-animation-exercise-5": [{
+    "animNum": 4,
+    "heading": {
+      "subTitle": "Sequential Animation Group",
+      "exercises": "Exercise 3 - More Challenges"
+    },
+    
+  }]
+}
