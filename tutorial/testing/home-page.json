@@ -1,0 +1,16 @@
+{
+  "home-page": [{
+    "description": "This site has the following tutorials:",
+    "ul": {
+      "1": "Create basic animation",
+      "2": "Parallel animation groups",
+      "3": "Sequential animation groups",
+      "4": "Adding timing dictionary",
+      "5": "Adding timing functions"
+    },
+    "iframe": {
+      "name": "demos",
+      "src": "../../../web-animations-js/test-harness.html"
+    }
+  }]
+}
