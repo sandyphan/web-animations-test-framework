@@ -15,45 +15,68 @@
   "basic-animation-exercise-1": [{
     "animNum": 1,
     "heading": {
-      "subTitle": "Sequential Animation Group",
+      "subTitle": "Create a new basic animation",
       "exercises": "Exercise 1 - Make a Sequential Group"
     }
     
   }],
 
   "basic-animation-exercise-2": [{
-    "animNum": 3,
+    "animNum": 1,
     "heading": {
-      "subTitle": "Sequential Animation Group",
+      "subTitle": "Create a new basic animation",
       "exercises": "Exercise 2 - Overlapping (Challenge)"
     }
     
   }],
 
   "basic-animation-exercise-3": [{
-    "animNum": 4,
+    "animNum": 1,
     "heading": {
-      "subTitle": "Sequential Animation Group",
-      "exercises": "Exercise 3 - More Challenges"
-    }
-    
+      "subTitle": "Create a new basic animation",
+      "exercises": "Exercise 3 - Moving Diagonally"
+    },
+    "description": {
+      "1": "Now you know how to move right and down, lets try to combine the 2 to see what will happen.",
+      "2": "Put both codes in the previous exercise into the editor to see what happens. The animation was move 300px from left for exercise 1 and move 500px from top for exercise 2. (Try to type in the codes before going back to the exercise for the codes."
+    },
+    "hideLabel": "Show Solution",
+    "toggleText codeSamples": "new Animation(document.querySelector('#a'), {left: '300px'}, 2); <br /> new Animation(document.querySelector('#a'), {top: '500px'}, 2);",
+    "tryIt": ""    
   }],
 
   "basic-animation-exercise-4": [{
-    "animNum": 4,
+    "animNum": 1,
     "heading": {
-      "subTitle": "Sequential Animation Group",
-      "exercises": "Exercise 3 - More Challenges"
-    }
-    
+      "subTitle": "Create a new basic animation",
+      "exercises": "Exercise 4 - Moving in rectangle (challenge)",
+    },
+    "description a": "Now you know how to let the animation move left, right, top and down as well as diagonally. How about you try to let the move in a rectangle clockwise. So this is what you need to achieve:",
+
+    "description b": "You may have to change the timing to {startDelay: 2, duration: 2} from '2' at certain places. Note that startDelay starts counting from the start of the animation.",
+    "hideLabel": "Show Solution",
+    "toggleText codeSamples": "new Animation(document.querySelector('#a'), {left: '400px'}, 2); <br />new Animation(document.querySelector('#a'), {top: '200px'}, {startDelay: 2, duration: 2});<br /> new Animation(document.querySelector('#a'), {left: '0px'}, {startDelay: 4, duration: 2});<br /> new Animation(document.querySelector('#a'), {top: '0px'}, {startDelay: 6, duration: 2});",
+    "tryIt": ""
   }],
 
   "basic-animation-exercise-5": [{
-    "animNum": 4,
+    "animNum": 1,
     "heading": {
-      "subTitle": "Sequential Animation Group",
-      "exercises": "Exercise 3 - More Challenges"
-    }
-    
+      "subTitle": "Create a new basic animation",
+      "exercises": "Exercise 5 - Changing Colours"
+    },
+    "description a": {
+      "1": "Now you have known a tonne of basics stuffs about web aniamtions, how about let's try out changing the colour of the block since red doesn't look as nice. The question is, how?",
+      "2": "It is easy, we only need to access it's background-color property and change it. Sounds easy enough? The following code will change the block from red to green:"
+    },
+    "codeSamples": "new Animation(document.querySelector('#a'), {'background-color': ['red', 'green']}, 2);",
+    "description b": {
+      "1": "So the above code had just access the background-color property in CSS and change it from red to green. You can always change them to other colours such as blue, grey, yellow, or even #827031.",
+      "2": "Now let's give it a try. Your task for this exercise is to change the colour of the block from red to green, then to light steel blue, then green then back to red again in 10 seconds.",
+      "3": "Hint: you will only need one line of code so don't write 3 lines of codes for changing 3 colours. You can actually put 2+ colours in the square brackets."
+    },
+    "hideLabel": "Show Solution",
+    "toggleText codeSamples": "new Animation(document.querySelector('#a'), {'background-color': ['red', 'green', 'lightsteelblue', 'green', 'red']}, 10);",
+    "tryIt": ""
   }]
 }

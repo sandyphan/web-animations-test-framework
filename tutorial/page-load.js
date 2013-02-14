@@ -38,7 +38,7 @@ $(document.body).ready(function() {
     loadReferences();
   else {
 
-/*    // if one of the side menu is clicked
+    // if one of the side menu is clicked
     // update page content without refreshing the whole page.
     $('.sideMenu li').click(function(e) {
       // get the exercise number from the <li> being clicked.
@@ -69,15 +69,15 @@ $(document.body).ready(function() {
         });
       }
     });
-*/
-    $('.sideMenu li').click(function(e) {
+
+/*    $('.sideMenu li').click(function(e) {
       exerciseNum = $(this).html().split(' ')[1];
       if (parseInt(exerciseNum) !== exerciseNum && isNaN(exerciseNum)) {
        load_json_content(currentSection);
       } else {
         load_json_content(currentSection + '-exercise-' + exerciseNum);
       }
-    });
+    });*/
   }
 });
 
