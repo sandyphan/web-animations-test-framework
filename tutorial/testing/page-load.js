@@ -179,6 +179,8 @@ var load_json_content = function(content) {
   $.getJSON(currentSection + ".json")
     .success(function(data) {
       document.querySelector('.content').innerHTML = '';
+      console.log(data);
+      console.log(content);
       var obj = data[content];
       for (var i = 0; i < obj.length; i++) {
         traverse_json_object(obj[i], '');
@@ -219,9 +221,9 @@ var traverse_json_object = function(obj, className) {
         if (prop == 'hideLabel')
           ele.setAttribute('onclick', 'toggleSolution()');
       } else {
-        if (prop == 'toggleText codeSamples' || prop == 'codeSamples') {
+        if (prop.indexOf('code') !== -1)
           ele = createObject('code', name, obj[prop], 'class');
-        } else
+        else
           ele = createObject('div', name, obj[prop], 'class');
       }
       document.querySelector('.content').appendChild(ele);
