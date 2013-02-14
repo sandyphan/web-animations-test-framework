@@ -19,7 +19,7 @@ limitations under the License.
 
 <div class="content">
 
-  <div id="animNum">1</div>
+  <div class="animNum">1</div>
 
 	<div class="heading subTitle">Sequential Animation Group</div>
 
@@ -41,17 +41,15 @@ limitations under the License.
     animation div, so do not make more divs. Do not add any start delay.</p>
 
   <div id="hideLabel" onclick="toggleSolution()">Show Solution</div>
-  <div id="toggleText" class="codeSamples">
-    <code>var A = new Animation(document.querySelector("#a"), 
-      {left: "300px", top: "300px"}, 3); <br />
-          var B = new Animation(document.querySelector("#a"), 
-          {left: "600px", top: "0px"}, 3); <br />
-          var C = new Animation(document.querySelector("#a"), 
-          {left: "0px", top: "0px"}, 3); <br />
-          var seq = new SeqGroup([A, B, C]); <br />
-          seq.play();
-    </code>
-  </div>
+  <code  id="toggleText" class="codeSamples">var A = new Animation(document.querySelector("#a"), 
+    {left: "300px", top: "300px"}, 3); <br />
+        var B = new Animation(document.querySelector("#a"), 
+        {left: "600px", top: "0px"}, 3); <br />
+        var C = new Animation(document.querySelector("#a"), 
+        {left: "0px", top: "0px"}, 3); <br />
+        var seq = new SeqGroup([A, B, C]); <br />
+        seq.play();
+  </code>
 
   <div id="tryIt"></div>
 

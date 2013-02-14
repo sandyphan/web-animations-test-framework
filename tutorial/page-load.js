@@ -29,13 +29,16 @@ var currentSection = window.location.href.split('/').pop();
 currentSection = currentSection.split('.')[0];
 var exerciseNum;
 
+
+
 // waits until all DOM elements are ready to perform
 $(document.body).ready(function() {
+  // load_json_content();
   if (currentSection == 'references')
     loadReferences();
   else {
 
-    // if one of the side menu is clicked
+/*    // if one of the side menu is clicked
     // update page content without refreshing the whole page.
     $('.sideMenu li').click(function(e) {
       // get the exercise number from the <li> being clicked.
@@ -66,8 +69,16 @@ $(document.body).ready(function() {
         });
       }
     });
+*/
+    $('.sideMenu li').click(function(e) {
+      exerciseNum = $(this).html().split(' ')[1];
+      if (parseInt(exerciseNum) !== exerciseNum && isNaN(exerciseNum)) {
+       load_json_content(currentSection);
+      } else {
+        load_json_content(currentSection + '-exercise-' + exerciseNum);
+      }
+    });
   }
-  load_json_content();
 });
 
 var loadReferences = function() {
@@ -92,7 +103,7 @@ var loadReferences = function() {
 var loadEditor = function() {
   var html = '', currentId = 'a';
 
-  var animNum = findDivNum();
+ var animNum = findDivNum();
   // Generate a number of animation divs according to
   // the requirements of the exercise
   // such as in sequence section.
@@ -136,7 +147,7 @@ var isNumber = function(str) {
 // animation divs
 // by default returns 1
 var findDivNum = function() {
-  var value = document.getElementById('animNum').innerHTML;
+  var value = document.querySelector('.animNum').innerHTML;
   value = parseInt(value);
   return value;
 }
@@ -161,41 +172,4 @@ var loadTest = function(exerciseNum, editor) {
       console.log('Error: ' + status );
       console.log('xhr: ' + xhr);
     });
-}
-
-
-var load_json_content = function() {
-  console.log('loading json content');
-  
-  $.getJSON(currentSection + ".json")
-    .success(function(data) {
-      var obj = data["sequence-exercise-1"];
-      for (var i = 0; i < obj.length; i++) {
-        traverse_json_object(obj[i], '');
-      }
-      console.log(obj);
-    })
-    .error(function(data, status, xhr) {
-      console.log('Error: ' + status );
-      console.log('xhr: ' + xhr);
-    });
-}
-
-var traverse_json_object = function(obj, className) {
-  var name = className;
-  for (var prop in obj) {
-    if (obj.hasOwnProperty(prop)) {
-      name += prop + ' ';
-      console.log(name);
-      if (isObject(obj[prop])) {
-        traverse_json_object(obj[prop], name);
-      }
-      console.log(prop + ': ' + obj[prop]);
-      
-    }
-  }
-}
-
-var isObject = function(data) {
-  return (typeof data === 'object');
 }
