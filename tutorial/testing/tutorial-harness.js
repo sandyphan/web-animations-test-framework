@@ -316,8 +316,8 @@ var traverse_json_object = function(obj, className) {
       name += prop;
       if (isObject(obj[prop])) {
         name += ' ';
-        if (prop == 'ul') {
-          ele = loadList(obj[prop]);
+        if (prop == 'ul' || prop == 'ol') {
+          ele = loadList(obj[prop], prop);
           flag = true;
         } else if (prop == 'iframe') {
           ele = loadIframe(obj[prop]);
@@ -350,15 +350,19 @@ var traverse_json_object = function(obj, className) {
   }
 }
 
-var loadList = function(obj) {
-  var ul = createObject('ul', 'description', '', 'class');
+var loadList = function(obj, type) {
+  var ele;
+  if (type == 'ul')
+    ele = createObject('ul', 'description', '', 'class');
+  if (type == 'ol')
+    ele = createObject('ol', 'description', '', 'class');
   for (var prop in obj) {
     if (obj.hasOwnProperty(prop)) {
       var li = createObject('li', '', obj[prop], '');
-      ul.appendChild(li);
+      ele.appendChild(li);
     }
   }
-  return ul;
+  return ele;
 }
 
 var loadIframe = function(obj) {

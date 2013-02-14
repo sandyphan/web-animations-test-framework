@@ -16,19 +16,34 @@
     "animNum": 1,
     "heading": {
       "subTitle": "Create a new basic animation",
-      "exercises": "Exercise 1 - Make a Sequential Group"
+      "exercises": "Exercise 1 - Moving Right"
+    },
+    "description a": {
+      "1": "Now let's code some animation out! In the 'Try It Yourself' block, you should see a default div block with class named 'test' and ID named 'a' coloured in red. If you don't like the colour, you can always change it around. Click on 'Update' when you have finished typing in your code.",
+      "2": "Now we want to make the red rounded rectangle move to 300px from left for 2 seconds. We should do the following:"
+    },
+    "hideLabel": "Show Solution",
+    "toggleText codeSamples": "new Animation(document.querySelector('#a'), {left: '300px'}, 2);",
+    "tryIt": "" ,
+    "ol": {
+      "1": "'new Animation()' creates a new animation object.",
+      "2": "'document.querySelector('#a')'is a DOM method which gets the element with id equals to 'a' from the HTML file. You can always use 'document.getElementById('a')' which would result the same thing. Since we have defined its class name as well, we can also select it using 'document.querySelector('.test')'.",
+      "3": "'{left: '300px'}' is the effects of the animation. In this case we are letting it move to 300px from left.",
+      "4": "'2' will set the duration of the animation to 2 seconds. The bigger the number, the slower the animation speed and vice versa."
     }
-    
   }],
 
   "basic-animation-exercise-2": [{
     "animNum": 1,
     "heading": {
       "subTitle": "Create a new basic animation",
-      "exercises": "Exercise 2 - Overlapping (Challenge)"
-    }
-    
-  }],
+      "exercises": "Exercise 2 - Moving Down"
+    },
+    "description": "Now try move the red rectangle 500px from top for 2 seconds. Try it one time without replacing the original code you have entered, then try another time with all old javascript code replaced. What do you see?",
+    "hideLabel": "Show Solution",
+    "toggleText codeSamples": "new Animation(document.querySelector('#a'), {top: '500px'}, 2);",
+    "tryIt": ""   
+    }],
 
   "basic-animation-exercise-3": [{
     "animNum": 1,
@@ -49,10 +64,16 @@
     "animNum": 1,
     "heading": {
       "subTitle": "Create a new basic animation",
-      "exercises": "Exercise 4 - Moving in rectangle (challenge)",
+      "exercises": "Exercise 4 - Moving in rectangle (challenge)"
     },
     "description a": "Now you know how to let the animation move left, right, top and down as well as diagonally. How about you try to let the move in a rectangle clockwise. So this is what you need to achieve:",
-
+    "ol": {
+      "1": "Move right 400px",
+      "2": "Move down 200px",
+      "3": "Move left 400px",
+      "4": "Then move back up 200px",
+      "5": "Each move will take 2 seconds to run."
+    },
     "description b": "You may have to change the timing to {startDelay: 2, duration: 2} from '2' at certain places. Note that startDelay starts counting from the start of the animation.",
     "hideLabel": "Show Solution",
     "toggleText codeSamples": "new Animation(document.querySelector('#a'), {left: '400px'}, 2); <br />new Animation(document.querySelector('#a'), {top: '200px'}, {startDelay: 2, duration: 2});<br /> new Animation(document.querySelector('#a'), {left: '0px'}, {startDelay: 4, duration: 2});<br /> new Animation(document.querySelector('#a'), {top: '0px'}, {startDelay: 6, duration: 2});",
