@@ -76,6 +76,7 @@ var addStyles = function(styles) {
     for (var i = 0; i < styles.length; i++) {
   	  style.href = styles[i];
   	  head.appendChild(style);
+      style = document.createElement('style');
   	}
   }
 }
@@ -196,6 +197,10 @@ $(document.body).ready(function() {
   }
 });
 
+// These load the reference pages using HTML
+// The contents of these refernece pages are still store
+// in HTML files. JSON-data-driven is not yet implemented
+// for this
 var loadReferences = function() {
   $(document.body).ready(function() {
     $('.description li').click(function(e) {
