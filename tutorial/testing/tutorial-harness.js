@@ -289,13 +289,18 @@ var loadTest = function(exerciseNum, editor) {
     });
 }
 
-
+// This load contents stored in JSON files and put
+// them into a div classed 'content'.
+// Pass in 'content' as the section of the tutorial to display:
+// e.g. if you would like to display 'parallel-exercise-1'
+// then pass in 'parallel-exercise-1'.
+// By defaults, the home pages for each tutorial topic
+// should pass in their home page name such as
+// 'Basic Animation' should pass in 'basic-animation'
 var load_json_content = function(content) {
   $.getJSON(currentSection + ".json")
     .success(function(data) {
       document.querySelector('.content').innerHTML = '';
-      console.log(data);
-      console.log(content);
       var obj = data[content];
       for (var i = 0; i < obj.length; i++) {
         traverse_json_object(obj[i], '');
@@ -308,17 +313,32 @@ var load_json_content = function(content) {
     });
 }
 
+// This function is called by 'load_json_content' which iterate
+// through each objects/elements in the topic section
+// and creates HTML elements accordingly with idenfication names
+// assigned recursively.
 var traverse_json_object = function(obj, className) {
   var name = className, ele;
   for (var prop in obj) {
+
+    // flag is used to exit the 'if' statement
+    // when a data is no longer an object and to indicate
+    // that it is the end of a recursion.
+    // When data is an object, this will recurse
+    // and loop through all elements in the object
+    // until there no longer is any objects.
     var flag = false;
     if (obj.hasOwnProperty(prop)) {
       name += prop;
       if (isObject(obj[prop])) {
         name += ' ';
+
+        // use loadList to generate lists
         if (prop == 'ul' || prop == 'ol') {
           ele = loadList(obj[prop], prop);
           flag = true;
+
+        // use loadIframe to generate iframes
         } else if (prop == 'iframe') {
           ele = loadIframe(obj[prop]);
           flag = true;
@@ -331,14 +351,23 @@ var traverse_json_object = function(obj, className) {
       }
     }
     if (flag == false) {
+
+      // 'hideLabel' and 'tryIt' are put as ids in css style
       if (prop == 'hideLabel' || prop == 'tryIt') {
         ele = createObject('div', name, obj[prop], 'id');
+
+        // add onclick events for 'hideLabel' to toggle solutions
         if (prop == 'hideLabel')
-          ele.setAttribute('onclick', 'toggleSolution()');
+          ele.setAttribute('onclick', 'toggleSolution()'); 
       } else {
-        if (prop == 'toggleText codeSamples' || prop == 'codeSamples')
+
+        // sample codes are put inside <code> tags
+        if (prop.indexOf('code') !== -1)
           ele = createObject('code', name, obj[prop], 'class');
-        else if (prop == 'description')
+
+        // Normal explaination texts and paragraphs
+        // are classed as 'description'
+        else if (prop.indexOf('description') !== -1)
           ele = createObject('p', name, obj[prop], 'class');
         else
           ele = createObject('div', name, obj[prop], 'class');
@@ -349,7 +378,10 @@ var traverse_json_object = function(obj, className) {
     name = name.replace(prop, '');
   }
 }
-
+// This function is called by 'traverse_json_object'
+// to load only lists elements
+// All lists are by default classed as 'description'
+// for CSS style
 var loadList = function(obj, type) {
   var ele;
   if (type == 'ul')
@@ -365,12 +397,18 @@ var loadList = function(obj, type) {
   return ele;
 }
 
+// This function is called by 'traverse_json_object'
+// to load an iframe with a specified source
+// This is used particularly for the home-page of
+// Web Animations Tutorials
 var loadIframe = function(obj) {
   var iframe = createObject('iframe', obj.name, 'Your browser does not support iframes', 'class');
   iframe.src = obj.src;
   return iframe;
 }
 
+// This function returns if the passed in
+// data is an object or not
 var isObject = function(data) {
   return (typeof data === 'object');
 }

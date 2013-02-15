@@ -147,7 +147,7 @@ var isNumber = function(str) {
 // animation divs
 // by default returns 1
 var findDivNum = function() {
-  var value = document.querySelector('.animNum').innerHTML;
+  var value = document.querySelector('#animNum').innerHTML;
   value = parseInt(value);
   return value;
 }
